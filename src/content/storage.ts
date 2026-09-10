@@ -7,8 +7,12 @@ import { unstable_cache } from "next/cache";
  *
  * На компьютере — обычные файлы в папке content/, как и раньше.
  * На сервере (Vercel) файлы менять нельзя, поэтому используется облачное
- * хранилище Vercel Blob. Оно включается само, как только в настройках проекта
- * появляется ключ BLOB_READ_WRITE_TOKEN — руками ничего прописывать не нужно.
+ * хранилище Vercel Blob. Оно включается само, как только проект подключён
+ * к хранилищу — руками ничего прописывать не нужно.
+ *
+ * Vercel даёт доступ к хранилищу двумя способами, поддерживаем оба:
+ *   BLOB_STORE_ID          — новый способ, вход по внутреннему ключу проекта
+ *   BLOB_READ_WRITE_TOKEN  — прежний способ, отдельный ключ
  *
  * Пока в облаке пусто, читаем из файлов, уехавших вместе с кодом, — поэтому
  * сайт работает сразу после публикации, ещё до первой правки в админке.
@@ -19,30 +23,13 @@ const dir = path.join(process.cwd(), "content");
 /** Папка внутри хранилища — чтобы не путать с загруженными картинками. */
 const PREFIX = "content";
 
+/** Хранилище открытое (картинки видны по прямой ссылке) — иначе их не показать на сайте. */
+export const BLOB_ACCESS = (process.env.BLOB_ACCESS?.trim() === "private" ? "private" : "public") as
+  | "public"
+  | "private";
+
 export function cloudEnabled() {
-  return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
-}
-
-/* ─────────────── адрес хранилища ─────────────── */
-
-/** Общий адрес вида https://xxxx.public.blob.vercel-storage.com — ищем один раз. */
-let cachedHost: string | null = null;
-
-async function storageHost(): Promise<string | null> {
-  const manual = process.env.BLOB_PUBLIC_BASE?.trim();
-  if (manual) return manual.replace(/\/$/, "");
-  if (cachedHost) return cachedHost;
-
-  try {
-    const { list } = await import("@vercel/blob");
-    const { blobs } = await list({ limit: 1 });
-    if (!blobs.length) return null; // в хранилище пока ничего нет
-    const url = new URL(blobs[0].url);
-    cachedHost = `${url.protocol}//${url.host}`;
-    return cachedHost;
-  } catch {
-    return null;
-  }
+  return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim() || process.env.BLOB_STORE_ID?.trim());
 }
 
 /* ─────────────── чтение ─────────────── */
@@ -55,24 +42,25 @@ function readFile<T>(file: string): T | null {
   }
 }
 
-/**
- * Читает файл из облака. Результат кэшируется и сбрасывается после сохранения
- * из админки, поэтому лишних обращений к хранилищу нет.
- */
 async function fetchCloud<T>(file: string): Promise<T | null> {
-  const host = await storageHost();
-  if (!host) return null;
-
   try {
-    // отметка времени не даёт отдать старую копию из промежуточных кэшей
-    const res = await fetch(`${host}/${PREFIX}/${file}?v=${Date.now()}`, { cache: "no-store" });
-    if (!res.ok) return null;
-    return (await res.json()) as T;
+    const { get } = await import("@vercel/blob");
+    // useCache: false — берём последнюю версию, а не копию из кэша сети
+    const result = await get(`${PREFIX}/${file}`, { access: BLOB_ACCESS, useCache: false });
+    if (!result || result.statusCode !== 200) return null;
+
+    const text = await new Response(result.stream).text();
+    return JSON.parse(text) as T;
   } catch {
+    // файла ещё нет в хранилище или оно недоступно — вернёмся к файлам проекта
     return null;
   }
 }
 
+/**
+ * Читает файл из облака. Результат кэшируется и сбрасывается после сохранения
+ * из админки, поэтому лишних обращений к хранилищу нет.
+ */
 function readCloud<T>(file: string): Promise<T | null> {
   return unstable_cache(() => fetchCloud<T>(file), ["content", file], { tags: ["content"] })();
 }
@@ -121,21 +109,13 @@ function writeFile(file: string, data: unknown) {
 
 async function writeCloud(file: string, data: unknown) {
   const { put } = await import("@vercel/blob");
-  const blob = await put(`${PREFIX}/${file}`, JSON.stringify(data, null, 2) + "\n", {
-    access: "public",
+  await put(`${PREFIX}/${file}`, JSON.stringify(data, null, 2) + "\n", {
+    access: BLOB_ACCESS,
     contentType: "application/json; charset=utf-8",
     addRandomSuffix: false,
     allowOverwrite: true,
     cacheControlMaxAge: 0,
   });
-
-  // запомним адрес хранилища — пригодится для следующих чтений
-  try {
-    const url = new URL(blob.url);
-    cachedHost = `${url.protocol}//${url.host}`;
-  } catch {
-    // адрес не разобрался — не страшно, найдём заново
-  }
 }
 
 export async function writeStored(file: string, data: unknown) {

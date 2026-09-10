@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { isAuthenticated } from "@/lib/auth";
-import { cloudEnabled } from "@/content/storage";
+import { cloudEnabled, BLOB_ACCESS } from "@/content/storage";
 
 const allowed = ["image/png", "image/jpeg", "image/webp", "image/svg+xml", "image/gif"];
 const maxBytes = 8 * 1024 * 1024;
@@ -56,7 +56,7 @@ export async function POST(request: Request) {
     try {
       const { put } = await import("@vercel/blob");
       const blob = await put(`uploads/${name}`, data, {
-        access: "public",
+        access: BLOB_ACCESS,
         contentType: file.type,
         addRandomSuffix: false,
       });
