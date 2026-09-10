@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function SeoAdminPage() {
   await requireAuth();
-  return <SeoEditor initial={getSeo()} />;
+  return <SeoEditor initial={await getSeo()} />;
 }

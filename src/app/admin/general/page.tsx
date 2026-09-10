@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function GeneralAdminPage() {
   await requireAuth();
-  return <GeneralEditor texts={getTexts()} site={getSite()} />;
+  return <GeneralEditor texts={await getTexts()} site={await getSite()} />;
 }

@@ -34,9 +34,9 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
-  const { analytics } = getSeo();
+  const dict = await getDict(locale);
+  const site = await getSite();
+  const { analytics } = await getSeo();
 
   return (
     <>

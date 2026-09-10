@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function HomeAdminPage() {
   await requireAuth();
-  return <HomeEditor texts={getTexts()} site={getSite()} />;
+  return <HomeEditor texts={await getTexts()} site={await getSite()} />;
 }

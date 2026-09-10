@@ -20,8 +20,8 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
+  const dict = await getDict(locale);
+  const site = await getSite();
 
   return (
     <>

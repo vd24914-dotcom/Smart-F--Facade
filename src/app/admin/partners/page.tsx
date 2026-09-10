@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function PartnersAdminPage() {
   await requireAuth();
-  return <PartnersEditor initial={getPartners()} texts={getTexts()} site={getSite()} />;
+  return <PartnersEditor initial={await getPartners()} texts={await getTexts()} site={await getSite()} />;
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { files, writeContent, storageIsWritable, type ContentFile } from "@/content/store";
 
@@ -21,16 +21,17 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         error:
-          "Сайт открыт на хостинге, который не разрешает сохранять файлы. " +
-          "Правьте содержимое в админке на своём компьютере и отправляйте изменения на GitHub.",
+          "Сохранять некуда: к сайту не подключено хранилище. " +
+          "На Vercel откройте Storage → Create Database → Blob, подключите его к проекту и сделайте Redeploy.",
       },
       { status: 503 }
     );
   }
 
   try {
-    writeContent(file as ContentFile, data);
-    // Сбрасываем кэш страниц сайта, чтобы правки были видны сразу
+    await writeContent(file as ContentFile, data);
+    // Сбрасываем кэш содержимого и страниц сайта, чтобы правки были видны сразу
+    revalidateTag("content");
     revalidatePath("/", "layout");
     return NextResponse.json({ ok: true });
   } catch (error) {

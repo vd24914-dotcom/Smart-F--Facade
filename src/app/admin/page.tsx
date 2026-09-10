@@ -22,12 +22,12 @@ export const dynamic = "force-dynamic";
 export default async function AdminHome() {
   await requireAuth();
 
-  const projects = getProjects();
-  const { items: leads } = getLeads();
-  const traffic = getStats();
+  const projects = await getProjects();
+  const { items: leads } = await getLeads();
+  const traffic = await getStats();
   const newLeads = leads.filter((lead) => lead.status === "new").length;
-  const { representatives, partners } = getPartners();
-  const { blocks } = getContacts();
+  const { representatives, partners } = await getPartners();
+  const { blocks } = await getContacts();
 
   const stats = [
     { label: "Новых заявок", value: newLeads },

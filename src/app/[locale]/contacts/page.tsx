@@ -19,9 +19,9 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
-  const { blocks } = getContacts();
+  const dict = await getDict(locale);
+  const site = await getSite();
+  const { blocks } = await getContacts();
   const t = dict.pages.contacts;
 
   const socials = [

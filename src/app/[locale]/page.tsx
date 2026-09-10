@@ -20,11 +20,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
-  const projects = getProjects();
-  const { representatives, partners } = getPartners();
-  const { items: beforeAfter } = getBeforeAfter();
+  const dict = await getDict(locale);
+  const site = await getSite();
+  const projects = await getProjects();
+  const { representatives, partners } = await getPartners();
+  const { items: beforeAfter } = await getBeforeAfter();
 
   return (
     <>

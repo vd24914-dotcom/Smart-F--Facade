@@ -6,5 +6,5 @@ export const dynamic = "force-dynamic";
 
 export default async function ContactsAdminPage() {
   await requireAuth();
-  return <ContactsEditor contacts={getContacts()} texts={getTexts()} site={getSite()} />;
+  return <ContactsEditor contacts={await getContacts()} texts={await getTexts()} site={await getSite()} />;
 }

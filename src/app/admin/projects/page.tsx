@@ -8,10 +8,10 @@ export default async function ProjectsAdminPage() {
   await requireAuth();
   return (
     <ProjectsEditor
-      initial={getProjects()}
-      labels={getDict("ru")}
-      texts={getTexts()}
-      site={getSite()}
+      initial={await getProjects()}
+      labels={await getDict("ru")}
+      texts={await getTexts()}
+      site={await getSite()}
     />
   );
 }

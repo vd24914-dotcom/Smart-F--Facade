@@ -1,8 +1,8 @@
 import { storageIsWritable } from "@/content/store";
 
 /**
- * На хостингах вроде Vercel сайт не может записывать файлы.
- * Показываем это сразу, чтобы правки не «терялись» молча.
+ * Сайт на хостинге не может записывать файлы — для правок нужно хранилище.
+ * Показываем это сразу, чтобы изменения не «терялись» молча.
  */
 export default function ReadOnlyBanner() {
   if (storageIsWritable()) return null;
@@ -11,9 +11,10 @@ export default function ReadOnlyBanner() {
     <div className="mb-5 rounded-xl border border-amber-300 bg-amber-50 p-4">
       <p className="text-[14px] font-bold text-amber-900">Только просмотр</p>
       <p className="mt-1 text-[13px] leading-[20px] text-amber-900">
-        Этот сервер не разрешает сайту сохранять файлы, поэтому кнопка «Сохранить» здесь не
-        сработает. Правьте содержимое в админке на своём компьютере и отправляйте изменения на
-        GitHub — сайт обновится сам.
+        Кнопка «Сохранить» здесь не сработает: к сайту не подключено хранилище. Откройте проект на
+        Vercel → вкладка <b>Storage</b> → <b>Create Database</b> → <b>Blob</b>, подключите хранилище
+        к проекту и нажмите <b>Redeploy</b>. После этого админка начнёт сохранять правки прямо
+        отсюда, с любого компьютера или телефона.
       </p>
     </div>
   );

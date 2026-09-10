@@ -20,13 +20,13 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
+  const dict = await getDict(locale);
+  const site = await getSite();
 
   return (
     <>
       <PageHero title={dict.pages.projects.heading} image={site.images.pageHero} />
-      <PortfolioGrid dict={dict} locale={locale} projects={getProjects()} />
+      <PortfolioGrid dict={dict} locale={locale} projects={await getProjects()} />
       <Stats dict={dict} />
       <CallToAction dict={dict} image={site.images.cta} site={site} />
     </>

@@ -5,13 +5,13 @@ import { locales } from "@/i18n/config";
 const sections = ["", "/about", "/services", "/projects", "/partners", "/contacts"];
 
 /** Карта сайта собирается сама: разделы на трёх языках плюс страницы всех объектов. */
-export default function sitemap(): MetadataRoute.Sitemap {
-  const seo = getSeo();
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const seo = await getSeo();
   const base = seo.siteUrl.trim().replace(/\/$/, "");
   if (!base) return [];
 
   const now = new Date();
-  const projects = getProjects().map((project) => `/projects/${project.id}`);
+  const projects = (await getProjects()).map((project) => `/projects/${project.id}`);
   const paths = [...sections, ...projects];
 
   return paths.flatMap((path) =>

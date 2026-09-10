@@ -7,8 +7,9 @@ import { isLocale, locales } from "@/i18n/config";
 import { getDict, getSite, getProjects } from "@/content/store";
 import { projectMetadata } from "@/lib/seo";
 
-export function generateStaticParams() {
-  return locales.flatMap((locale) => getProjects().map((item) => ({ locale, slug: item.id })));
+export async function generateStaticParams() {
+  const projects = await getProjects();
+  return locales.flatMap((locale) => projects.map((item) => ({ locale, slug: item.id })));
 }
 
 export async function generateMetadata({
@@ -18,7 +19,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isLocale(locale)) return {};
-  const project = getProjects().find((p) => p.id === slug);
+  const project = (await getProjects()).find((p) => p.id === slug);
   if (!project) return {};
   const text = project.texts[locale];
 
@@ -37,11 +38,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
 
-  const project = getProjects().find((p) => p.id === slug);
+  const project = (await getProjects()).find((p) => p.id === slug);
   if (!project) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
+  const dict = await getDict(locale);
+  const site = await getSite();
   const text = project.texts[locale];
   const t = dict.pages.project;
 

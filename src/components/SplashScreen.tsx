@@ -6,8 +6,8 @@ import SplashControl from "@/components/SplashControl";
  * и заставка уходит. Вся анимация на CSS, поэтому работает и до загрузки скриптов;
  * если картинку не удалось разобрать — заставки просто не будет.
  */
-export default function SplashScreen({ logo }: { logo: string }) {
-  const svg = inlineSvg(logo);
+export default async function SplashScreen({ logo }: { logo: string }) {
+  const svg = await inlineSvg(logo);
   if (!svg) return null;
 
   return (

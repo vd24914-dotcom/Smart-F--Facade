@@ -19,9 +19,9 @@ export default async function PartnersPage({ params }: { params: Promise<{ local
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
-  const { representatives, partners } = getPartners();
+  const dict = await getDict(locale);
+  const site = await getSite();
+  const { representatives, partners } = await getPartners();
 
   return (
     <>

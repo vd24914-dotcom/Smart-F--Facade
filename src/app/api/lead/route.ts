@@ -19,7 +19,7 @@ const clean = (value: unknown, max: number) =>
 
 /** Возвращает true, если сообщение действительно ушло в телеграм. */
 async function notifyTelegram(text: string) {
-  const { telegram } = getIntegrations();
+  const { telegram } = await getIntegrations();
   if (!telegram.enabled || !telegram.token || !telegram.chatId) return false;
 
   try {
@@ -69,7 +69,7 @@ export async function POST(request: Request) {
   // но если не сработало ни то, ни другое, честно сообщаем об ошибке
   let saved = true;
   try {
-    addLead(draft);
+    await addLead(draft);
   } catch (error) {
     saved = false;
     console.error("Заявку не удалось записать в файл:", error);

@@ -10,7 +10,7 @@ export default async function AdminBeforeAfterPage() {
 
   let content: BeforeAfterContent = { items: [] };
   try {
-    content = readContent("beforeafter") as BeforeAfterContent;
+    content = await readContent("beforeafter") as BeforeAfterContent;
   } catch {
     // файла ещё нет — начинаем с пустого списка
   }
@@ -18,8 +18,8 @@ export default async function AdminBeforeAfterPage() {
   return (
     <BeforeAfterEditor
       initial={{ items: content.items ?? [] }}
-      texts={getTexts()}
-      site={getSite()}
+      texts={await getTexts()}
+      site={await getSite()}
     />
   );
 }

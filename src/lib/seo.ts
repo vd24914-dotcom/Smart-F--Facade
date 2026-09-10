@@ -72,8 +72,8 @@ export function alternates(path: string, locale: Locale, siteUrl: string) {
 }
 
 /** Метатеги страницы: берём из админки, пустые поля закрываем запасным текстом. */
-export function pageMetadata(page: SeoPage, locale: Locale): Metadata {
-  const seo = getSeo();
+export async function pageMetadata(page: SeoPage, locale: Locale): Promise<Metadata> {
+  const seo = await getSeo();
   const saved = seo.pages[page]?.[locale];
   const spare = fallback[page][locale];
   const brand = seo.brand.trim();
@@ -119,7 +119,7 @@ export function pageMetadata(page: SeoPage, locale: Locale): Metadata {
 }
 
 /** Метатеги страницы одного объекта. */
-export function projectMetadata({
+export async function projectMetadata({
   locale,
   slug,
   title,
@@ -135,8 +135,8 @@ export function projectMetadata({
   image?: string;
   seoTitle?: string;
   seoDescription?: string;
-}): Metadata {
-  const seo = getSeo();
+}): Promise<Metadata> {
+  const seo = await getSeo();
   const brand = seo.brand.trim();
   const finalTitle = seoTitle?.trim() || (brand ? `${title} — ${brand}` : title);
   const finalDescription = seoDescription?.trim() || description?.trim() || undefined;

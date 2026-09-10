@@ -9,17 +9,27 @@ const SHAPES = "path|circle|rect|polygon|polyline|ellipse|line";
  * Читает SVG из public/ и готовит две версии: контур для «черчения»
  * и обычную заливку. Файл читается один раз и остаётся в памяти.
  */
-export function inlineSvg(src: string): { outline: string; fill: string } | null {
-  if (!src || !src.startsWith("/") || !src.toLowerCase().endsWith(".svg")) return null;
+export async function inlineSvg(src: string): Promise<{ outline: string; fill: string } | null> {
+  if (!src || !src.toLowerCase().endsWith(".svg")) return null;
+  const remote = /^https?:\/\//i.test(src);
+  if (!remote && !src.startsWith("/")) return null;
   if (cache.has(src)) return cache.get(src) ?? null;
 
   try {
-    const file = path.join(process.cwd(), "public", src.replace(/^\//, ""));
-    // не выпускаем чтение за пределы public/
-    const root = path.join(process.cwd(), "public");
-    if (!file.startsWith(root)) throw new Error("вне public");
+    let raw: string;
 
-    const raw = fs.readFileSync(file, "utf8");
+    if (remote) {
+      // логотип, загруженный через админку, лежит в облачном хранилище
+      const res = await fetch(src, { next: { revalidate: 3600 } });
+      if (!res.ok) throw new Error("не удалось скачать");
+      raw = await res.text();
+    } else {
+      const file = path.join(process.cwd(), "public", src.replace(/^\//, ""));
+      // не выпускаем чтение за пределы public/
+      const root = path.join(process.cwd(), "public");
+      if (!file.startsWith(root)) throw new Error("вне public");
+      raw = fs.readFileSync(file, "utf8");
+    }
 
     const body = raw
       .replace(/<\?xml[\s\S]*?\?>/gi, "")

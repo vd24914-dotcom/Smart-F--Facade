@@ -1,12 +1,10 @@
-import fs from "node:fs";
-import path from "node:path";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Building, Material } from "@/data/portfolio";
 import { seoPages, type SeoPage } from "@/data/seo";
+import { readStored, writeStored, storageIsWritable, ReadOnlyStorageError } from "./storage";
 
-/** Весь редактируемый контент сайта лежит в JSON-файлах папки content/. */
-const dir = path.join(process.cwd(), "content");
+export { storageIsWritable, ReadOnlyStorageError };
 
 export type SiteContent = {
   name: string;
@@ -154,138 +152,90 @@ export const files = {
 
 export type ContentFile = keyof typeof files;
 
-function read<T>(file: ContentFile): T {
-  const raw = fs.readFileSync(path.join(dir, files[file]), "utf8");
-  return JSON.parse(raw) as T;
+const MAX_LEADS = 1000;
+const MAX_DAYS = 400;
+
+/** Разделы, которые пишет сам сайт — их всегда читаем свежими. */
+const liveFiles = new Set<ContentFile>(["leads", "stats"]);
+
+/** Читает раздел содержимого: сначала облако, потом файл проекта. */
+function read<T>(file: ContentFile, fallback: T): Promise<T> {
+  return readStored<T>(files[file], fallback, liveFiles.has(file));
 }
 
-export function getSite(): SiteContent {
-  return read<SiteContent>("site");
+export async function getSite(): Promise<SiteContent> {
+  return read<SiteContent>("site", {} as SiteContent);
 }
 
-export function getTexts(): TextsContent {
-  return read<TextsContent>("texts");
+export async function getTexts(): Promise<TextsContent> {
+  return read<TextsContent>("texts", {} as TextsContent);
 }
 
-export function getDict(locale: Locale): Dictionary {
-  return getTexts()[locale];
+export async function getDict(locale: Locale): Promise<Dictionary> {
+  return (await getTexts())[locale];
 }
 
-export function getProjects(): Project[] {
+export async function getProjects(): Promise<Project[]> {
+  const list = await read<Project[]>("projects", []);
   // Если фото ещё не загрузили — подставляем общий фон, чтобы страница не падала
-  return read<Project[]>("projects").map((project) => ({
+  return (Array.isArray(list) ? list : []).map((project) => ({
     ...project,
     image: project.image?.trim() ? project.image : "/img/page-hero.jpg",
   }));
 }
 
-export function getPartners(): PartnersContent {
-  return read<PartnersContent>("partners");
+export async function getPartners(): Promise<PartnersContent> {
+  return read<PartnersContent>("partners", { representatives: [], partners: [] });
 }
 
-export function getContacts(): ContactsContent {
-  return read<ContactsContent>("contacts");
+export async function getContacts(): Promise<ContactsContent> {
+  return read<ContactsContent>("contacts", { blocks: [] });
 }
 
-
-/** Хостинг не разрешает записывать файлы (например Vercel). */
-export class ReadOnlyStorageError extends Error {
-  constructor() {
-    super(
-      "Этот сервер не разрешает сайту сохранять файлы, поэтому правки не записались. " +
-        "Меняйте содержимое на своём компьютере и отправляйте изменения на GitHub."
-    );
-    this.name = "ReadOnlyStorageError";
-  }
+/** Запись из админки. */
+export async function writeContent(file: ContentFile, data: unknown) {
+  await writeStored(files[file], data);
 }
 
-const READ_ONLY_CODES = new Set(["EROFS", "EACCES", "EPERM", "ENOENT"]);
-
-function isReadOnly(error: unknown) {
-  const code = (error as NodeJS.ErrnoException)?.code;
-  return Boolean(code && READ_ONLY_CODES.has(code));
-}
-
-/** Можно ли сейчас сохранять правки. Проверяем один раз за запуск. */
-let writable: boolean | null = null;
-
-export function storageIsWritable(): boolean {
-  if (writable !== null) return writable;
-  try {
-    const probe = path.join(dir, ".write-probe");
-    fs.writeFileSync(probe, "ok", "utf8");
-    fs.unlinkSync(probe);
-    writable = true;
-  } catch {
-    writable = false;
-  }
-  return writable;
-}
-
-/** Запись из админки. Пишем атомарно: сначала во временный файл, потом переименовываем. */
-export function writeContent(file: ContentFile, data: unknown) {
-  const target = path.join(dir, files[file]);
-  const tmp = `${target}.tmp`;
-  try {
-    fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf8");
-    fs.renameSync(tmp, target);
-  } catch (error) {
-    if (isReadOnly(error)) throw new ReadOnlyStorageError();
-    throw error;
-  }
-}
-
-export function readContent(file: ContentFile): unknown {
-  return read(file);
+export async function readContent(file: ContentFile): Promise<unknown> {
+  return read<unknown>(file, null);
 }
 
 /* ─────────── заявки, статистика, интеграции ─────────── */
 
-/** Такие файлы могут ещё не существовать — тогда возвращаем пустую заготовку. */
-function readSoft<T>(file: ContentFile, fallback: T): T {
-  try {
-    return read<T>(file);
-  } catch {
-    return fallback;
-  }
-}
-
-const MAX_LEADS = 1000;
-const MAX_DAYS = 400;
-
-export function getBeforeAfter(): BeforeAfterContent {
-  const data = readSoft<BeforeAfterContent>("beforeafter", { items: [] });
-  const items = Array.isArray(data.items) ? data.items : [];
+export async function getBeforeAfter(): Promise<BeforeAfterContent> {
+  const data = await read<BeforeAfterContent>("beforeafter", { items: [] });
+  const items = Array.isArray(data?.items) ? data.items : [];
   // показываем только заполненные пары
   return { items: items.filter((item) => item.before?.trim() && item.after?.trim()) };
 }
 
-export function getLeads(): LeadsContent {
-  const data = readSoft<LeadsContent>("leads", { items: [] });
-  return { items: Array.isArray(data.items) ? data.items : [] };
+export async function getLeads(): Promise<LeadsContent> {
+  const data = await read<LeadsContent>("leads", { items: [] });
+  return { items: Array.isArray(data?.items) ? data.items : [] };
 }
 
 /** Добавляет заявку в начало списка. Возвращает записанную заявку. */
-export function addLead(input: Omit<Lead, "id" | "createdAt" | "status">): Lead {
+export async function addLead(input: Omit<Lead, "id" | "createdAt" | "status">): Promise<Lead> {
   const lead: Lead = {
     ...input,
     id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
     createdAt: new Date().toISOString(),
     status: "new",
   };
-  const { items } = getLeads();
-  writeContent("leads", { items: [lead, ...items].slice(0, MAX_LEADS) });
+  const { items } = await getLeads();
+  await writeContent("leads", { items: [lead, ...items].slice(0, MAX_LEADS) });
   return lead;
 }
 
-/** Настройки SEO. Файла может не быть — тогда пустая заготовка. */
-export function getSeo(): SeoContent {
+/** Настройки SEO. Раздела может не быть — тогда пустая заготовка. */
+export async function getSeo(): Promise<SeoContent> {
   const base = emptySeo();
-  const data = readSoft<Partial<SeoContent>>("seo", base);
+  const data = await read<Partial<SeoContent>>("seo", base);
 
   const pages = Object.fromEntries(
     seoPages.map((page) => {
-      const saved = data.pages?.[page];
+      const saved = data?.pages?.[page];
       return [
         page,
         {
@@ -301,19 +251,19 @@ export function getSeo(): SeoContent {
     ...base,
     ...data,
     pages,
-    verification: { ...base.verification, ...data.verification },
-    analytics: { ...base.analytics, ...data.analytics },
+    verification: { ...base.verification, ...data?.verification },
+    analytics: { ...base.analytics, ...data?.analytics },
   };
 }
 
-export function getStats(): StatsContent {
-  const data = readSoft<StatsContent>("stats", { days: {} });
-  return { days: data.days && typeof data.days === "object" ? data.days : {} };
+export async function getStats(): Promise<StatsContent> {
+  const data = await read<StatsContent>("stats", { days: {} });
+  return { days: data?.days && typeof data.days === "object" ? data.days : {} };
 }
 
 /** Считает просмотр страницы; `firstInSession` — новый посетитель за сессию. */
-export function trackView(firstInSession: boolean) {
-  const { days } = getStats();
+export async function trackView(firstInSession: boolean) {
+  const { days } = await getStats();
   const key = new Date().toISOString().slice(0, 10);
   const day = days[key] ?? { views: 0, visits: 0 };
 
@@ -324,21 +274,21 @@ export function trackView(firstInSession: boolean) {
       .sort(([a], [b]) => (a < b ? 1 : -1))
       .slice(0, MAX_DAYS)
   );
-  writeContent("stats", { days: trimmed });
+  await writeContent("stats", { days: trimmed });
 }
 
-export function getIntegrations(): IntegrationsContent {
-  const data = readSoft<IntegrationsContent>("integrations", {
+export async function getIntegrations(): Promise<IntegrationsContent> {
+  const data = await read<IntegrationsContent>("integrations", {
     telegram: { enabled: false, token: "", chatId: "" },
   });
   // на хостинге ключи удобнее держать в настройках проекта, а не в файле
-  const token = (process.env.TELEGRAM_BOT_TOKEN || data.telegram?.token || "").trim();
-  const chatId = (process.env.TELEGRAM_CHAT_ID || data.telegram?.chatId || "").trim();
+  const token = (process.env.TELEGRAM_BOT_TOKEN || data?.telegram?.token || "").trim();
+  const chatId = (process.env.TELEGRAM_CHAT_ID || data?.telegram?.chatId || "").trim();
   const fromEnv = Boolean(process.env.TELEGRAM_BOT_TOKEN && process.env.TELEGRAM_CHAT_ID);
 
   return {
     telegram: {
-      enabled: fromEnv || Boolean(data.telegram?.enabled),
+      enabled: fromEnv || Boolean(data?.telegram?.enabled),
       token,
       chatId,
     },

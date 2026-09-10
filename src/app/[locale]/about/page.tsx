@@ -21,9 +21,9 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const dict = getDict(locale);
-  const site = getSite();
-  const { partners } = getPartners();
+  const dict = await getDict(locale);
+  const site = await getSite();
+  const { partners } = await getPartners();
   const page = dict.pages.about;
 
   return (
