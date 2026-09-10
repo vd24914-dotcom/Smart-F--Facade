@@ -5,9 +5,37 @@ const cache = new Map<string, { outline: string; fill: string } | null>();
 
 const SHAPES = "path|circle|rect|polygon|polyline|ellipse|line";
 
+async function download(url: string) {
+  const res = await fetch(url, { next: { revalidate: 3600 } });
+  if (!res.ok) throw new Error("не удалось скачать");
+  return res.text();
+}
+
+/** Адрес самого сайта — нужен, чтобы дочитать файл из public/ уже с сервера. */
+function ownOrigin(): string | null {
+  const production = process.env.VERCEL_PROJECT_PRODUCTION_URL?.trim();
+  if (production) return `https://${production.replace(/^https?:\/\//, "")}`;
+  const current = process.env.VERCEL_URL?.trim();
+  if (current) return `https://${current.replace(/^https?:\/\//, "")}`;
+  return null;
+}
+
+/** Читает файл из папки public/. На сервере её рядом с кодом может не быть. */
+function readPublic(src: string) {
+  const root = path.join(process.cwd(), "public");
+  const file = path.join(root, src.replace(/^\//, ""));
+  // не выпускаем чтение за пределы public/
+  if (!file.startsWith(root)) throw new Error("вне public");
+  return fs.readFileSync(file, "utf8");
+}
+
 /**
- * Читает SVG из public/ и готовит две версии: контур для «черчения»
- * и обычную заливку. Файл читается один раз и остаётся в памяти.
+ * Готовит из SVG две версии: контур для «черчения» и обычную заливку.
+ * Файл читается один раз и остаётся в памяти.
+ *
+ * Картинка может лежать в трёх местах, и все три поддерживаются:
+ * в папке public/, в облачном хранилище (полная ссылка) и — на сервере,
+ * где папки public/ рядом с кодом нет, — на самом сайте по своему адресу.
  */
 export async function inlineSvg(src: string): Promise<{ outline: string; fill: string } | null> {
   if (!src || !src.toLowerCase().endsWith(".svg")) return null;
@@ -20,15 +48,17 @@ export async function inlineSvg(src: string): Promise<{ outline: string; fill: s
 
     if (remote) {
       // логотип, загруженный через админку, лежит в облачном хранилище
-      const res = await fetch(src, { next: { revalidate: 3600 } });
-      if (!res.ok) throw new Error("не удалось скачать");
-      raw = await res.text();
+      raw = await download(src);
     } else {
-      const file = path.join(process.cwd(), "public", src.replace(/^\//, ""));
-      // не выпускаем чтение за пределы public/
-      const root = path.join(process.cwd(), "public");
-      if (!file.startsWith(root)) throw new Error("вне public");
-      raw = fs.readFileSync(file, "utf8");
+      try {
+        raw = readPublic(src);
+      } catch {
+        // на хостинге папка public/ отдаётся отдельно и функции недоступна —
+        // забираем тот же файл по адресу сайта
+        const origin = ownOrigin();
+        if (!origin) throw new Error("нет адреса сайта");
+        raw = await download(`${origin}${src}`);
+      }
     }
 
     const body = raw
