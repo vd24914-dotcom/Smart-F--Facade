@@ -14,6 +14,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang={lang}>
       <head>
+        {/* тот же смысл, что и color-scheme в CSS: запрещаем браузеру
+            принудительно затемнять светлую тему */}
+        <meta name="color-scheme" content="light dark" />
         {/* Сайт всегда открывается светлым. Тёмная тема включается только кнопкой
             и запоминается — системная тема Windows на это не влияет. */}
         <script

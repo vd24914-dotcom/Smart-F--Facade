@@ -22,8 +22,10 @@ export default function Hero({
 }) {
   const [firstLine, ...restLines] = dict.hero.title;
 
+  // min-h вместо жёсткой высоты: на маленьких экранах блок дорастает под
+  // содержимое, поэтому карточку с цифрами больше не обрезает
   return (
-    <section className="sticky top-0 isolate flex h-[100svh] min-h-[560px] flex-col overflow-hidden bg-gradient-to-b from-white via-[#eef4fa] to-white pt-24 dark:from-[#0b1523] dark:via-[#0e1a2c] dark:to-[#0b1523] lg:pt-28">
+    <section className="sticky top-0 isolate flex min-h-[100svh] flex-col overflow-hidden bg-gradient-to-b from-white via-[#eef4fa] to-white pt-20 dark:from-[#0b1523] dark:via-[#0e1a2c] dark:to-[#0b1523] sm:pt-24 lg:pt-28">
       {/* мягкое свечение слева сверху */}
       <div
         aria-hidden
@@ -59,8 +61,8 @@ export default function Hero({
       </div>
 
       <ScrollFade className="mx-auto flex w-full max-w-[1200px] flex-1 flex-col px-5">
-        <div className="flex max-w-[660px] flex-1 flex-col justify-center py-8 lg:py-10">
-          <h1 className="text-[34px] font-extrabold leading-[1.1] tracking-[-0.5px] text-ink sm:text-[44px] lg:text-[52px]">
+        <div className="flex max-w-[660px] flex-1 flex-col justify-center py-4 sm:py-8 lg:py-10">
+          <h1 className="text-[28px] font-extrabold leading-[1.12] tracking-[-0.5px] text-ink min-[380px]:text-[32px] sm:text-[44px] lg:text-[52px]">
             <span className="block">{firstLine}</span>
             {restLines.map((line) => (
               <span key={line} className="block text-navy">
@@ -69,41 +71,44 @@ export default function Hero({
             ))}
           </h1>
 
-          <p className="mt-6 max-w-[520px] text-[16px] font-light leading-[28px] text-graphite lg:text-[17px] lg:leading-[30px]">
+          <p className="mt-4 max-w-[520px] text-[15px] font-light leading-[24px] text-graphite sm:mt-6 sm:text-[16px] sm:leading-[28px] lg:text-[17px] lg:leading-[30px]">
             {dict.hero.lead}
           </p>
 
-          <div className="mt-9 flex flex-wrap items-center gap-3">
+          <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-9">
             <PillButton
               href={`/${locale}/services`}
               icon={<LayoutGrid className="size-4" strokeWidth={1.8} />}
             >
               {dict.nav.services}
             </PillButton>
-            <ContactButton className="inline-flex items-center gap-2.5 rounded-full border border-slate-200 bg-white/80 px-6 py-3.5 text-[14px] font-semibold text-navy backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white">
+            <ContactButton className="inline-flex items-center gap-2.5 rounded-full border border-slate-200 bg-white/80 px-5 py-3 text-[14px] sm:px-6 sm:py-3.5 font-semibold text-navy backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white">
               <MessageCircle className="size-4" strokeWidth={1.8} />
               {dict.cta.button}
             </ContactButton>
           </div>
         </div>
 
-        {/* карточка с цифрами */}
+        {/* Карточка с цифрами. На телефоне — три компактных столбца: столбиком
+            она не помещалась в экран и нижнюю строку обрезало. */}
         {dict.stats.length > 0 && (
-          <div className="stats-card relative z-10 mb-10 mt-8 rounded-2xl border border-navy/20 bg-white/90 px-4 py-6 shadow-[0_25px_60px_-28px_rgba(41,79,123,0.6)] ring-1 ring-inset ring-navy/[0.06] backdrop-blur sm:px-8 lg:mb-12">
-            <ul className="grid gap-6 sm:grid-cols-3 sm:gap-0">
+          <div className="stats-card relative z-10 mb-5 mt-4 rounded-2xl border border-navy/20 bg-white/90 px-3 py-4 shadow-[0_25px_60px_-28px_rgba(41,79,123,0.6)] ring-1 ring-inset ring-navy/[0.06] backdrop-blur sm:mt-8 sm:px-8 sm:py-6 lg:mb-12">
+            <ul className="grid grid-cols-3 gap-2 sm:gap-0">
               {dict.stats.map((stat, index) => {
                 const Icon = statIcons[index % statIcons.length];
                 return (
                   <li
                     key={stat.label}
-                    className="flex items-center gap-4 px-2 sm:justify-center sm:px-6 sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-slate-200"
+                    className="flex flex-col items-center gap-1 px-1 text-center sm:flex-row sm:justify-center sm:gap-4 sm:px-6 sm:text-left sm:[&:not(:first-child)]:border-l sm:[&:not(:first-child)]:border-slate-200"
                   >
-                    <Icon className="size-8 shrink-0 text-navy" strokeWidth={1.5} />
+                    <Icon className="size-5 shrink-0 text-navy sm:size-8" strokeWidth={1.5} />
                     <div>
-                      <p className="text-[24px] font-extrabold leading-none text-ink lg:text-[28px]">
+                      <p className="text-[18px] font-extrabold leading-none text-ink sm:text-[24px] lg:text-[28px]">
                         <CountUp value={stat.value} delay={index * 150} />
                       </p>
-                      <p className="mt-1.5 text-[13px] text-slate-500">{stat.label}</p>
+                      <p className="mt-1 text-[11px] leading-[14px] text-slate-500 sm:mt-1.5 sm:text-[13px] sm:leading-normal">
+                        {stat.label}
+                      </p>
                     </div>
                   </li>
                 );
