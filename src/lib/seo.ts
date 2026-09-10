@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getSeo } from "@/content/store";
-import type { SeoPage } from "@/data/seo";
+import { siteOrigin, type SeoPage } from "@/data/seo";
 import { locales, type Locale } from "@/i18n/config";
 
 /** Запасные заголовки, если в админке поля ещё не заполнены. */
@@ -103,9 +103,10 @@ export async function pageMetadata(page: SeoPage, locale: Locale): Promise<Metad
     },
   };
 
-  if (seo.siteUrl.trim()) {
-    meta.metadataBase = new URL(seo.siteUrl.trim());
-    meta.alternates = alternates(paths[page], locale, seo.siteUrl.trim());
+  const origin = siteOrigin(seo.siteUrl);
+  if (origin) {
+    meta.metadataBase = new URL(origin);
+    meta.alternates = alternates(paths[page], locale, origin);
   }
 
   const verification: Record<string, string> = {};
@@ -162,9 +163,10 @@ export async function projectMetadata({
     },
   };
 
-  if (seo.siteUrl.trim()) {
-    meta.metadataBase = new URL(seo.siteUrl.trim());
-    meta.alternates = alternates(`/projects/${slug}`, locale, seo.siteUrl.trim());
+  const origin = siteOrigin(seo.siteUrl);
+  if (origin) {
+    meta.metadataBase = new URL(origin);
+    meta.alternates = alternates(`/projects/${slug}`, locale, origin);
   }
 
   if (seo.favicon.trim()) meta.icons = { icon: seo.favicon.trim() };

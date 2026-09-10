@@ -125,6 +125,8 @@ export function ImageField({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [editing, setEditing] = useState<{ src: string; name: string } | null>(null);
+  // файла может не быть: удалили, переименовали или ссылка вписана руками
+  const [missing, setMissing] = useState(false);
 
   const isVector = (name: string) => /\.(svg|gif)$/i.test(name);
 
@@ -137,6 +139,7 @@ export function ImageField({
       const res = await fetch("/api/admin/upload", { method: "POST", body });
       const json = await res.json();
       if (!res.ok) throw new Error(json.error || "Не удалось загрузить");
+      setMissing(false);
       onChange(json.url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка загрузки");
@@ -151,12 +154,19 @@ export function ImageField({
 
       <div className="flex items-start gap-4">
         <div className="flex h-[92px] w-[130px] shrink-0 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-slate-50">
-          {value ? (
+          {value && !missing ? (
             // обычный img: превью может быть и SVG, и свежезагруженным файлом
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={value} alt="" className="max-h-full max-w-full object-contain" />
+            <img
+              src={value}
+              alt=""
+              className="max-h-full max-w-full object-contain"
+              onError={() => setMissing(true)}
+            />
           ) : (
-            <span className="text-[12px] text-slate-400">нет файла</span>
+            <span className="px-2 text-center text-[12px] leading-[16px] text-slate-400">
+              {value ? "файл не найден" : "нет файла"}
+            </span>
           )}
         </div>
 
@@ -164,8 +174,11 @@ export function ImageField({
           <input
             className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[13px] outline-none transition focus:border-slate-900"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder="/uploads/например.png"
+            onChange={(e) => {
+              setMissing(false);
+              onChange(e.target.value);
+            }}
+            placeholder="/uploads/название-файла.png"
           />
           <div className="mt-2 flex flex-wrap items-center gap-2">
             <label className="cursor-pointer rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700">

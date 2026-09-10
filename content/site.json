@@ -13,13 +13,13 @@
   },
   "images": {
     "logoHeader": "/uploads/1789025166214-121212.svg",
-    "logoFooter": "/img/logo-footer.png",
+    "logoFooter": "",
     "hero": "/uploads/1788955736317-1666397693_19-mykaleidoscope-ru-p-fasadi.jpg",
     "pageHero": "/img/page-hero.jpg",
     "aboutPhoto": "/img/about-photo.png",
     "aboutCompany": "/img/about-company.jpg",
-    "cta": "/img/cta-bg.png",
-    "footer": "/img/footer-bg.png"
+    "cta": "",
+    "footer": ""
   },
   "icons": {
     "specs": [
@@ -39,5 +39,25 @@
       "/icons/adv-standards.png",
       "/icons/adv-ontime.png"
     ]
-  }
+  },
+  "socials": [
+    {
+      "id": "whatsapp",
+      "label": "WhatsApp",
+      "url": "https://wa.me/996773999777",
+      "icon": ""
+    },
+    {
+      "id": "instagram",
+      "label": "Instagram",
+      "url": "",
+      "icon": ""
+    },
+    {
+      "id": "facebook",
+      "label": "Facebook",
+      "url": "",
+      "icon": ""
+    }
+  ]
 }

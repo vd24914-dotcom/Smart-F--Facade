@@ -205,7 +205,7 @@
   },
   {
     "id": "prestige-hall",
-    "image": "/portfolio/07.png",
+    "image": "/img/page-hero.jpg",
     "building": "residential",
     "materials": [
       "acp"
@@ -239,7 +239,7 @@
   },
   {
     "id": "diplomat",
-    "image": "/portfolio/08.png",
+    "image": "/img/page-hero.jpg",
     "building": "residential",
     "materials": [
       "acp"
@@ -273,7 +273,7 @@
   },
   {
     "id": "park-avenue",
-    "image": "/portfolio/09.png",
+    "image": "/img/page-hero.jpg",
     "building": "residential",
     "materials": [
       "acp"
@@ -307,7 +307,7 @@
   },
   {
     "id": "baytik-tower",
-    "image": "/portfolio/10.webp",
+    "image": "/img/page-hero.jpg",
     "building": "office",
     "materials": [
       "acp",
@@ -342,7 +342,7 @@
   },
   {
     "id": "politeh",
-    "image": "/portfolio/11.png",
+    "image": "/img/page-hero.jpg",
     "building": "residential",
     "materials": [
       "acp"
@@ -376,7 +376,7 @@
   },
   {
     "id": "ak-bulut",
-    "image": "/portfolio/12.png",
+    "image": "/img/page-hero.jpg",
     "building": "restaurant",
     "materials": [
       "acp"
@@ -410,7 +410,7 @@
   },
   {
     "id": "ulu-too-zeta",
-    "image": "/portfolio/13.png",
+    "image": "/img/page-hero.jpg",
     "building": "restaurant",
     "materials": [
       "acp",
@@ -445,7 +445,7 @@
   },
   {
     "id": "ala-archa",
-    "image": "/portfolio/14.png",
+    "image": "/img/page-hero.jpg",
     "building": "mall",
     "materials": [
       "acp"
@@ -479,7 +479,7 @@
   },
   {
     "id": "spar",
-    "image": "/portfolio/15.png",
+    "image": "/img/page-hero.jpg",
     "building": "shop",
     "materials": [
       "acp"
@@ -513,7 +513,7 @@
   },
   {
     "id": "kortex",
-    "image": "/portfolio/16.png",
+    "image": "/img/page-hero.jpg",
     "building": "clinic",
     "materials": [
       "acp"
@@ -547,7 +547,7 @@
   },
   {
     "id": "aurora",
-    "image": "/portfolio/17.png",
+    "image": "/img/page-hero.jpg",
     "building": "office",
     "materials": [
       "hpl",
@@ -582,7 +582,7 @@
   },
   {
     "id": "baytash",
-    "image": "/portfolio/18.png",
+    "image": "/img/page-hero.jpg",
     "building": "hotel",
     "materials": [
       "acp"
@@ -616,7 +616,7 @@
   },
   {
     "id": "karakol",
-    "image": "/portfolio/19.png",
+    "image": "/img/page-hero.jpg",
     "building": "airport",
     "materials": [
       "acp",

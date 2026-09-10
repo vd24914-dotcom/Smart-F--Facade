@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Image from "next/image";
+import SafeImage from "@/components/ui/safe-image";
 import Link from "next/link";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
@@ -153,7 +154,7 @@ export default function PortfolioGrid({
                   className="group flex flex-col overflow-hidden rounded-[22px] border border-navy/10 bg-white transition-all duration-300 hover:-translate-y-1 hover:border-navy/20 hover:shadow-[0_28px_60px_-34px_rgba(8,19,36,0.5)]"
                 >
                   <Link href={`/${locale}/projects/${item.id}`} className="relative block aspect-[265/260] w-full overflow-hidden">
-                    <Image
+                    <SafeImage
                       src={item.image}
                       alt={text.imageAlt?.trim() || text.title}
                       fill

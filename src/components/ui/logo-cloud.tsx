@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SafeImage from "@/components/ui/safe-image";
 import { Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -30,7 +30,7 @@ export default function LogoCloud({ logos, className }: Props) {
             index % 2 === 1 && "bg-mist/60"
           )}
         >
-          <Image
+          <SafeImage
             src={logo}
             alt=""
             width={240}

@@ -88,7 +88,6 @@ export default function GeneralEditor({
 
         <Block title="Подвал" hint="Нижняя часть каждой страницы: логотип, ссылки, форма обратного звонка.">
           <Img imgKey="logoFooter" label="Логотип в подвале" hint="PNG или SVG" />
-          <Img imgKey="footer" label="Фон подвала" hint="Широкое фото" aspect={21 / 9} />
           <div className="grid gap-4 sm:grid-cols-2">
             <T path="footer.companyTitle" label="Заголовок «Компания»" />
             <T path="footer.contactsTitle" label="Заголовок «Контакты»" />

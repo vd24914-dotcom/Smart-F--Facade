@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { SeoContent } from "@/content/store";
-import { seoPages, type SeoPage } from "@/data/seo";
+import { seoPages, type SeoPage, siteOrigin } from "@/data/seo";
 import { localeNames, type Locale } from "@/i18n/config";
 import { useSaveAll } from "./page-kit";
 import { Area, Button, Card, Field, ImageField, LocaleTabs, SaveBar } from "./ui";
@@ -49,7 +49,9 @@ export default function SeoEditor({ initial }: { initial: SeoContent }) {
       },
     }));
 
-  const site = seo.siteUrl.trim().replace(/\/$/, "");
+  const site = siteOrigin(seo.siteUrl);
+  // подсказываем сразу, а не после того, как поисковик увидит мусор
+  const siteUrlBroken = Boolean(seo.siteUrl.trim()) && !site;
 
   return (
     <div className="pb-10">
@@ -69,7 +71,13 @@ export default function SeoEditor({ initial }: { initial: SeoContent }) {
               label="Адрес сайта"
               value={seo.siteUrl}
               onChange={(value) => setSeo((prev) => ({ ...prev, siteUrl: value }))}
-              hint="Например https://smartfacade.uz — нужен для карты сайта и ссылок в поиске"
+              hint={
+                siteUrlBroken
+                  ? "⚠ Это не похоже на адрес сайта — поле будет пропущено. Впишите вида smartfacade.uz"
+                  : site
+                    ? `Понято как ${site} — этот адрес пойдёт в карту сайта и ссылки в поиске`
+                    : "Например smartfacade.uz — нужен для карты сайта и ссылок в поиске"
+              }
             />
             <Field
               label="Название компании в заголовках"

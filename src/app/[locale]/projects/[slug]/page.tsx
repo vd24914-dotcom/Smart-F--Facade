@@ -1,4 +1,5 @@
 import Image from "next/image";
+import SafeImage from "@/components/ui/safe-image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -56,12 +57,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
     <>
       <section className="bg-white px-3 pb-2 pt-24 sm:px-5 lg:pt-28">
         <div className="relative isolate mx-auto max-w-[1320px] overflow-hidden rounded-[28px] lg:rounded-[40px]">
-          <Image
+          <SafeImage
             src={project.image}
             alt=""
             fill
             sizes="100vw"
             priority
+            onMissing="hide"
             className="-z-20 object-cover object-center"
           />
           <div className="absolute inset-0 -z-10 bg-ink/70" aria-hidden />
@@ -93,7 +95,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ locale
           </div>
 
           <div className="relative aspect-[4/3] w-full overflow-hidden shadow-[40px_40px_120px_-40px_rgba(0,0,0,0.24)]">
-            <Image
+            <SafeImage
               src={project.image}
               alt={text.imageAlt?.trim() || text.title}
               fill

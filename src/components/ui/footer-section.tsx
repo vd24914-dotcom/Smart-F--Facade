@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import SafeImage from "@/components/ui/safe-image";
 import Link from "next/link";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -86,11 +86,12 @@ export default function FooterSection({
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4 lg:gap-12">
           {/* о компании + быстрая заявка */}
           <div>
-            <Image
+            <SafeImage
               src={logo}
               alt={companyName}
               width={200}
               height={36}
+              onMissing="hide"
               className="site-logo h-8 w-auto object-contain"
             />
             <p className="mt-5 text-[14px] font-light leading-[24px] text-slate-500">{about}</p>

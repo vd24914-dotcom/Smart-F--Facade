@@ -1,4 +1,4 @@
-import Image from "next/image";
+import SafeImage from "@/components/ui/safe-image";
 import LeadForm from "@/components/ui/lead-form";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { SiteContent } from "@/content/store";
@@ -17,8 +17,9 @@ export default function CallToAction({
 
   return (
     <section className="bg-white px-3 py-10 sm:px-5 lg:py-14">
-      <div className="relative isolate mx-auto max-w-[1320px] overflow-hidden rounded-[28px] lg:rounded-[40px]">
-        <Image src={image} alt="" fill sizes="100vw" className="-z-20 object-cover object-center" />
+      {/* тёмная подложка на случай, если фоновое фото не задано */}
+      <div className="relative isolate mx-auto max-w-[1320px] overflow-hidden rounded-[28px] bg-ink lg:rounded-[40px]">
+        <SafeImage src={image} alt="" fill sizes="100vw" onMissing="hide" className="-z-20 object-cover object-center" />
         <div className="absolute inset-0 -z-10 bg-ink/80" aria-hidden />
 
         <div className="mx-auto grid max-w-[1200px] items-center gap-10 px-6 py-14 sm:px-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,440px)] lg:gap-16 lg:px-12 lg:py-16">
