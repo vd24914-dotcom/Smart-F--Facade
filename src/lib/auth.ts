@@ -36,24 +36,32 @@ export function savePassword(next: string) {
   return value;
 }
 
+/** Почему вход в админку закрыт: пароля нет вовсе или он совпадает с общеизвестным. */
+export type AdminLock = "none" | "no-password" | "default-password";
+
 /**
  * На боевом сервере админку нельзя открывать с паролем по умолчанию:
- * если пароль не задан в настройках хостинга — вход закрыт совсем.
+ * он лежит в исходниках, то есть известен всем.
  */
-export function adminIsLocked() {
-  if (process.env.NODE_ENV !== "production") return false;
+export function adminLockReason(): AdminLock {
+  if (process.env.NODE_ENV !== "production") return "none";
 
   const fromEnv = process.env.ADMIN_PASSWORD?.trim();
-  // пароль по умолчанию знают все — он не считается настроенным
-  if (fromEnv) return fromEnv === DEFAULT_PASSWORD;
+  if (fromEnv) return fromEnv === DEFAULT_PASSWORD ? "default-password" : "none";
 
   try {
     const raw = fs.readFileSync(passwordFile, "utf8");
     const parsed = JSON.parse(raw) as { password?: string };
-    return !parsed.password?.trim() || parsed.password.trim() === DEFAULT_PASSWORD;
+    const saved = parsed.password?.trim();
+    if (!saved) return "no-password";
+    return saved === DEFAULT_PASSWORD ? "default-password" : "none";
   } catch {
-    return true;
+    return "no-password";
   }
+}
+
+export function adminIsLocked() {
+  return adminLockReason() !== "none";
 }
 
 export function tokenFor(pass: string) {
