@@ -173,6 +173,92 @@ export function Block({
   );
 }
 
+/* ─────────────── соцсети ─────────────── */
+
+/**
+ * Список соцсетей: название, ссылка и своя иконка.
+ * Строк можно добавлять сколько угодно — они хранятся в site.json.
+ */
+export function SocialRows({ hint }: { hint?: string }) {
+  const { site, setSite } = useContent();
+  const rows = site.socials ?? [];
+
+  const update = (next: SiteContent["socials"]) => setSite((prev) => ({ ...prev, socials: next }));
+
+  const setField = (index: number, key: "label" | "url" | "icon", value: string) =>
+    update(rows.map((row, i) => (i === index ? { ...row, [key]: value } : row)));
+
+  const move = (index: number, delta: number) => {
+    const j = index + delta;
+    if (j < 0 || j >= rows.length) return;
+    const next = rows.slice();
+    [next[index], next[j]] = [next[j], next[index]];
+    update(next);
+  };
+
+  const remove = (index: number) => update(rows.filter((_, i) => i !== index));
+
+  const add = () =>
+    update([
+      ...rows,
+      { id: `social-${Date.now()}-${rows.length}`, label: "", url: "", icon: "" },
+    ]);
+
+  return (
+    <div className="space-y-3">
+      {hint && <p className="text-[13px] leading-[19px] text-slate-500">{hint}</p>}
+
+      {rows.map((row, index) => (
+        <div key={row.id} className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-[13px] font-bold text-slate-700">
+              {row.label?.trim() || `Соцсеть ${index + 1}`}
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <IconButton title="Выше" onClick={() => move(index, -1)}>
+                ↑
+              </IconButton>
+              <IconButton title="Ниже" onClick={() => move(index, 1)}>
+                ↓
+              </IconButton>
+              <IconButton title="Удалить" danger onClick={() => remove(index)}>
+                ✕
+              </IconButton>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="grid gap-3 sm:grid-cols-2">
+              <Field
+                label="Название"
+                hint="Показывается в подвале и во всплывающей подсказке"
+                value={row.label ?? ""}
+                onChange={(value) => setField(index, "label", value)}
+              />
+              <Field
+                label="Ссылка"
+                hint="Полный адрес, например https://t.me/smartfacade"
+                value={row.url ?? ""}
+                onChange={(value) => setField(index, "url", value)}
+              />
+            </div>
+            <ImageField
+              label="Иконка (необязательно)"
+              hint="SVG или PNG на прозрачном фоне. Если не загружать — подставится простой значок."
+              value={row.icon ?? ""}
+              onChange={(value) => setField(index, "icon", value)}
+            />
+          </div>
+        </div>
+      ))}
+
+      <Button variant="ghost" onClick={add}>
+        + Добавить соцсеть
+      </Button>
+    </div>
+  );
+}
+
 /* ─────────────── иконка + подпись одной строкой ─────────────── */
 
 /**

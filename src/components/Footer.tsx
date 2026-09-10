@@ -43,7 +43,7 @@ export default function Footer({
       address={dict.footer.address}
       phones={site.phones}
       email={site.email}
-      social={site.social}
+      socials={site.socials}
       copyright={dict.footer.copyright}
     />
   );

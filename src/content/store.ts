@@ -2,15 +2,20 @@ import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { Building, Material } from "@/data/portfolio";
 import { seoPages, type SeoPage } from "@/data/seo";
+import type { SocialLink } from "@/data/socials";
 import { readStored, writeStored, storageIsWritable, ReadOnlyStorageError } from "./storage";
 
 export { storageIsWritable, ReadOnlyStorageError };
+
+export type { SocialLink };
 
 export type SiteContent = {
   name: string;
   email: string;
   phones: string[];
-  social: { facebook: string; whatsapp: string; instagram: string };
+  socials: SocialLink[];
+  /** старый формат из трёх фиксированных полей — читается, но больше не пишется */
+  social?: { facebook: string; whatsapp: string; instagram: string };
   images: {
     logoHeader: string;
     logoFooter: string;
@@ -163,8 +168,39 @@ function read<T>(file: ContentFile, fallback: T): Promise<T> {
   return readStored<T>(files[file], fallback, liveFiles.has(file));
 }
 
+/** «#» в старых данных означал «ссылки пока нет» — считаем это пустым полем. */
+function cleanUrl(url: string | undefined) {
+  const value = (url ?? "").trim();
+  return value === "#" ? "" : value;
+}
+
+/** Раньше соцсети были тремя полями — превращаем их в список, ничего не теряя. */
+function normalizeSocials(site: SiteContent): SocialLink[] {
+  const list = Array.isArray(site?.socials) ? site.socials : [];
+  if (list.length) {
+    return list
+      .filter((item) => item && (item.url?.trim() || item.label?.trim()))
+      .map((item, index) => ({
+        id: item.id?.trim() || `social-${index}`,
+        label: item.label ?? "",
+        url: cleanUrl(item.url),
+        icon: item.icon ?? "",
+      }));
+  }
+
+  const old = site?.social;
+  if (!old) return [];
+
+  return [
+    { id: "whatsapp", label: "WhatsApp", url: cleanUrl(old.whatsapp), icon: "" },
+    { id: "instagram", label: "Instagram", url: cleanUrl(old.instagram), icon: "" },
+    { id: "facebook", label: "Facebook", url: cleanUrl(old.facebook), icon: "" },
+  ];
+}
+
 export async function getSite(): Promise<SiteContent> {
-  return read<SiteContent>("site", {} as SiteContent);
+  const site = await read<SiteContent>("site", {} as SiteContent);
+  return { ...site, socials: normalizeSocials(site) };
 }
 
 export async function getTexts(): Promise<TextsContent> {

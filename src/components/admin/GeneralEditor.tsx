@@ -1,7 +1,16 @@
 "use client";
 
 import type { SiteContent, TextsContent } from "@/content/store";
-import { Block, ContentProvider, Img, PageShell, T, useContentState, useSaveAll } from "./page-kit";
+import {
+  Block,
+  ContentProvider,
+  Img,
+  PageShell,
+  SocialRows,
+  T,
+  useContentState,
+  useSaveAll,
+} from "./page-kit";
 import { Field, SaveBar, StringList } from "./ui";
 
 /** Шапка, подвал, логотипы и общие данные компании — всё, что видно на каждой странице. */
@@ -68,29 +77,13 @@ export default function GeneralEditor({
             onChange={(values) => setSite((prev) => ({ ...prev, phones: values }))}
             placeholder="+996 (___) __-__-__"
           />
-          <div className="grid gap-4 sm:grid-cols-3">
-            <Field
-              label="WhatsApp"
-              value={store.site.social.whatsapp}
-              onChange={(value) =>
-                setSite((prev) => ({ ...prev, social: { ...prev.social, whatsapp: value } }))
-              }
-            />
-            <Field
-              label="Instagram"
-              value={store.site.social.instagram}
-              onChange={(value) =>
-                setSite((prev) => ({ ...prev, social: { ...prev.social, instagram: value } }))
-              }
-            />
-            <Field
-              label="Facebook"
-              value={store.site.social.facebook}
-              onChange={(value) =>
-                setSite((prev) => ({ ...prev, social: { ...prev.social, facebook: value } }))
-              }
-            />
-          </div>
+        </Block>
+
+        <Block
+          title="Соцсети"
+          hint="Показываются в подвале и на странице «Контакты». Порядок в списке — порядок на сайте."
+        >
+          <SocialRows hint="Кнопки «Написать в WhatsApp» и «Instagram» во всплывающем окне заявки берут ссылки отсюда — они появятся, если такие соцсети есть в списке." />
         </Block>
 
         <Block title="Подвал" hint="Нижняя часть каждой страницы: логотип, ссылки, форма обратного звонка.">

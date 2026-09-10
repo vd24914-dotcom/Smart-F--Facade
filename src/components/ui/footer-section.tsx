@@ -3,8 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Camera, Globe, MessageCircle, Send, Mail, Phone, MapPin } from "lucide-react";
+import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import type { SocialLink } from "@/data/socials";
+import SocialMark from "@/components/ui/social-mark";
 
 export type FooterLink = { label: string; href: string };
 
@@ -19,7 +21,7 @@ type Props = {
   address: string;
   phones: string[];
   email: string;
-  social: { facebook: string; whatsapp: string; instagram: string };
+  socials: SocialLink[];
   copyright: string;
   className?: string;
 };
@@ -35,18 +37,14 @@ export default function FooterSection({
   address,
   phones,
   email,
-  social,
+  socials,
   copyright,
   className,
 }: Props) {
   const [phone, setPhone] = useState("");
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
 
-  const socials = [
-    { href: social.whatsapp, Icon: MessageCircle, label: "WhatsApp" },
-    { href: social.instagram, Icon: Camera, label: "Instagram" },
-    { href: social.facebook, Icon: Globe, label: "Facebook" },
-  ].filter((item) => item.href);
+  const socialLinks = socials.filter((item) => item.url?.trim());
 
   async function send(event: React.FormEvent) {
     event.preventDefault();
@@ -184,17 +182,17 @@ export default function FooterSection({
               {titles.social}
             </h3>
             <div className="mt-4 flex flex-wrap gap-2">
-              {socials.map(({ href, Icon, label }) => (
+              {socialLinks.map((item) => (
                 <a
-                  key={label}
-                  href={href}
+                  key={item.id}
+                  href={item.url}
                   target="_blank"
                   rel="noreferrer"
-                  title={label}
+                  title={item.label}
                   className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2.5 text-[13px] font-semibold text-navy transition hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white"
                 >
-                  <Icon className="size-4" />
-                  {label}
+                  <SocialMark social={item} className="size-4" />
+                  {item.label}
                 </a>
               ))}
             </div>

@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
+import SocialMark from "@/components/ui/social-mark";
 import ContactForm from "@/components/ContactForm";
 import { isLocale, locales } from "@/i18n/config";
 import { getDict, getSite, getContacts } from "@/content/store";
@@ -24,11 +24,7 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
   const { blocks } = await getContacts();
   const t = dict.pages.contacts;
 
-  const socials = [
-    { href: site.social.facebook, icon: "/icons/social-facebook.svg", label: "Facebook" },
-    { href: site.social.whatsapp, icon: "/icons/social-whatsapp.svg", label: "WhatsApp" },
-    { href: site.social.instagram, icon: "/icons/social-instagram.svg", label: "Instagram" },
-  ];
+  const socials = site.socials.filter((item) => item.url?.trim());
 
   const hrefFor = (link: string, value: string) => {
     if (link === "tel") return `tel:${value.replace(/[^+\d]/g, "")}`;
@@ -68,17 +64,18 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
 
             <div className="mt-8">
               <h2 className="text-[18px] font-extrabold uppercase text-black-soft">{t.socialTitle}</h2>
-              <div className="mt-3 flex items-center gap-6">
+              <div className="mt-3 flex flex-wrap items-center gap-4">
                 {socials.map((social) => (
                   <a
-                    key={social.label}
-                    href={social.href}
+                    key={social.id}
+                    href={social.url}
                     target="_blank"
                     rel="noreferrer"
                     aria-label={social.label}
-                    className="flex h-12 w-12 items-center justify-center rounded-full bg-navy transition-opacity hover:opacity-85"
+                    title={social.label}
+                    className="flex h-12 w-12 items-center justify-center rounded-full bg-navy text-white transition-transform hover:-translate-y-0.5 hover:opacity-90"
                   >
-                    <Image src={social.icon} alt="" width={40} height={40} className="h-7 w-7" />
+                    <SocialMark social={social} className="h-6 w-6" />
                   </a>
                 ))}
               </div>

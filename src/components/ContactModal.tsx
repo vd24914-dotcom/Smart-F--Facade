@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Send } from "lucide-react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import type { SiteContent } from "@/content/store";
+import { findSocial } from "@/data/socials";
 
 export const CONTACT_MODAL_EVENT = "smartfacade:open-contact";
 
@@ -17,6 +18,10 @@ export default function ContactModal({ dict, site }: { dict: Dictionary; site: S
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ name: "", phone: "", message: "", company: "" });
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
+
+  // две быстрые кнопки — ищем нужные соцсети в общем списке
+  const whatsapp = findSocial(site.socials, "whatsapp", "wa.me");
+  const instagram = findSocial(site.socials, "instagram");
 
   useEffect(() => {
     const onOpen = () => {
@@ -174,23 +179,27 @@ export default function ContactModal({ dict, site }: { dict: Dictionary; site: S
           </ul>
 
           <div className="mt-4 flex flex-wrap gap-2">
-            <a
-              href={site.social.whatsapp}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full bg-whatsapp px-5 py-3 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-            >
-              {dict.hero.whatsapp}
-            </a>
-            <a
-              href={site.social.instagram}
-              target="_blank"
-              rel="noreferrer"
-              className="rounded-full px-5 py-3 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
-              style={{ backgroundImage: "linear-gradient(28.9deg, #e83b68 20%, #f2c141 94%)" }}
-            >
-              {dict.hero.instagram}
-            </a>
+            {whatsapp && (
+              <a
+                href={whatsapp.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full bg-whatsapp px-5 py-3 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
+              >
+                {dict.hero.whatsapp}
+              </a>
+            )}
+            {instagram && (
+              <a
+                href={instagram.url}
+                target="_blank"
+                rel="noreferrer"
+                className="rounded-full px-5 py-3 text-[13px] font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundImage: "linear-gradient(28.9deg, #e83b68 20%, #f2c141 94%)" }}
+              >
+                {dict.hero.instagram}
+              </a>
+            )}
             <a
               href={`mailto:${site.email}`}
               className="rounded-full border border-slate-200 px-5 py-3 text-[13px] font-semibold text-navy transition-colors hover:border-navy"
