@@ -1,0 +1,43 @@
+{
+  "name": "Smart Facade",
+  "email": "smartfacadekg@gmail.com",
+  "phones": [
+    "+996 (777) 997-200",
+    "+996 (773) 999-777",
+    "+996 (772) 163-376"
+  ],
+  "social": {
+    "facebook": "#",
+    "whatsapp": "https://wa.me/996773999777",
+    "instagram": "#"
+  },
+  "images": {
+    "logoHeader": "/uploads/1789025166214-121212.svg",
+    "logoFooter": "/img/logo-footer.png",
+    "hero": "/uploads/1788955736317-1666397693_19-mykaleidoscope-ru-p-fasadi.jpg",
+    "pageHero": "/img/page-hero.jpg",
+    "aboutPhoto": "/img/about-photo.png",
+    "aboutCompany": "/img/about-company.jpg",
+    "cta": "/img/cta-bg.png",
+    "footer": "/img/footer-bg.png"
+  },
+  "icons": {
+    "specs": [
+      "/icons/spec-facades.svg",
+      "/icons/spec-interiors.svg",
+      "/icons/spec-furniture.svg"
+    ],
+    "services": [
+      "/icons/service-materials.svg",
+      "/icons/service-subsystems.svg",
+      "/icons/service-installation.svg",
+      "/icons/service-solutions.svg"
+    ],
+    "advantages": [
+      "/icons/adv-dealers.png",
+      "/icons/adv-experience.png",
+      "/icons/adv-standards.png",
+      "/icons/adv-ontime.png"
+    ]
+  }
+}

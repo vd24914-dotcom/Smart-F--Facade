@@ -1,0 +1,652 @@
+[
+  {
+    "id": "shar",
+    "image": "/portfolio/01.webp",
+    "building": "office",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Офисное здание «Шар»",
+        "text": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!Проект выполнен совместно с компанией Biplane.",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Bildex BX 0005 (графит); Bildex BX 0001 (искрящееся серебро)"
+      },
+      "uz": {
+        "title": "«Shar» ofis binosi",
+        "text": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi. Loyiha Biplane kompaniyasi bilan hamkorlikda bajarilgan.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Bildex BX 0005 (grafit); Bildex BX 0001 (yaltiroq kumush)"
+      },
+      "en": {
+        "title": "Shar Office Building",
+        "text": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that guarantee durability, strength and quality.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality. The project was delivered together with Biplane.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Bildex BX 0005 (graphite); Bildex BX 0001 (sparkling silver)"
+      }
+    }
+  },
+  {
+    "id": "atrium",
+    "image": "/portfolio/02.png",
+    "building": "office",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Бизнес-центр «Атриум»",
+        "text": "Ещё один наш проект, над фасадом которого работала наша команда. Фасадный материал: натуральный камень травертин (Сары-Таш) и итальянский гранит. Для подшивки консолей использовалась алюминиевая композитная панель AlcoteK FR.",
+        "description": "Ещё один наш проект, над фасадом которого работала наша команда — БЦ «Атриум». Фасадный материал: натуральный камень травертин (Сары Таш) и итальянский гранит. Для подшивки консолей использовалась алюминиевая композитная панель от компании AlcoteK FR.",
+        "material": "Алюминиевые композитные панели AlcoteK FR",
+        "area": "5000 м²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Atrium» biznes markazi",
+        "text": "Jamoamiz ishlagan yana bir loyiha. Fasad materiali: tabiiy travertin toshi (Sari-Tosh) va italyan graniti. Konsollarni qoplash uchun AlcoteK FR alyuminiy kompozit paneli ishlatilgan.",
+        "description": "Jamoamiz ishlagan yana bir loyiha. Fasad materiali: tabiiy travertin toshi (Sari-Tosh) va italyan graniti. Konsollarni qoplash uchun AlcoteK FR alyuminiy kompozit paneli ishlatilgan.",
+        "material": "AlcoteK FR alyuminiy kompozit panellari",
+        "area": "5000 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Atrium Business Center",
+        "text": "Another project whose facade was handled by our team. Facade materials: natural travertine stone (Sary-Tash) and Italian granite. AlcoteK FR aluminium composite panels were used to line the cantilevers.",
+        "description": "Another project whose facade was handled by our team. Facade materials: natural travertine stone (Sary-Tash) and Italian granite. AlcoteK FR aluminium composite panels were used to line the cantilevers.",
+        "material": "AlcoteK FR aluminium composite panels",
+        "area": "5,000 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "novotel",
+    "image": "/portfolio/03.png",
+    "building": "hotel",
+    "materials": [
+      "porcelain"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Novotel Hotel",
+        "text": "Один из наших крупных объектов — Novotel Bishkek City Center Hotel. Фасадный материал: ультратонкий широкоформатный керамогранит Neolith (Испания). Подсистема: алюминиевая, Т-образная система.",
+        "description": "Один из наших крупных объектов — Novotel Bishkek City Center Hotel На данном объекте были использованы наши материалы и произведены монтажные работы: Фасадный материал: ультратонкий широкоформатный керамогранит Neolith (производство Испания); Подсистема: алюминиевая (Т-образная система);",
+        "material": "Ультратонкий широкоформатный керамогранит Neolith",
+        "area": "4500 м²",
+        "colors": "Neolith; Neolith"
+      },
+      "uz": {
+        "title": "Novotel Hotel",
+        "text": "Yirik obyektlarimizdan biri — Novotel Bishkek City Center Hotel. Fasad materiali: ultra yupqa keng formatli Neolith keramogranit (Ispaniya). Quyi tizim: alyuminiy, T-shaklidagi tizim.",
+        "description": "Yirik obyektlarimizdan biri — Novotel Bishkek City Center Hotel. Fasad materiali: ultra yupqa keng formatli Neolith keramogranit (Ispaniya). Quyi tizim: alyuminiy, T-shaklidagi tizim.",
+        "material": "Ультратонкий широкоформатный керамогранит Neolith",
+        "area": "4500 m²",
+        "colors": "Neolith; Neolith"
+      },
+      "en": {
+        "title": "Novotel Hotel",
+        "text": "One of our largest projects — Novotel Bishkek City Center Hotel. Facade material: ultra-thin large-format Neolith porcelain stoneware (Spain). Subsystem: aluminium, T-profile.",
+        "description": "One of our largest projects — Novotel Bishkek City Center Hotel. Facade material: ultra-thin large-format Neolith porcelain stoneware (Spain). Subsystem: aluminium, T-profile.",
+        "material": "Ультратонкий широкоформатный керамогранит Neolith",
+        "area": "4,500 m²",
+        "colors": "Neolith; Neolith"
+      }
+    }
+  },
+  {
+    "id": "apart",
+    "image": "/portfolio/04.png",
+    "building": "hotel",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Apart Hotel",
+        "text": "Перед началом монтажных работ мы сделали проект фасада с детализацией, а затем воплотили его в реальность. Это первый в Центральной Азии объект, реализованный с помощью медиафасада.",
+        "description": "Перед началом монтажных работ мы сделали проект данного фасада с детализацией, а затем воплотили его в реальность. Это первый в Центральной Азии объект, реализованный с помощью медиа фасада.",
+        "material": "Алюминиевые композитные панели AlcoteK FR",
+        "area": "4500 м²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "Apart Hotel",
+        "text": "Montaj ishlari boshlanishidan oldin fasadning batafsil loyihasini tayyorladik va uni amalga oshirdik. Bu Markaziy Osiyodagi mediafasad yordamida qurilgan birinchi obyekt.",
+        "description": "Montaj ishlari boshlanishidan oldin fasadning batafsil loyihasini tayyorladik va uni amalga oshirdik. Bu Markaziy Osiyodagi mediafasad yordamida qurilgan birinchi obyekt.",
+        "material": "AlcoteK FR alyuminiy kompozit panellari",
+        "area": "4500 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Apart Hotel",
+        "text": "Before installation we produced a detailed facade design and then brought it to life. This is the first building in Central Asia built with a media facade.",
+        "description": "Before installation we produced a detailed facade design and then brought it to life. This is the first building in Central Asia built with a media facade.",
+        "material": "AlcoteK FR aluminium composite panels",
+        "area": "4,500 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "private-house",
+    "image": "/portfolio/05.png",
+    "building": "residential",
+    "materials": [
+      "ceramics"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Частный дом",
+        "text": "Заказчику мы предложили комплексное фасадное решение: тонкостенная широкоформатная керамика Laminam и алюминиевые композитные панели Bildex, алюминиевая подсистема «Альтернатива», ветро- и влагозащитная мембрана «Фиброизол», бельгийская клеевая система Soudal.",
+        "description": "Для заказчика мы предложили комплексное фасадное решение. В качестве фасадного материала была использована тонкостенная широкоформатная керамика Laminam. А также алюминиевые композитные панели Bildex. Алюминиевая подсистема от компании «Альтернатива». Ветро- и влагозащитная мембрана «Фиброизол». Бельгийская клеевая система Soudal.",
+        "material": "Керамика Laminam; Панели Bildex",
+        "area": "Более 200 м²",
+        "colors": "Laminam Pietra di Savoia Perla 3+; Laminam Legno Venezia Noce 3+; Alcotek FR RAL 9003 (белый)"
+      },
+      "uz": {
+        "title": "Xususiy uy",
+        "text": "Buyurtmachiga kompleks fasad yechimini taklif qildik: yupqa devorli keng formatli Laminam keramikasi va Bildex alyuminiy kompozit panellari, «Alternativa» alyuminiy quyi tizimi, «Fibroizol» shamol va namlikdan himoya membranasi, Belgiyaning Soudal yelim tizimi.",
+        "description": "Buyurtmachiga kompleks fasad yechimini taklif qildik: yupqa devorli keng formatli Laminam keramikasi va Bildex alyuminiy kompozit panellari, «Alternativa» alyuminiy quyi tizimi, «Fibroizol» shamol va namlikdan himoya membranasi, Belgiyaning Soudal yelim tizimi.",
+        "material": "Laminam keramikasi; Bildex panellari",
+        "area": "200 m² dan ortiq",
+        "colors": "Laminam Pietra di Savoia Perla 3+; Laminam Legno Venezia Noce 3+; Alcotek FR RAL 9003 (oq)"
+      },
+      "en": {
+        "title": "Private House",
+        "text": "We offered the client a complete facade solution: thin large-format Laminam ceramics and Bildex aluminium composite panels, an Alternativa aluminium subsystem, a Fibroizol wind and moisture barrier, and the Belgian Soudal adhesive system.",
+        "description": "We offered the client a complete facade solution: thin large-format Laminam ceramics and Bildex aluminium composite panels, an Alternativa aluminium subsystem, a Fibroizol wind and moisture barrier, and the Belgian Soudal adhesive system.",
+        "material": "Laminam ceramics; Bildex panels",
+        "area": "Over 200 m²",
+        "colors": "Laminam Pietra di Savoia Perla 3+; Laminam Legno Venezia Noce 3+; Alcotek FR RAL 9003 (white)"
+      }
+    }
+  },
+  {
+    "id": "ego",
+    "image": "/portfolio/06.png",
+    "building": "restaurant",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Ресторан Ego",
+        "text": "Новый модный ресторан в южной части Бишкека. Совместно с дизайн-компанией «Biplane Group» мы реализовали все пожелания заказчика. Фасад выполнен из алюминиевой композитной панели AlcotEK FR.",
+        "description": "Новый модный ресторан в южной части города Бишкек. Совместно с профессиональной дизайн компанией «Biplane Group», мы смогли качественно исполнить и реализовать все пожелания заказчика. Нашей компанией был исполнен фасад из высококачественного материала, алюминиевой композитной панели Российского производства AlcotEK FR.",
+        "material": "Алюминиевые композитные панели AlcoteK FR",
+        "area": "Более 400 м²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "Ego restorani",
+        "text": "Bishkekning janubiy qismidagi yangi zamonaviy restoran. «Biplane Group» dizayn kompaniyasi bilan birgalikda buyurtmachining barcha istaklarini amalga oshirdik. Fasad AlcotEK FR alyuminiy kompozit panelidan bajarilgan.",
+        "description": "Bishkekning janubiy qismidagi yangi zamonaviy restoran. «Biplane Group» dizayn kompaniyasi bilan birgalikda buyurtmachining barcha istaklarini amalga oshirdik. Fasad AlcotEK FR alyuminiy kompozit panelidan bajarilgan.",
+        "material": "AlcoteK FR alyuminiy kompozit panellari",
+        "area": "400 m² dan ortiq",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Ego Restaurant",
+        "text": "A new stylish restaurant in the south of Bishkek. Together with the design studio Biplane Group we delivered everything the client asked for. The facade is made of AlcotEK FR aluminium composite panels.",
+        "description": "A new stylish restaurant in the south of Bishkek. Together with the design studio Biplane Group we delivered everything the client asked for. The facade is made of AlcotEK FR aluminium composite panels.",
+        "material": "AlcoteK FR aluminium composite panels",
+        "area": "Over 400 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "prestige-hall",
+    "image": "/portfolio/07.png",
+    "building": "residential",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Клубный дом «Престиж Холл»",
+        "text": "Проект от строительной компании «Синан Курулуш», где мы произвели поставку и монтаж фасадной части. Фасадный материал — тонкостенная широкоформатная керамика Laminam: прочность, экологичность, огнестойкость, устойчивость к перепадам температур. Консольная часть кровли выполнена из панелей Alcotek FR, подсистемы — «Альтернатива».",
+        "description": "Наш проект Клубный дом «Престиж Холл» от строительной компании Синан Курулуш, где мы произвели поставку и монтаж фасадной части. Для данного объекта в качестве фасадного материала мы использовали тонкостенную широкоформатную керамику Laminam, которая имеет ряд преимуществ, таких как: прочность, экологичность, огнестойкость, устойчивость к температурным перепадам и многое другое. Консольная часть кровли выполнена из алюминиевых композитных панелей Alcotek FR. Используемые подсистемы от компании «Альтернатива».",
+        "material": "Тонкостенная широкоформатная керамика Laminam; Алюминиевые композитные панели AlcoteK FR",
+        "area": "4500 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Prestige Hall» klub uyi",
+        "text": "«Sinan Kurulush» qurilish kompaniyasining loyihasi — biz fasad qismini yetkazib berdik va o‘rnatdik. Fasad materiali — yupqa devorli keng formatli Laminam keramikasi: mustahkamlik, ekologik toza, olovga chidamli, harorat o‘zgarishlariga bardoshli. Tom konsoli Alcotek FR panellaridan, quyi tizimlar «Alternativa»dan.",
+        "description": "«Sinan Kurulush» qurilish kompaniyasining loyihasi — biz fasad qismini yetkazib berdik va o‘rnatdik. Fasad materiali — yupqa devorli keng formatli Laminam keramikasi: mustahkamlik, ekologik toza, olovga chidamli, harorat o‘zgarishlariga bardoshli. Tom konsoli Alcotek FR panellaridan, quyi tizimlar «Alternativa»dan.",
+        "material": "Yupqa devorli keng formatli Laminam keramikasi; AlcoteK FR alyuminiy kompozit panellari",
+        "area": "4500 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Prestige Hall Club House",
+        "text": "A project by the construction company Sinan Kurulush, where we supplied and installed the facade. The facade material is thin large-format Laminam ceramics: strong, environmentally friendly, fire resistant and stable under temperature swings. The roof cantilever uses Alcotek FR panels, with Alternativa subsystems.",
+        "description": "A project by the construction company Sinan Kurulush, where we supplied and installed the facade. The facade material is thin large-format Laminam ceramics: strong, environmentally friendly, fire resistant and stable under temperature swings. The roof cantilever uses Alcotek FR panels, with Alternativa subsystems.",
+        "material": "Thin large-format Laminam ceramics; AlcoteK FR aluminium composite panels",
+        "area": "4,500 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "diplomat",
+    "image": "/portfolio/08.png",
+    "building": "residential",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Жилой комплекс «Дипломат»",
+        "text": "Проект от строительной компании Royal Construction, где мы произвели полный монтаж фасада. С 5 по 10 этаж установлена оцинкованная Т-образная подсистема «Альтернатива», с 11 по 12 — межэтажная оцинкованная подсистема. Оконные откосы выполнены из натурального камня и панелей AlcoteK FR.",
+        "description": "Наш проект: ЖД «Дипломат» от строительной компании Royal Construction. На данном объекте мы произвели полный монтаж фасада. С 5 по 10 этаж была установлена оцинкованная подсистема от компании «Альтернатива» оцинкованная (Т образная система). А с 11 по 12 этаж была установлена межэтажная оцинкованная подсистема «Альтернатива». Оконные откосы были выполнены из натурального камня и алюминиевых композитных панелей AlcoteK FR.",
+        "material": "Алюминиевые композитные панели AlcoteK FR",
+        "area": "4500 м²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Diplomat» turar-joy majmuasi",
+        "text": "Royal Construction qurilish kompaniyasining loyihasi, bu yerda fasadni to‘liq montaj qildik. 5–10 qavatlarda «Alternativa» ruxlangan T-shaklidagi quyi tizimi, 11–12 qavatlarda qavatlararo ruxlangan quyi tizim o‘rnatilgan. Deraza qiyaliklari tabiiy tosh va AlcoteK FR panellaridan.",
+        "description": "Royal Construction qurilish kompaniyasining loyihasi, bu yerda fasadni to‘liq montaj qildik. 5–10 qavatlarda «Alternativa» ruxlangan T-shaklidagi quyi tizimi, 11–12 qavatlarda qavatlararo ruxlangan quyi tizim o‘rnatilgan. Deraza qiyaliklari tabiiy tosh va AlcoteK FR panellaridan.",
+        "material": "AlcoteK FR alyuminiy kompozit panellari",
+        "area": "4500 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Diplomat Residential Complex",
+        "text": "A project by Royal Construction where we carried out the full facade installation. Floors 5 to 10 use a galvanised T-profile Alternativa subsystem, floors 11 to 12 a floor-to-floor galvanised subsystem. Window reveals are finished in natural stone and AlcoteK FR panels.",
+        "description": "A project by Royal Construction where we carried out the full facade installation. Floors 5 to 10 use a galvanised T-profile Alternativa subsystem, floors 11 to 12 a floor-to-floor galvanised subsystem. Window reveals are finished in natural stone and AlcoteK FR panels.",
+        "material": "AlcoteK FR aluminium composite panels",
+        "area": "4,500 m²",
+        "colors": "AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "park-avenue",
+    "image": "/portfolio/09.png",
+    "building": "residential",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Жилой комплекс «Park Avenue»",
+        "text": "В качестве фасадного материала использована керамика LAMINAM — высокотехнологичная поверхность с выдающимися эксплуатационными свойствами. Для обрамления оконных откосов и подшивки консолей применили алюминиевые композитные панели AlcoteK FR. Застройщик: «Бурана Гранд».",
+        "description": "В качестве фасадного материала был использована керамика LAMINAM, удивительно привлекательная, высокотехнологичная поверхность, способная обеспечить выдающиеся эксплуатационные свойства во всех сферах применения материала. Для обрамления оконных откосов и подшивки консолей использовали алюминиевые композитные панели AlcoteK FR, уникальный современный материал, который сочетает в себе качества металла и пластика, панели жесткие и в то же время легкие, легко поддаются обработке и соответствуют требованиям пожарной безопасности. Застройщик: «Бурана Гранд»",
+        "material": "Алюминиевые композитные панели Alcotek FR; Керамика Laminam",
+        "area": "4100 м²",
+        "colors": "Alcotek FR RAL 9003 (белый); Alcotek"
+      },
+      "uz": {
+        "title": "«Park Avenue» turar-joy majmuasi",
+        "text": "Fasad materiali sifatida LAMINAM keramikasi ishlatilgan — yuqori texnologiyali, ajoyib ekspluatatsion xususiyatlarga ega sirt. Deraza qiyaliklari va konsollar uchun AlcoteK FR alyuminiy kompozit panellari qo‘llanilgan. Quruvchi: «Burana Grand».",
+        "description": "Fasad materiali sifatida LAMINAM keramikasi ishlatilgan — yuqori texnologiyali, ajoyib ekspluatatsion xususiyatlarga ega sirt. Deraza qiyaliklari va konsollar uchun AlcoteK FR alyuminiy kompozit panellari qo‘llanilgan. Quruvchi: «Burana Grand».",
+        "material": "Alcotek FR alyuminiy kompozit panellari; Laminam keramikasi",
+        "area": "4100 m²",
+        "colors": "Alcotek FR RAL 9003 (oq); Alcotek"
+      },
+      "en": {
+        "title": "Park Avenue Residential Complex",
+        "text": "LAMINAM ceramics were used as the facade material — a high-tech surface with outstanding performance. AlcoteK FR aluminium composite panels frame the window reveals and line the cantilevers. Developer: Burana Grand.",
+        "description": "LAMINAM ceramics were used as the facade material — a high-tech surface with outstanding performance. AlcoteK FR aluminium composite panels frame the window reveals and line the cantilevers. Developer: Burana Grand.",
+        "material": "Alcotek FR aluminium composite panels; Laminam ceramics",
+        "area": "4,100 m²",
+        "colors": "Alcotek FR RAL 9003 (white); Alcotek"
+      }
+    }
+  },
+  {
+    "id": "baytik-tower",
+    "image": "/portfolio/10.webp",
+    "building": "office",
+    "materials": [
+      "acp",
+      "porcelain"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Бизнес-центр «Baytik Tower»",
+        "text": "Фасад выполнен из алюминиевых композитных панелей AlcoteK FR. Материал относится к категории трудногорючих, гарантия на срок службы — более 50 лет, на невыгораемость цвета — более 30 лет. Также использован керамогранит «Урал Гранит» размером 1200×600 мм.",
+        "description": "В качестве фасадного материала для данного объекта были использованы алюминиевые композитные панели AlcoteK FR. Данный материал относится к категории трудногорючих, имеет гарантию на срок службы более 50 лет, а на невыгораемость цвета — более 30 лет. Был использован керамогранит «Урал Гранит» в размере 1200х600мм. У нас вы можете приобрести данные подсистемы по самым выгодным ценам! Ниже рыночной стоимости!",
+        "material": "Алюминиевые композитные панели Alcotek FR; Керамогранит «Урал Гранит»; Подсистема Альтернатива «Альт-фасад»",
+        "area": "4000 м²",
+        "colors": "Alcotek FR RAL 9003 (белый); Alcotek FR RAL 5005 (синий)"
+      },
+      "uz": {
+        "title": "«Baytik Tower» biznes markazi",
+        "text": "Fasad AlcoteK FR alyuminiy kompozit panellaridan bajarilgan. Material qiyin yonuvchilar toifasiga kiradi, xizmat muddati kafolati — 50 yildan ortiq, rang barqarorligi — 30 yildan ortiq. Shuningdek 1200×600 mm o‘lchamli «Ural Granit» keramograniti ishlatilgan.",
+        "description": "Fasad AlcoteK FR alyuminiy kompozit panellaridan bajarilgan. Material qiyin yonuvchilar toifasiga kiradi, xizmat muddati kafolati — 50 yildan ortiq, rang barqarorligi — 30 yildan ortiq. Shuningdek 1200×600 mm o‘lchamli «Ural Granit» keramograniti ishlatilgan.",
+        "material": "Alcotek FR alyuminiy kompozit panellari; «Ural Granit» keramograniti; «Alternativa» «Alt-fasad» quyi tizimi",
+        "area": "4000 m²",
+        "colors": "Alcotek FR RAL 9003 (oq); Alcotek FR RAL 5005 (ko‘k)"
+      },
+      "en": {
+        "title": "Baytik Tower Business Center",
+        "text": "The facade is made of AlcoteK FR aluminium composite panels. The material is fire retardant, with a service life warranty of over 50 years and colour fastness of over 30 years. Ural Granit porcelain stoneware in 1200×600 mm was also used.",
+        "description": "The facade is made of AlcoteK FR aluminium composite panels. The material is fire retardant, with a service life warranty of over 50 years and colour fastness of over 30 years. Ural Granit porcelain stoneware in 1200×600 mm was also used.",
+        "material": "Alcotek FR aluminium composite panels; Ural Granit porcelain stoneware; Alternativa Alt-Fasad subsystem",
+        "area": "4,000 m²",
+        "colors": "Alcotek FR RAL 9003 (white); Alcotek FR RAL 5005 (blue)"
+      }
+    }
+  },
+  {
+    "id": "politeh",
+    "image": "/portfolio/11.png",
+    "building": "residential",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Жилой дом «Политех»",
+        "text": "Проект от застройщика O2 Development. В качестве фасадного материала использовались алюминиевые композитные панели Alcotek FR: панели жёсткие и лёгкие, легко поддаются обработке и соответствуют требованиям пожарной безопасности.",
+        "description": "Представляем вашему вниманию наш проект: Жилой Дом «Политех» от застройщика O2 development. В качестве фасадного материала использовались алюминиевые композитные панели Alcotek FR. Уникальный современный материал, который сочетает в себе качества металла и пластика, панели жесткие и в то же время легкие, легко поддаются обработке и соответствуют требованиям пожарной безопасности.",
+        "material": "Алюминиевые композитные панели Alcotek FR",
+        "area": "8000 м²",
+        "colors": "Alcotek FR RAL 9003 (белый); Alcotek FR RAL 7016 (антрацитово-серый); славянский дуб"
+      },
+      "uz": {
+        "title": "«Politeh» turar-joy uyi",
+        "text": "O2 Development quruvchisining loyihasi. Fasad materiali sifatida Alcotek FR alyuminiy kompozit panellari ishlatilgan: panellar qattiq va yengil, ishlov berish oson va yong‘in xavfsizligi talablariga javob beradi.",
+        "description": "O2 Development quruvchisining loyihasi. Fasad materiali sifatida Alcotek FR alyuminiy kompozit panellari ishlatilgan: panellar qattiq va yengil, ishlov berish oson va yong‘in xavfsizligi talablariga javob beradi.",
+        "material": "Alcotek FR alyuminiy kompozit panellari",
+        "area": "8000 m²",
+        "colors": "Alcotek FR RAL 9003 (oq); Alcotek FR RAL 7016 (antratsit-kulrang); slavyan eman"
+      },
+      "en": {
+        "title": "Politeh Residential Building",
+        "text": "A project by the developer O2 Development. Alcotek FR aluminium composite panels were used for the facade: rigid yet light, easy to work with and compliant with fire safety requirements.",
+        "description": "A project by the developer O2 Development. Alcotek FR aluminium composite panels were used for the facade: rigid yet light, easy to work with and compliant with fire safety requirements.",
+        "material": "Alcotek FR aluminium composite panels",
+        "area": "8,000 m²",
+        "colors": "Alcotek FR RAL 9003 (white); Alcotek FR RAL 7016 (anthracite grey); Slavic oak"
+      }
+    }
+  },
+  {
+    "id": "ak-bulut",
+    "image": "/portfolio/12.png",
+    "building": "restaurant",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Ресторан «Ak Bulut»",
+        "text": "Элегантное пространство, в котором гармонично сочетаются современный дизайн и национальный колорит. В отделке фасада использованы надёжные и выразительные материалы, подчёркивающие статус заведения. Архитектура продумана до деталей.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Bildex BX 0005 (графит); Bildex BX 0001 (искрящееся серебро)"
+      },
+      "uz": {
+        "title": "«Ak Bulut» restorani",
+        "text": "Zamonaviy dizayn va milliy kolorit uyg‘unlashgan nafis makon. Fasad pardozida muassasa maqomini ta’kidlaydigan ishonchli va ifodali materiallar ishlatilgan. Arxitektura eng mayda tafsilotlargacha o‘ylangan.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Bildex BX 0005 (grafit); Bildex BX 0001 (yaltiroq kumush)"
+      },
+      "en": {
+        "title": "Ak Bulut Restaurant",
+        "text": "An elegant space where contemporary design meets national character. The facade uses reliable, expressive materials that underline the status of the venue, and the architecture is thought through down to the details.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Bildex BX 0005 (graphite); Bildex BX 0001 (sparkling silver)"
+      }
+    }
+  },
+  {
+    "id": "ulu-too-zeta",
+    "image": "/portfolio/13.png",
+    "building": "restaurant",
+    "materials": [
+      "acp",
+      "ceramics"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Ресторан «Ulu-Too Zeta»",
+        "text": "Проект, в котором архитектурная выразительность сочетается с технологичностью материалов. Фасад выполнен из алюминиевых композитных панелей и керамики Laminam: АКП даёт лёгкость конструкции и современный облик, крупноформатная керамика — премиальный вид и стойкость к внешним воздействиям.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Ulu-Too Zeta» restorani",
+        "text": "Arxitektura ifodaliligi materiallar texnologikligi bilan uyg‘unlashgan loyiha. Fasad alyuminiy kompozit panellar va Laminam keramikasidan bajarilgan: panellar konstruksiyaga yengillik va zamonaviy ko‘rinish beradi, keng formatli keramika esa premium ko‘rinish va tashqi ta’sirlarga bardoshlilik qo‘shadi.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Ulu-Too Zeta Restaurant",
+        "text": "A project where architectural expression meets advanced materials. The facade combines aluminium composite panels with Laminam ceramics: the panels keep the structure light and modern, while the large-format ceramics add a premium look and resistance to weather.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "ala-archa",
+    "image": "/portfolio/14.png",
+    "building": "mall",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "ТЦ «Ала-Арча»",
+        "text": "Современное здание с акцентом на функциональность и визуальную выразительность. Фасад из алюминиевых композитных панелей даёт строгий лаконичный облик и надёжную защиту от климатических нагрузок. Панели лёгкие, прочные и устойчивые к выцветанию.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Ala-Archa» savdo markazi",
+        "text": "Funksionallik va vizual ifodalilikka urg‘u bergan zamonaviy bino. Alyuminiy kompozit panellardan bajarilgan fasad qat’iy va lo‘nda ko‘rinish hamda iqlim yuklamalaridan ishonchli himoya beradi. Panellar yengil, mustahkam va rangi so‘nishga chidamli.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Ala-Archa Shopping Center",
+        "text": "A modern building focused on function and visual impact. The aluminium composite panel facade gives it a clean, restrained look and reliable protection against the climate. The panels are light, strong and fade resistant.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "spar",
+    "image": "/portfolio/15.png",
+    "building": "shop",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Магазин SPAR",
+        "text": "Практичное и современное решение для ритейла. В отделке использованы алюминиевые композитные панели — прочные, лёгкие и устойчивые к внешним воздействиям. Фасад сохраняет опрятный вид долгие годы, что особенно важно для объектов с высокой проходимостью.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "SPAR do‘koni",
+        "text": "Riteyl uchun amaliy va zamonaviy yechim. Pardozda mustahkam, yengil va tashqi ta’sirlarga chidamli alyuminiy kompozit panellar ishlatilgan. Fasad ko‘p yillar davomida ozoda ko‘rinishini saqlaydi — bu odam ko‘p keladigan savdo obyektlari uchun ayniqsa muhim.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "SPAR Grocery Store",
+        "text": "A practical, modern solution for retail. The facade uses aluminium composite panels — strong, light and weather resistant. It keeps a neat appearance for years, which matters for retail buildings with heavy footfall.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "kortex",
+    "image": "/portfolio/16.png",
+    "building": "clinic",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Медцентр «Кортекс»",
+        "text": "Объект, где строгая архитектура сочетается с технологичным фасадным решением. Алюминиевые композитные панели обеспечивают современный внешний вид, высокую износостойкость и простоту обслуживания, подчёркивая чистоту линий и деловую эстетику.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Korteks» tibbiyot markazi",
+        "text": "Qat’iy arxitektura texnologik fasad yechimi bilan uyg‘unlashgan obyekt. Alyuminiy kompozit panellar zamonaviy tashqi ko‘rinish, yuqori chidamlilik va parvarish qulayligini ta’minlaydi, chiziqlar tozaligi va ishchan estetikani ta’kidlaydi.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Kortex Medical Center",
+        "text": "A building where restrained architecture meets an advanced facade solution. Aluminium composite panels provide a modern look, high durability and easy maintenance, emphasising clean lines and a professional aesthetic.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "aurora",
+    "image": "/portfolio/17.png",
+    "building": "office",
+    "materials": [
+      "hpl",
+      "ceramics"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Бизнес-центр «Аврора»",
+        "text": "Современное офисное здание с выразительной архитектурой и продуманным фасадным решением. В отделке использованы HPL-панели и керамика Laminam: HPL придаёт фасаду чёткую геометрию и устойчивость к нагрузкам, Laminam добавляет утончённости и визуальной лёгкости.",
+        "description": "На объекте использована фасадная керамика Laminam — материал премиум-класса, сочетающий в себе эстетичность, прочность и долговечность. Панели устойчивы к перепадам температуры, ультрафиолету, механическим повреждениям и не требуют сложного ухода. Благодаря минимальной толщине и лёгкости, монтаж проходит быстро, а внешний вид остаётся безупречным на протяжении многих лет.",
+        "material": "Керамика Laminam",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Avrora» biznes markazi",
+        "text": "Ifodali arxitektura va o‘ylangan fasad yechimiga ega zamonaviy ofis binosi. Pardozda HPL panellar va Laminam keramikasi ishlatilgan: HPL fasadga aniq geometriya va yuklamalarga bardoshlilik beradi, Laminam esa nafislik va vizual yengillik qo‘shadi.",
+        "description": "Obyektda Laminam fasad keramikasi qo‘llanilgan — estetika, mustahkamlik va uzoq xizmat muddatini birlashtirgan premium sinf materiali. Panellar harorat o‘zgarishlariga, ultrabinafsha nurlarga va mexanik shikastlanishlarga chidamli, murakkab parvarishni talab qilmaydi. Minimal qalinligi va yengilligi tufayli montaj tez o‘tadi, tashqi ko‘rinish esa ko‘p yillar davomida benuqson qoladi.",
+        "material": "Laminam keramikasi",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Aurora Business Center",
+        "text": "A modern office building with expressive architecture and a carefully considered facade. HPL panels and Laminam ceramics were used: HPL gives the facade crisp geometry and load resistance, while Laminam adds refinement and visual lightness.",
+        "description": "The building is finished with Laminam facade ceramics — a premium material that combines aesthetics, strength and longevity. The panels resist temperature swings, UV light and mechanical damage, and need no complex maintenance. Their minimal thickness and light weight speed up installation, and the facade keeps its flawless look for years.",
+        "material": "Laminam ceramics",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "baytash",
+    "image": "/portfolio/18.png",
+    "building": "hotel",
+    "materials": [
+      "acp"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Отель «Байташ»",
+        "text": "Отель оформлен алюминиевыми композитными панелями, которые подчёркивают современный архитектурный стиль здания. Материал выбран за лёгкость, прочность и устойчивость к резким перепадам температуры, а также за простоту обслуживания.",
+        "description": "В качестве фасадного материала на объекте были использованы алюминиевые композитные панели Bildex BDX. Данный материал имеет непревзойденные механические свойства, которые обеспечивают ему долговечность, прочность и качество!",
+        "material": "Алюминиевые композитные панели Bildex BDX",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "«Baytash» mehmonxonasi",
+        "text": "Mehmonxona binoning zamonaviy arxitektura uslubini ta’kidlaydigan alyuminiy kompozit panellar bilan bezatilgan. Material yengilligi, mustahkamligi, keskin harorat o‘zgarishlariga bardoshliligi va parvarish qulayligi uchun tanlangan.",
+        "description": "Obyektda fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari ishlatilgan. Bu material yuqori mexanik xususiyatlarga ega bo‘lib, uzoq xizmat muddati, mustahkamlik va sifatni ta’minlaydi.",
+        "material": "Bildex BDX alyuminiy kompozit panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Baytash Hotel",
+        "text": "The hotel is finished with aluminium composite panels that underline the building's contemporary architecture. The material was chosen for its light weight, strength, resistance to sharp temperature changes and ease of maintenance.",
+        "description": "Bildex BDX aluminium composite panels were used as the facade material. They offer outstanding mechanical properties that give the facade durability, strength and quality.",
+        "material": "Bildex BDX aluminium composite panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  },
+  {
+    "id": "karakol",
+    "image": "/portfolio/19.png",
+    "building": "airport",
+    "materials": [
+      "acp",
+      "hpl"
+    ],
+    "texts": {
+      "ru": {
+        "title": "Аэропорт Каракол",
+        "text": "Аэропорт выполнен в современном стиле с использованием алюминиевых композитных панелей и HPL. Сочетание материалов обеспечивает прочность, устойчивость к суровым погодным условиям и визуальную выразительность.",
+        "description": "На объекте — здании аэропорта — в качестве фасадных материалов были использованы алюминиевые композитные панели Bildex BDX, а также панели HPL. Эти материалы выбраны за их надёжность, устойчивость к внешним воздействиям и соответствие современным стандартам архитектуры и безопасности. Bildex BDX обеспечивают высокую прочность, стабильность и долговечность при любых климатических условиях, сохраняя эстетичный внешний вид на долгие годы. HPL-панели, в свою очередь, демонстрируют отличную стойкость к влаге, ультрафиолету и механическим нагрузкам, что делает их идеальным решением для интенсивной эксплуатации в инфраструктуре крупных общественных объектов.",
+        "material": "Алюминиевые композитные панели Bildex BDX; HPL-панели",
+        "area": "2700 м²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "uz": {
+        "title": "Qorakol aeroporti",
+        "text": "Aeroport alyuminiy kompozit panellar va HPL yordamida zamonaviy uslubda bajarilgan. Materiallar uyg‘unligi mustahkamlik, og‘ir ob-havo sharoitlariga bardoshlilik va vizual ifodalilikni ta’minlaydi.",
+        "description": "Aeroport binosida fasad materiali sifatida Bildex BDX alyuminiy kompozit panellari va HPL panellari ishlatilgan. Bu materiallar ishonchliligi, tashqi ta’sirlarga chidamliligi va zamonaviy arxitektura hamda xavfsizlik standartlariga muvofiqligi uchun tanlangan. Bildex BDX har qanday iqlim sharoitida yuqori mustahkamlik va barqarorlikni ta’minlaydi, HPL panellari esa namlik, ultrabinafsha nurlar va mexanik yuklamalarga a’lo darajada bardosh beradi — bu yirik jamoat obyektlari uchun ideal yechim.",
+        "material": "Bildex BDX alyuminiy kompozit panellari; HPL panellari",
+        "area": "2700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      },
+      "en": {
+        "title": "Karakol Airport",
+        "text": "The airport is built in a contemporary style using aluminium composite panels and HPL. The combination provides strength, resistance to harsh weather and strong visual character.",
+        "description": "The airport building uses Bildex BDX aluminium composite panels together with HPL panels. The materials were chosen for their reliability, weather resistance and compliance with modern architectural and safety standards. Bildex BDX delivers strength and stability in any climate, while HPL panels resist moisture, UV light and mechanical loads — an ideal combination for heavy public infrastructure.",
+        "material": "Bildex BDX aluminium composite panels; HPL panels",
+        "area": "2,700 m²",
+        "colors": "Laminam; AlcoteK FR RAL 1013"
+      }
+    }
+  }
+]

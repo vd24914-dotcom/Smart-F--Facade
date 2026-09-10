@@ -1,0 +1,19 @@
+{
+  "items": [
+    {
+      "id": "sample",
+      "before": "/portfolio/01.webp",
+      "after": "/portfolio/02.png",
+      "title": {
+        "ru": "Пример объекта",
+        "uz": "Namuna obyekt",
+        "en": "Sample project"
+      },
+      "text": {
+        "ru": "Это пример: замените обе фотографии в админке, раздел «До/после».",
+        "uz": "Namuna: admin paneldagi «Oldin/keyin» bo‘limida suratlarni almashtiring.",
+        "en": "Sample pair — replace both photos in the admin panel."
+      }
+    }
+  ]
+}

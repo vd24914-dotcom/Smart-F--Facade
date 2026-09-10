@@ -1,0 +1,800 @@
+@import "tailwindcss";
+
+@theme {
+  --color-navy: #294f7b;
+  --color-ink: #081324;
+  --color-graphite: #141414;
+  --color-black-soft: #101010;
+  --color-gray-text: #333333;
+  --color-hairline: #616161;
+  --color-gold: #c5a47e;
+  --color-gold-btn: #c8a273;
+  --color-mist: #f0f5fa;
+  --color-whatsapp: #25d366;
+
+  --font-sans: "Montserrat", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ffffff;
+  color: var(--color-black-soft);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── переход между темами ── */
+/* круговое раскрытие: новый слой поверх старого, без стандартного затухания */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 1;
+}
+
+::view-transition-new(root) {
+  z-index: 2;
+}
+
+/* запасной вариант там, где нет View Transitions */
+.theme-switching *,
+.theme-switching *::before,
+.theme-switching *::after {
+  transition:
+    background-color 0.45s ease,
+    color 0.45s ease,
+    border-color 0.45s ease,
+    fill 0.45s ease,
+    box-shadow 0.45s ease !important;
+}
+
+/* ───────────────── тёмная тема ───────────────── */
+@custom-variant dark (&:where(.dark, .dark *));
+
+.dark {
+  color-scheme: dark;
+
+  /* поверхности */
+  --sf-bg: #0b1523;
+  --sf-surface: #111e30;
+  --sf-surface-2: #16243a;
+  --sf-line: rgba(255, 255, 255, 0.09);
+  --sf-text: #e7eef7;
+  --sf-text-soft: #a3b4c9;
+  --sf-accent: #8ab4e8;
+}
+
+.dark body {
+  background: var(--sf-bg);
+  color: var(--sf-text);
+}
+
+/* базовые заливки */
+.dark .bg-white,
+.dark .bg-white\/95,
+.dark .bg-white\/90,
+.dark .bg-white\/85 {
+  background-color: var(--sf-surface);
+}
+
+.dark .bg-mist,
+.dark .bg-mist\/60,
+.dark .bg-slate-50 {
+  background-color: var(--sf-surface-2);
+}
+
+/* светлая кнопка на тёмном фоне — читаемый вариант */
+.dark .bg-white\/70 {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.dark .bg-white\/70.text-navy,
+.dark .bg-white\/70 .text-navy {
+  color: var(--sf-text);
+}
+
+.dark .bg-white\/\[0\.06\],
+.dark .bg-white\/\[0\.04\] {
+  background-color: rgba(255, 255, 255, 0.06);
+}
+
+/* текст */
+.dark .text-navy {
+  color: var(--sf-accent);
+}
+
+.dark .text-ink,
+.dark .text-black-soft,
+.dark .text-slate-900 {
+  color: var(--sf-text);
+}
+
+.dark .text-graphite,
+.dark .text-gray-text,
+.dark .text-slate-700,
+.dark .text-slate-600,
+.dark .text-slate-500 {
+  color: var(--sf-text-soft);
+}
+
+.dark .text-slate-400 {
+  color: #7d8ea5;
+}
+
+/* линии и рамки */
+.dark .border-slate-200,
+.dark .border-slate-300,
+.dark .border-navy\/10,
+.dark .border-navy\/15,
+.dark .border-navy\/20,
+.dark .border-navy\/25,
+.dark .border-black\/\[0\.06\],
+.dark .border-hairline {
+  border-color: var(--sf-line);
+}
+
+.dark .divide-slate-200 > * + *,
+.dark .sm\:\[\&\:not\(\:first-child\)\]\:border-slate-200:not(:first-child) {
+  border-color: var(--sf-line);
+}
+
+/* логотип: любой файл становится белым */
+.dark .site-logo {
+  filter: brightness(0) invert(1);
+}
+
+/* поля ввода */
+.dark input,
+.dark textarea,
+.dark select {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--sf-text);
+}
+
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #7d8ea5;
+}
+
+/* карточки и кнопки поверх фото остаются как есть */
+.dark .shadow-\[0_25px_60px_-28px_rgba\(41\,79\,123\,0\.6\)\],
+.dark .shadow-\[0_25px_60px_-45px_rgba\(8\,19\,36\,0\.55\)\],
+.dark .shadow-\[0_30px_70px_-45px_rgba\(8\,19\,36\,0\.6\)\] {
+  box-shadow: 0 25px 60px -35px rgba(0, 0, 0, 0.75);
+}
+
+/* Фильтры проектов в тёмной теме: панель темнее фона, таблетки светлее панели */
+.dark .sf-filter {
+  background-color: rgba(255, 255, 255, 0.035);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .sf-filter__divider {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dark .sf-filter__label {
+  color: var(--sf-text-soft);
+}
+
+/* обычная таблетка */
+.dark .sf-chip--idle {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #d8e3f1;
+}
+
+.dark .sf-chip--idle:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: var(--sf-accent);
+  color: #ffffff;
+}
+
+.dark .sf-chip--idle .sf-chip__count {
+  background-color: rgba(255, 255, 255, 0.12);
+  color: #b9c9dd;
+}
+
+.dark .sf-chip--idle:hover .sf-chip__count {
+  background-color: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+}
+
+/* выбранная таблетка */
+.dark .sf-chip--on {
+  background-color: var(--sf-accent);
+  color: #0b1523;
+  box-shadow: 0 10px 26px -14px rgba(138, 180, 232, 0.85);
+}
+
+.dark .sf-chip--on .sf-chip__count {
+  background-color: rgba(11, 21, 35, 0.2);
+  color: #0b1523;
+}
+
+/* недоступная таблетка */
+.dark .sf-chip--off {
+  background-color: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.06);
+  color: #61718a;
+}
+
+.dark .sf-chip--off .sf-chip__count {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #61718a;
+}
+
+/* Карточка с цифрами на первом экране */
+@keyframes sf-stats-in {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* цикл 10 секунд: движение в начале, дальше покой */
+@keyframes sf-stats-loop {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  10%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sf-stats-icon {
+  0% {
+    opacity: 0;
+    transform: scale(0.75) rotate(-8deg);
+  }
+  12%,
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+@keyframes sf-stats-underline {
+  0%,
+  4% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  16% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  40%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+.stats-card {
+  animation: sf-stats-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.3s;
+}
+
+.stats-card li {
+  animation: sf-stats-loop 10s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+}
+
+.stats-card li:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.stats-card li:nth-child(n + 3) {
+  animation-delay: 0.3s;
+}
+
+.stats-card li svg {
+  animation: sf-stats-icon 10s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  animation-delay: inherit;
+}
+
+.stats-card li p:first-child::after {
+  content: "";
+  display: block;
+  height: 2px;
+  margin-top: 4px;
+  border-radius: 2px;
+  background: var(--color-gold);
+  transform-origin: left;
+  animation: sf-stats-underline 10s ease-out infinite both;
+  animation-delay: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-card,
+  .stats-card li,
+  .stats-card li svg,
+  .stats-card li p:first-child::after {
+    animation: none;
+  }
+  .stats-card li p:first-child::after {
+    display: none;
+  }
+}
+
+/* ── загрузочный экран: логотип чертится линиями ── */
+.splash-open,
+.splash-open body {
+  overflow: hidden;
+}
+
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  background: #ffffff;
+  color: var(--color-navy);
+  animation: splash-out 0.6s cubic-bezier(0.4, 0, 0.2, 1) 2.2s forwards;
+}
+
+.dark .splash {
+  background: #0b1523;
+  color: #e7eef7;
+}
+
+@keyframes splash-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* пропуск по клику или прокрутке */
+.splash.is-skipped {
+  animation: splash-out 0.3s ease forwards;
+}
+
+.splash__logo {
+  position: relative;
+  width: min(340px, 62vw);
+}
+
+.splash__logo svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.splash__fill {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  animation: sf-draw-ink 0.7s ease-out 1.5s forwards;
+}
+
+.dark .splash__fill svg {
+  filter: brightness(0) invert(1);
+}
+
+/* контур: каждая линия прочерчивается и гаснет, уступая место заливке */
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line) {
+  fill: none !important;
+  stroke: currentColor;
+  stroke-width: 0.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.85;
+  animation:
+    sf-draw-line 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+    sf-draw-line-out 0.5s ease-out 1.6s forwards;
+}
+
+/* линии идут по очереди — как будто чертят от руки */
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(2) {
+  animation-delay: 60ms, 1.64s;
+}
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(3) {
+  animation-delay: 120ms, 1.68s;
+}
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(4) {
+  animation-delay: 180ms, 1.72s;
+}
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(5) {
+  animation-delay: 240ms, 1.76s;
+}
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(6) {
+  animation-delay: 300ms, 1.8s;
+}
+.splash__line svg :is(path, circle, rect, polygon, polyline, ellipse, line):nth-child(n + 7) {
+  animation-delay: 360ms, 1.84s;
+}
+
+/* тонкая полоска прогресса под логотипом */
+.splash__bar {
+  position: relative;
+  width: min(180px, 40vw);
+  height: 2px;
+  overflow: hidden;
+  border-radius: 2px;
+  /* полупрозрачная подложка: opacity здесь нельзя — она погасит и саму полоску */
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.splash__bar span {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  transform: scaleX(0);
+  background: var(--color-gold);
+  animation: splash-bar 2.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes splash-bar {
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* без скриптов и при «уменьшить движение» заставка не показывается */
+@media (scripting: none) {
+  .splash {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash {
+    display: none;
+  }
+}
+
+/* ── кнопка со свечением от курсора ── */
+.glow-btn {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.glow-btn__light {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  /* пятно идёт за курсором: координаты приходят из JS */
+  background: radial-gradient(
+    circle var(--glow-radius, 60px) at var(--glow-x, 50%) var(--glow-y, 50%),
+    var(--glow-color, rgba(197, 164, 126, 0.95)) 0%,
+    var(--glow-color, rgba(197, 164, 126, 0.95)) 12%,
+    transparent 62%
+  );
+}
+
+.glow-btn__light.is-on {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glow-btn__light {
+    transition: none;
+  }
+}
+
+/* ── появление блоков при прокрутке ── */
+.sf-reveal,
+.sf-reveal-group > * {
+  opacity: 0;
+  transform: translateY(28px) scale(0.985);
+  /* появление идёт через transform, а наведение у карточек — через translate/scale,
+     поэтому они не мешают друг другу */
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+    translate 0.3s ease,
+    scale 0.3s ease,
+    border-color 0.3s ease,
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  will-change: opacity, transform;
+}
+
+.sf-reveal {
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.sf-reveal.is-visible,
+.sf-reveal-group.is-visible > * {
+  opacity: 1;
+  transform: none;
+}
+
+/* карточки всплывают по очереди */
+.sf-reveal-group.is-visible > *:nth-child(1) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 0);
+}
+.sf-reveal-group.is-visible > *:nth-child(2) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 1);
+}
+.sf-reveal-group.is-visible > *:nth-child(3) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 2);
+}
+.sf-reveal-group.is-visible > *:nth-child(4) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 3);
+}
+.sf-reveal-group.is-visible > *:nth-child(5) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 4);
+}
+.sf-reveal-group.is-visible > *:nth-child(6) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 5);
+}
+.sf-reveal-group.is-visible > *:nth-child(n + 7) {
+  transition-delay: calc(var(--reveal-step, 90ms) * 6);
+}
+
+/* без JS и при «уменьшить движение» блоки просто на месте */
+@media (scripting: none) {
+  .sf-reveal,
+  .sf-reveal-group > * {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sf-reveal,
+  .sf-reveal-group > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Полоса с цифрами: черты прочерчиваются от числа наружу, подпись всплывает. Цикл 10 секунд. */
+@keyframes sf-stat-line {
+  0% {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  16%,
+  100% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+@keyframes sf-stat-label {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  18%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sf-stat-glow {
+  0%,
+  4% {
+    text-shadow: none;
+  }
+  10% {
+    text-shadow: 0 0 22px rgba(197, 164, 126, 0.55);
+  }
+  30%,
+  100% {
+    text-shadow: none;
+  }
+}
+
+.stats-row__line {
+  animation: sf-stat-line 10s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  animation-delay: var(--stat-delay, 0ms);
+}
+
+.stats-row__line--left {
+  transform-origin: right center;
+}
+
+.stats-row__line--right {
+  transform-origin: left center;
+}
+
+.stats-row__label {
+  animation: sf-stat-label 10s cubic-bezier(0.22, 1, 0.36, 1) infinite both;
+  animation-delay: var(--stat-delay, 0ms);
+}
+
+.stats-row__item span[class*="text-gold"] {
+  animation: sf-stat-glow 10s ease-out infinite both;
+  animation-delay: var(--stat-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stats-row__line,
+  .stats-row__label,
+  .stats-row__item span[class*="text-gold"] {
+    animation: none;
+  }
+}
+
+/* Иконки услуг: сначала «чертим» контур, потом проявляем саму иконку */
+@keyframes sf-draw-line {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes sf-draw-ink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sf-draw-line-out {
+  from {
+    opacity: 0.9;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.draw-icon {
+  color: var(--color-gold);
+}
+
+.draw-icon__line > * {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  opacity: 0.9;
+}
+
+.draw-icon__fill {
+  opacity: 0;
+}
+
+.draw-icon.is-drawing .draw-icon__line > * {
+  animation:
+    sf-draw-line 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards,
+    sf-draw-line-out 0.5s ease-out forwards;
+  animation-delay: var(--draw-delay, 0ms), calc(var(--draw-delay, 0ms) + 1.3s);
+}
+
+.draw-icon.is-drawing .draw-icon__line > *:nth-child(2) {
+  animation-delay: calc(var(--draw-delay, 0ms) + 90ms), calc(var(--draw-delay, 0ms) + 1.35s);
+}
+.draw-icon.is-drawing .draw-icon__line > *:nth-child(3) {
+  animation-delay: calc(var(--draw-delay, 0ms) + 180ms), calc(var(--draw-delay, 0ms) + 1.4s);
+}
+.draw-icon.is-drawing .draw-icon__line > *:nth-child(4) {
+  animation-delay: calc(var(--draw-delay, 0ms) + 270ms), calc(var(--draw-delay, 0ms) + 1.45s);
+}
+.draw-icon.is-drawing .draw-icon__line > *:nth-child(n + 5) {
+  animation-delay: calc(var(--draw-delay, 0ms) + 360ms), calc(var(--draw-delay, 0ms) + 1.5s);
+}
+
+.draw-icon.is-drawing .draw-icon__fill {
+  animation: sf-draw-ink 0.7s ease-out forwards;
+  animation-delay: calc(var(--draw-delay, 0ms) + 1.15s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .draw-icon__line {
+    display: none;
+  }
+  .draw-icon__fill,
+  .draw-icon.is-drawing .draw-icon__fill {
+    opacity: 1;
+    animation: none;
+  }
+}
+
+/* Появление модального окна */
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes modal-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-card {
+  animation: modal-in 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.modal-backdrop {
+  animation: modal-fade 0.25s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .modal-card,
+  .modal-backdrop {
+    animation: none;
+  }
+}
+
+/* Появление заголовка слайдера по буквам */
+@keyframes lumina-char-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes lumina-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lumina-char {
+  display: inline-block;
+  animation: lumina-char-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.lumina-fade {
+  animation: lumina-fade-in 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 0.25s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lumina-char,
+  .lumina-fade {
+    animation: none;
+  }
+}
+
+/* Золотая черта-акцент под заголовками */
+.rule-gold {
+  width: 64px;
+  height: 4px;
+  background: var(--color-gold);
+}

@@ -1,0 +1,119 @@
+{
+  "siteUrl": "",
+  "brand": "Smart Facade",
+  "shareImage": "",
+  "favicon": "",
+  "indexing": true,
+  "pages": {
+    "home": {
+      "ru": {
+        "title": "Фасадные материалы и монтаж — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Fasad materiallari va montaj — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "Facade materials and installation — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    },
+    "about": {
+      "ru": {
+        "title": "О компании — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Kompaniya haqida — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "About the company — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    },
+    "services": {
+      "ru": {
+        "title": "Услуги — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Xizmatlar — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "Services — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    },
+    "projects": {
+      "ru": {
+        "title": "Наши проекты — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Loyihalarimiz — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "Our projects — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    },
+    "partners": {
+      "ru": {
+        "title": "Партнёры — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Hamkorlar — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "Partners — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    },
+    "contacts": {
+      "ru": {
+        "title": "Контакты — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "uz": {
+        "title": "Kontaktlar — Smart Facade",
+        "description": "",
+        "keywords": ""
+      },
+      "en": {
+        "title": "Contacts — Smart Facade",
+        "description": "",
+        "keywords": ""
+      }
+    }
+  },
+  "verification": {
+    "google": "",
+    "yandex": ""
+  },
+  "analytics": {
+    "googleId": "",
+    "yandexId": ""
+  }
+}

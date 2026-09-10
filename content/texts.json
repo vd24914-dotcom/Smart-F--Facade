@@ -1,0 +1,563 @@
+{
+  "ru": {
+    "nav": {
+      "home": "Главная",
+      "about": "О нас",
+      "services": "Услуги",
+      "projects": "Проекты",
+      "partners": "Партнеры",
+      "contacts": "Контакты",
+      "contactButton": "Связаться"
+    },
+    "hero": {
+      "title": [
+        "Фасадные материалы",
+        "и решения"
+      ],
+      "phonesLabel": "Наши телефоны:",
+      "contact": "Связаться",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "lead": "Полный комплекс услуг в фасадном сегменте: подбор материалов, подсистемы, монтаж и готовые решения под ключ."
+    },
+    "about": {
+      "title": "О нас",
+      "subtitle": "мы специализируемся на фасадных материалах",
+      "text": "Компания «SMART FACADE» предоставляет полный комплекс услуг: консультации в офисе или на объекте, расчет стоимости, подбор и согласование материалов, логистика, весь цикл строительно-монтажных работ в фасадном сегменте.",
+      "specs": [
+        "фасады",
+        "интерьеры",
+        "мебель"
+      ],
+      "more": "Подробнее о компании"
+    },
+    "services": {
+      "title": "наши услуги",
+      "lead": "Компания Smart Facade предоставляет большое количество услуг в фасадной сфере:",
+      "items": [
+        "материалы",
+        "подсистемы",
+        "монтаж",
+        "решения"
+      ]
+    },
+    "projects": {
+      "title": "Наши проекты",
+      "lead": "Более 10 лет успешной деятельности на строительном рынке.",
+      "all": "Посмотреть все",
+      "items": [
+        "Novotel Hotel",
+        "Бизнес Центр Шар",
+        "Apart Hotel",
+        "Ресторан Ego",
+        "Бизнес Центр Атриум",
+        "жилой комплекс дипломат"
+      ]
+    },
+    "stats": [
+      {
+        "value": "200",
+        "label": "Клиентов в год"
+      },
+      {
+        "value": "200",
+        "label": "Проектов в год"
+      },
+      {
+        "value": "200,000",
+        "label": "м² площади фасадов"
+      }
+    ],
+    "representatives": {
+      "title": "мы являемся официальными представителями"
+    },
+    "partners": {
+      "title": "наши партнеры"
+    },
+    "cta": {
+      "title": [
+        "Мы создаем качественные",
+        "и безопасные фасады!"
+      ],
+      "text": [
+        "Для этого вам нужно всего лишь оставить заявку и наш менеджер",
+        "свяжется с вами в рабочее время."
+      ],
+      "button": "Оставить заявку"
+    },
+    "footer": {
+      "contactsTitle": "Контакты",
+      "address": "Малдыбаева 54а, Исакеева 1/1, Бишкек, Кыргызстан",
+      "companyTitle": "Компания",
+      "links": [
+        "О нас",
+        "Услуги",
+        "Наши проекты",
+        "Партнеры"
+      ],
+      "copyright": "Smart Facade © 2026 Smart Facade",
+      "socialTitle": "Мы в соцсетях",
+      "callbackTitle": "Обратный звонок",
+      "callbackText": "Оставьте номер — перезвоним и ответим на вопросы.",
+      "callbackPlaceholder": "Ваш телефон",
+      "callbackDone": "Спасибо! Скоро свяжемся.",
+      "callbackError": "Не удалось отправить. Позвоните нам, пожалуйста."
+    },
+    "pages": {
+      "about": {
+        "heading": "О компании smart facade",
+        "subtitle": "smart facade",
+        "text": "Наша компания предоставляет полный комплекс услуг: консультации в офисе или на объекте, расчет стоимости, подбор и согласование материалов, логистика, весь цикл строительно-монтажных работ в фасадном сегменте. Ориентируемся на передовой опыт, внедрение новых технологий и современных материалов, безусловное выполнение своих обязательств по качеству, безопасности и срокам перед заказчиками и деловыми партнёрами.",
+        "advantagesTitle": "Наши преимущества",
+        "advantagesLead": "Работаем по всему циклу: подбор материала, расчёт стоимости, проектирование подсистемы, поставка и монтаж под ключ.",
+        "advantages": [
+          {
+            "title": "Официальные дилеры",
+            "text": "Мы являемся официальным представителем заводов производителей из Италии, Испании, Турции, Японии, России, Казахстана и др."
+          },
+          {
+            "title": "Опыт работы",
+            "text": "Более 10 лет успешной деятельности на строительном рынке. Выполнили более 200 000 м² фасадов в КР."
+          },
+          {
+            "title": "Все по ГОСТу",
+            "text": "Имеем все необходимые дилерские соглашения, технические свидетельства, сертификаты качества и разрешительные документы."
+          },
+          {
+            "title": "Всегда вовремя",
+            "text": "Обеспечиваем поставки, выполняем рабочие обязанности точно в срок."
+          }
+        ]
+      },
+      "services": {
+        "heading": "Наши услуги",
+        "intro": "Подбираем материалы, рассчитываем стоимость, проектируем подсистемы и выполняем весь цикл монтажных работ — от консультации до сдачи объекта."
+      },
+      "projects": {
+        "heading": "Наши проекты",
+        "buildingLabel": "Тип здания",
+        "materialLabel": "Тип материала",
+        "all": "Все",
+        "open": "Перейти",
+        "empty": "По выбранным фильтрам объектов нет.",
+        "buildings": {
+          "office": "БЦ",
+          "hotel": "Отель",
+          "residential": "Жилой дом",
+          "restaurant": "Ресторан",
+          "mall": "ТЦ",
+          "shop": "Магазин",
+          "clinic": "Клиника",
+          "airport": "Аэропорт"
+        },
+        "materials": {
+          "acp": "АКП",
+          "hpl": "HPL",
+          "porcelain": "Керамогранит",
+          "ceramics": "Керамика"
+        }
+      },
+      "partners": {
+        "heading": "Наши партнеры"
+      },
+      "project": {
+        "back": "Все проекты",
+        "material": "материал",
+        "area": "площадь",
+        "colors": "цвета"
+      },
+      "contacts": {
+        "heading": "Контакты",
+        "formTitle": "Оставить заявку",
+        "name": "Ваше имя",
+        "phone": "Телефон",
+        "message": "Комментарий",
+        "submit": "Отправить",
+        "addressTitle": "Адрес",
+        "phonesTitle": "Телефоны",
+        "emailTitle": "Почта",
+        "socialTitle": "Мы в соцсетях"
+      }
+    },
+    "beforeAfter": {
+      "title": "Как было и как стало",
+      "lead": "Двигайте шторку, чтобы увидеть фасад до работ и после сдачи объекта.",
+      "before": "До",
+      "after": "После"
+    }
+  },
+  "uz": {
+    "nav": {
+      "home": "Bosh sahifa",
+      "about": "Biz haqimizda",
+      "services": "Xizmatlar",
+      "projects": "Loyihalar",
+      "partners": "Hamkorlar",
+      "contacts": "Kontaktlar",
+      "contactButton": "Bog‘lanish"
+    },
+    "hero": {
+      "title": [
+        "Fasad materiallari",
+        "va yechimlari"
+      ],
+      "phonesLabel": "Telefonlarimiz:",
+      "contact": "Bog‘lanish",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "lead": "Fasad sohasida to‘liq xizmatlar majmuasi: materiallarni tanlash, quyi tizimlar, montaj va kalit topshirish yechimlari."
+    },
+    "about": {
+      "title": "Biz haqimizda",
+      "subtitle": "biz fasad materiallariga ixtisoslashganmiz",
+      "text": "«SMART FACADE» kompaniyasi to‘liq xizmatlar majmuasini taqdim etadi: ofisda yoki obyektda maslahat, qiymatni hisoblash, materiallarni tanlash va kelishish, logistika hamda fasad sohasidagi qurilish-montaj ishlarining to‘liq sikli.",
+      "specs": [
+        "fasadlar",
+        "interyerlar",
+        "mebel"
+      ],
+      "more": "Kompaniya haqida batafsil"
+    },
+    "services": {
+      "title": "xizmatlarimiz",
+      "lead": "Smart Facade kompaniyasi fasad sohasida keng ko‘lamli xizmatlarni taqdim etadi:",
+      "items": [
+        "materiallar",
+        "quyi tizimlar",
+        "montaj",
+        "yechimlar"
+      ]
+    },
+    "projects": {
+      "title": "Loyihalarimiz",
+      "lead": "Qurilish bozorida 10 yildan ortiq muvaffaqiyatli faoliyat.",
+      "all": "Barchasini ko‘rish",
+      "items": [
+        "Novotel Hotel",
+        "Shar biznes markazi",
+        "Apart Hotel",
+        "Ego restorani",
+        "Atrium biznes markazi",
+        "Diplomat turar-joy majmuasi"
+      ]
+    },
+    "stats": [
+      {
+        "value": "200",
+        "label": "Yiliga mijozlar"
+      },
+      {
+        "value": "200",
+        "label": "Yiliga loyihalar"
+      },
+      {
+        "value": "200,000",
+        "label": "m² fasad maydoni"
+      }
+    ],
+    "representatives": {
+      "title": "biz rasmiy vakillarmiz"
+    },
+    "partners": {
+      "title": "hamkorlarimiz"
+    },
+    "cta": {
+      "title": [
+        "Biz sifatli va xavfsiz",
+        "fasadlar yaratamiz!"
+      ],
+      "text": [
+        "Buning uchun ariza qoldirishingiz kifoya — menejerimiz",
+        "ish vaqtida siz bilan bog‘lanadi."
+      ],
+      "button": "Ariza qoldirish"
+    },
+    "footer": {
+      "contactsTitle": "Kontaktlar",
+      "address": "Maldibayev 54a, Isakeev 1/1, Bishkek, Qirg‘iziston",
+      "companyTitle": "Kompaniya",
+      "links": [
+        "Biz haqimizda",
+        "Xizmatlar",
+        "Loyihalarimiz",
+        "Hamkorlar"
+      ],
+      "copyright": "Smart Facade © 2026 Smart Facade",
+      "socialTitle": "Ijtimoiy tarmoqlarda",
+      "callbackTitle": "Qayta qo‘ng‘iroq",
+      "callbackText": "Raqamingizni qoldiring — o‘zimiz qo‘ng‘iroq qilamiz.",
+      "callbackPlaceholder": "Telefoningiz",
+      "callbackDone": "Rahmat! Tez orada bog‘lanamiz.",
+      "callbackError": "Yuborilmadi. Iltimos, qo‘ng‘iroq qiling."
+    },
+    "pages": {
+      "about": {
+        "heading": "Smart facade kompaniyasi haqida",
+        "subtitle": "smart facade",
+        "text": "Kompaniyamiz to‘liq xizmatlar majmuasini taqdim etadi: ofisda yoki obyektda maslahat, qiymatni hisoblash, materiallarni tanlash va kelishish, logistika, fasad sohasidagi qurilish-montaj ishlarining to‘liq sikli. Biz ilg‘or tajribaga, yangi texnologiyalar va zamonaviy materiallarni joriy etishga, buyurtmachilar va hamkorlar oldidagi sifat, xavfsizlik va muddat bo‘yicha majburiyatlarni so‘zsiz bajarishga tayanamiz.",
+        "advantagesTitle": "Bizning afzalliklarimiz",
+        "advantagesLead": "To‘liq sikl bo‘yicha ishlaymiz: material tanlash, qiymatni hisoblash, quyi tizimni loyihalash, yetkazib berish va kalit topshirish asosida montaj.",
+        "advantages": [
+          {
+            "title": "Rasmiy dilerlar",
+            "text": "Italiya, Ispaniya, Turkiya, Yaponiya, Rossiya, Qozog‘iston va boshqa mamlakatlardagi ishlab chiqaruvchi zavodlarning rasmiy vakili hisoblanamiz."
+          },
+          {
+            "title": "Tajriba",
+            "text": "Qurilish bozorida 10 yildan ortiq muvaffaqiyatli faoliyat. Qirg‘izistonda 200 000 m² dan ortiq fasad bajarilgan."
+          },
+          {
+            "title": "Standartlarga muvofiq",
+            "text": "Barcha zarur diler shartnomalari, texnik guvohnomalar, sifat sertifikatlari va ruxsat hujjatlari mavjud."
+          },
+          {
+            "title": "Har doim o‘z vaqtida",
+            "text": "Yetkazib berishni ta’minlaymiz va ishlarni aniq muddatda bajaramiz."
+          }
+        ]
+      },
+      "services": {
+        "heading": "Xizmatlarimiz",
+        "intro": "Materiallarni tanlaymiz, qiymatni hisoblaymiz, quyi tizimlarni loyihalaymiz va montaj ishlarining to‘liq siklini bajaramiz — maslahatdan obyektni topshirishgacha."
+      },
+      "projects": {
+        "heading": "Loyihalarimiz",
+        "buildingLabel": "Bino turi",
+        "materialLabel": "Material turi",
+        "all": "Barchasi",
+        "open": "Batafsil",
+        "empty": "Tanlangan filtrlar bo‘yicha obyektlar topilmadi.",
+        "buildings": {
+          "office": "Biznes markaz",
+          "hotel": "Mehmonxona",
+          "residential": "Turar-joy",
+          "restaurant": "Restoran",
+          "mall": "Savdo markazi",
+          "shop": "Do‘kon",
+          "clinic": "Klinika",
+          "airport": "Aeroport"
+        },
+        "materials": {
+          "acp": "AKP",
+          "hpl": "HPL",
+          "porcelain": "Keramogranit",
+          "ceramics": "Keramika"
+        }
+      },
+      "partners": {
+        "heading": "Hamkorlarimiz"
+      },
+      "project": {
+        "back": "Barcha loyihalar",
+        "material": "material",
+        "area": "maydon",
+        "colors": "ranglar"
+      },
+      "contacts": {
+        "heading": "Kontaktlar",
+        "formTitle": "Ariza qoldirish",
+        "name": "Ismingiz",
+        "phone": "Telefon",
+        "message": "Izoh",
+        "submit": "Yuborish",
+        "addressTitle": "Manzil",
+        "phonesTitle": "Telefonlar",
+        "emailTitle": "Pochta",
+        "socialTitle": "Ijtimoiy tarmoqlarda"
+      }
+    },
+    "beforeAfter": {
+      "title": "Qanday edi va qanday bo‘ldi",
+      "lead": "Ishlardan oldin va topshirilgandan keyingi fasadni ko‘rish uchun ajratgichni suring.",
+      "before": "Oldin",
+      "after": "Keyin"
+    }
+  },
+  "en": {
+    "nav": {
+      "home": "Home",
+      "about": "About",
+      "services": "Services",
+      "projects": "Projects",
+      "partners": "Partners",
+      "contacts": "Contacts",
+      "contactButton": "Contact us"
+    },
+    "hero": {
+      "title": [
+        "Facade materials",
+        "and solutions"
+      ],
+      "phonesLabel": "Our phones:",
+      "contact": "Get in touch",
+      "whatsapp": "WhatsApp",
+      "instagram": "Instagram",
+      "lead": "A full range of facade services: material selection, subsystems, installation and turnkey solutions."
+    },
+    "about": {
+      "title": "About us",
+      "subtitle": "we specialise in facade materials",
+      "text": "SMART FACADE provides a full range of services: consulting in the office or on site, cost estimation, material selection and approval, logistics, and the complete cycle of construction and installation work in the facade segment.",
+      "specs": [
+        "facades",
+        "interiors",
+        "furniture"
+      ],
+      "more": "More about the company"
+    },
+    "services": {
+      "title": "our services",
+      "lead": "Smart Facade offers a wide range of services in the facade industry:",
+      "items": [
+        "materials",
+        "subsystems",
+        "installation",
+        "solutions"
+      ]
+    },
+    "projects": {
+      "title": "Our projects",
+      "lead": "More than 10 years of successful work in the construction market.",
+      "all": "View all",
+      "items": [
+        "Novotel Hotel",
+        "Shar Business Center",
+        "Apart Hotel",
+        "Ego Restaurant",
+        "Atrium Business Center",
+        "Diplomat Residential Complex"
+      ]
+    },
+    "stats": [
+      {
+        "value": "200",
+        "label": "Clients per year"
+      },
+      {
+        "value": "200",
+        "label": "Projects per year"
+      },
+      {
+        "value": "200,000",
+        "label": "m² of facade area"
+      }
+    ],
+    "representatives": {
+      "title": "we are official representatives of"
+    },
+    "partners": {
+      "title": "our partners"
+    },
+    "cta": {
+      "title": [
+        "We build high-quality",
+        "and safe facades!"
+      ],
+      "text": [
+        "Just leave a request and our manager",
+        "will contact you during business hours."
+      ],
+      "button": "Leave a request"
+    },
+    "footer": {
+      "contactsTitle": "Contacts",
+      "address": "54a Maldybaev St., 1/1 Isakeev St., Bishkek, Kyrgyzstan",
+      "companyTitle": "Company",
+      "links": [
+        "About us",
+        "Services",
+        "Our projects",
+        "Partners"
+      ],
+      "copyright": "Smart Facade © 2026 Smart Facade",
+      "socialTitle": "Follow us",
+      "callbackTitle": "Request a call",
+      "callbackText": "Leave your number — we will call you back.",
+      "callbackPlaceholder": "Your phone",
+      "callbackDone": "Thank you! We will contact you soon.",
+      "callbackError": "Could not send. Please call us instead."
+    },
+    "pages": {
+      "about": {
+        "heading": "About smart facade",
+        "subtitle": "smart facade",
+        "text": "Our company provides a full range of services: consulting in the office or on site, cost estimation, material selection and approval, logistics, and the complete cycle of construction and installation work in the facade segment. We rely on best practice, new technologies and modern materials, and we meet every commitment to our clients and partners on quality, safety and deadlines.",
+        "advantagesTitle": "Our advantages",
+        "advantagesLead": "We cover the full cycle: material selection, cost estimation, subsystem design, supply and turnkey installation.",
+        "advantages": [
+          {
+            "title": "Official dealers",
+            "text": "We are the official representative of manufacturing plants from Italy, Spain, Turkey, Japan, Russia, Kazakhstan and other countries."
+          },
+          {
+            "title": "Experience",
+            "text": "More than 10 years of successful work in the construction market. Over 200,000 m² of facades completed in Kyrgyzstan."
+          },
+          {
+            "title": "Fully certified",
+            "text": "We hold all the necessary dealer agreements, technical certificates, quality certificates and permits."
+          },
+          {
+            "title": "Always on time",
+            "text": "We guarantee supply and deliver our work exactly on schedule."
+          }
+        ]
+      },
+      "services": {
+        "heading": "Our services",
+        "intro": "We select materials, estimate costs, design subsystems and handle the full installation cycle — from the first consultation to project handover."
+      },
+      "projects": {
+        "heading": "Our projects",
+        "buildingLabel": "Building type",
+        "materialLabel": "Material",
+        "all": "All",
+        "open": "View",
+        "empty": "No projects match the selected filters.",
+        "buildings": {
+          "office": "Office",
+          "hotel": "Hotel",
+          "residential": "Residential",
+          "restaurant": "Restaurant",
+          "mall": "Shopping center",
+          "shop": "Retail",
+          "clinic": "Clinic",
+          "airport": "Airport"
+        },
+        "materials": {
+          "acp": "ACP",
+          "hpl": "HPL",
+          "porcelain": "Porcelain stoneware",
+          "ceramics": "Ceramics"
+        }
+      },
+      "partners": {
+        "heading": "Our partners"
+      },
+      "project": {
+        "back": "All projects",
+        "material": "material",
+        "area": "area",
+        "colors": "colours"
+      },
+      "contacts": {
+        "heading": "Contacts",
+        "formTitle": "Leave a request",
+        "name": "Your name",
+        "phone": "Phone",
+        "message": "Message",
+        "submit": "Send",
+        "addressTitle": "Address",
+        "phonesTitle": "Phones",
+        "emailTitle": "Email",
+        "socialTitle": "Follow us"
+      }
+    },
+    "beforeAfter": {
+      "title": "Before and after",
+      "lead": "Drag the handle to see the facade before the works and after handover.",
+      "before": "Before",
+      "after": "After"
+    }
+  }
+}

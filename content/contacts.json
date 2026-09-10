@@ -1,0 +1,70 @@
+{
+  "blocks": [
+    {
+      "id": "address",
+      "title": {
+        "ru": "Адрес",
+        "uz": "Manzil",
+        "en": "Address"
+      },
+      "items": {
+        "ru": [
+          "Малдыбаева 54а, Исакеева 1/1, Бишкек, Кыргызстан"
+        ],
+        "uz": [
+          "Maldibayev 54a, Isakeev 1/1, Bishkek, Qirg‘iziston"
+        ],
+        "en": [
+          "54a Maldybaev St., 1/1 Isakeev St., Bishkek, Kyrgyzstan"
+        ]
+      },
+      "link": "none"
+    },
+    {
+      "id": "phones",
+      "title": {
+        "ru": "Телефоны",
+        "uz": "Telefonlar",
+        "en": "Phones"
+      },
+      "items": {
+        "ru": [
+          "+996 (777) 997-200",
+          "+996 (773) 999-777",
+          "+996 (772) 163-376"
+        ],
+        "uz": [
+          "+996 (777) 997-200",
+          "+996 (773) 999-777",
+          "+996 (772) 163-376"
+        ],
+        "en": [
+          "+996 (777) 997-200",
+          "+996 (773) 999-777",
+          "+996 (772) 163-376"
+        ]
+      },
+      "link": "tel"
+    },
+    {
+      "id": "email",
+      "title": {
+        "ru": "Почта",
+        "uz": "Pochta",
+        "en": "Email"
+      },
+      "items": {
+        "ru": [
+          "smartfacadekg@gmail.com"
+        ],
+        "uz": [
+          "smartfacadekg@gmail.com"
+        ],
+        "en": [
+          "smartfacadekg@gmail.com"
+        ]
+      },
+      "link": "mail"
+    }
+  ]
+}
