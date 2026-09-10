@@ -452,16 +452,33 @@ body {
   }
 }
 
-/* без скриптов и при «уменьшить движение» заставка не показывается */
+/* без скриптов заставку убрать некому — не показываем её вовсе */
 @media (scripting: none) {
   .splash {
     display: none;
   }
 }
 
+/* при системной настройке «уменьшить движение» заставка остаётся,
+   но без черчения и бегущей полоски: просто логотип и спокойное затухание */
 @media (prefers-reduced-motion: reduce) {
   .splash {
-    display: none;
+    animation: splash-out 0.4s ease 1.1s forwards;
+  }
+
+  /* прячем контур, но оставляем ему место: заливка лежит поверх него */
+  .splash__line {
+    visibility: hidden;
+  }
+
+  .splash__fill {
+    opacity: 1;
+    animation: none;
+  }
+
+  .splash__bar span {
+    transform: scaleX(1);
+    animation: none;
   }
 }
 

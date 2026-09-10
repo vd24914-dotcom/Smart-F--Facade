@@ -5,6 +5,9 @@ import { useEffect } from "react";
 /** Сколько живёт заставка: должно совпадать с CSS. */
 const LIFETIME = 2800;
 
+/** При «уменьшить движение» показываем только логотип и быстро уходим. */
+const LIFETIME_CALM = 1700;
+
 /**
  * Мелочи, которые нельзя сделать на CSS: не даём странице прокручиваться,
  * пока идёт заставка, и убираем её из разметки, когда она отыграла.
@@ -17,10 +20,6 @@ export default function SplashControl() {
     if (!splash) return;
 
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
-      splash.remove();
-      return;
-    }
 
     root.classList.add("splash-open");
 
@@ -35,7 +34,7 @@ export default function SplashControl() {
       window.setTimeout(finish, 320);
     };
 
-    const timer = window.setTimeout(finish, LIFETIME);
+    const timer = window.setTimeout(finish, reduce ? LIFETIME_CALM : LIFETIME);
 
     // пропустить, если человек не хочет ждать
     window.addEventListener("pointerdown", skip, { once: true });

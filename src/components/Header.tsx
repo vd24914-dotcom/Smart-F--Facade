@@ -70,19 +70,21 @@ export default function Header({ locale, dict, logo }: Props) {
       <div className="mx-auto max-w-[1200px]">
         <div
           className={cn(
-            "flex items-center gap-3 rounded-full border border-black/[0.06] bg-white/90 px-4 py-2.5 backdrop-blur-xl transition-shadow duration-300 sm:px-6",
+            "flex items-center gap-2 rounded-full border border-black/[0.06] bg-white/90 px-4 py-2.5 backdrop-blur-xl transition-shadow duration-300 sm:gap-3 sm:px-6",
             scrolled
               ? "shadow-[0_20px_45px_-26px_rgba(8,19,36,0.6)]"
               : "shadow-[0_12px_32px_-24px_rgba(8,19,36,0.45)]"
           )}
         >
-          <Link href={`/${locale}`} className="shrink-0">
+          {/* логотип может быть широким — на узком экране ограничиваем, иначе он
+              выдавливает кнопку меню за край */}
+          <Link href={`/${locale}`} className="min-w-0 shrink">
             <Image
               src={logo}
               alt="Smart Facade"
               width={220}
               height={40}
-              className="site-logo h-[28px] w-auto md:h-[32px]"
+              className="site-logo h-[24px] w-auto max-w-[46vw] object-contain object-left sm:h-[28px] sm:max-w-none md:h-[32px]"
               priority
             />
           </Link>
@@ -108,7 +110,8 @@ export default function Header({ locale, dict, logo }: Props) {
             </ul>
           </nav>
 
-          <div className="ml-auto flex items-center gap-1 lg:ml-0">
+          {/* на телефоне языки переехали внутрь меню — в узкой шапке им нет места */}
+          <div className="ml-auto hidden items-center gap-1 sm:flex lg:ml-0">
             {locales.map((code) => (
               <Link
                 key={code}
@@ -123,7 +126,7 @@ export default function Header({ locale, dict, logo }: Props) {
             ))}
           </div>
 
-          <ThemeToggle className="shrink-0" />
+          <ThemeToggle className="ml-auto shrink-0 sm:ml-0" />
 
           <GlowButton
             onClick={openContactModal}
@@ -186,6 +189,23 @@ export default function Header({ locale, dict, logo }: Props) {
                 >
                   {dict.nav.contactButton}
                 </button>
+              </li>
+
+              {/* языки: в узкой шапке для них нет места, поэтому они здесь */}
+              <li className="mt-2 flex items-center gap-2 border-t border-black/[0.06] px-2 pt-3 sm:hidden">
+                {locales.map((code) => (
+                  <Link
+                    key={code}
+                    href={`/${code}${rest}`}
+                    onClick={() => setOpen(false)}
+                    className={cn(
+                      "rounded-full px-3 py-1.5 text-[13px] font-semibold uppercase transition-colors",
+                      code === locale ? "bg-navy text-white" : "bg-mist text-slate-600"
+                    )}
+                  >
+                    {localeNames[code]}
+                  </Link>
+                ))}
               </li>
             </ul>
           </nav>
