@@ -91,6 +91,11 @@ export type Dictionary = {
     fileChoose: string;
     fileRemove: string;
     required: string;
+    /** подсказки при неверно заполненных полях */
+    errName: string;
+    errPhone: string;
+    errArea: string;
+    phoneHint: string;
   };
   representatives: { title: string };
   partners: { title: string };

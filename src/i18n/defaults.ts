@@ -85,6 +85,10 @@ export const defaultTexts: DictionaryDefaults = {
       fileChoose: "Выбрать файл",
       fileRemove: "Убрать",
       required: "Заполните имя и телефон",
+      errName: "Укажите имя — минимум две буквы",
+      errPhone: "Проверьте номер: нужен настоящий телефон, например +998 90 123-45-67",
+      errArea: "Площадь — число, например 1200",
+      phoneHint: "+998 90 123-45-67",
     },
     materials: {
       title: "Материалы",
@@ -198,6 +202,10 @@ export const defaultTexts: DictionaryDefaults = {
       fileChoose: "Fayl tanlash",
       fileRemove: "Olib tashlash",
       required: "Ism va telefonni to‘ldiring",
+      errName: "Ismni kiriting — kamida ikkita harf",
+      errPhone: "Raqamni tekshiring: haqiqiy telefon kerak, masalan +998 90 123-45-67",
+      errArea: "Maydon — son, masalan 1200",
+      phoneHint: "+998 90 123-45-67",
     },
     materials: {
       title: "Materiallar",
@@ -311,6 +319,10 @@ export const defaultTexts: DictionaryDefaults = {
       fileChoose: "Choose file",
       fileRemove: "Remove",
       required: "Please fill in your name and phone",
+      errName: "Enter your name — at least two letters",
+      errPhone: "Check the number: a real phone is required, e.g. +998 90 123-45-67",
+      errArea: "Area must be a number, e.g. 1200",
+      phoneHint: "+998 90 123-45-67",
     },
     materials: {
       title: "Materials",

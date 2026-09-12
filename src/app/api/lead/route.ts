@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { addLead, getIntegrations } from "@/content/store";
 import { cloudEnabled, BLOB_ACCESS } from "@/content/storage";
+import { isValidArea, isValidName, isValidPhone, normalizePhone } from "@/lib/validate";
 
 /** Простая защита от спама: не больше 5 заявок за 10 минут с одного IP. */
 const recent = new Map<string, number[]>();
@@ -104,13 +105,10 @@ export async function POST(request: Request) {
     request.headers.get("x-real-ip") ||
     "local";
 
-  if (tooMany(ip)) {
-    return NextResponse.json({ error: "Слишком много заявок. Попробуйте позже." }, { status: 429 });
-  }
-
   const type = request.headers.get("content-type") ?? "";
   let body: Record<string, unknown> = {};
   let attachment: { url: string; name: string } | null = null;
+  let drawing: File | null = null;
 
   if (type.includes("multipart/form-data")) {
     const form = await request.formData().catch(() => null);
@@ -121,15 +119,7 @@ export async function POST(request: Request) {
       if (typeof value === "string") body[key] = value;
     }
     const file = form.get("file");
-    if (file instanceof File && file.size > 0) {
-      attachment = await storeAttachment(file);
-      if (!attachment) {
-        return NextResponse.json(
-          { error: "Файл не подошёл: проверьте формат и размер (до 15 МБ)." },
-          { status: 400 }
-        );
-      }
-    }
+    if (file instanceof File && file.size > 0) drawing = file;
   } else {
     body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
   }
@@ -148,9 +138,40 @@ export async function POST(request: Request) {
 
   const name = clean(body.name, 120);
   const phone = clean(body.phone, 60);
+  const area = clean(body.area, 40);
 
+  // те же проверки, что и в форме: страницу можно обойти, этот код — нет
   if (!name || !phone) {
     return NextResponse.json({ error: "Укажите имя и телефон" }, { status: 400 });
+  }
+  if (!isValidName(name)) {
+    return NextResponse.json({ error: "Укажите имя — минимум две буквы" }, { status: 400 });
+  }
+  if (!isValidPhone(phone)) {
+    return NextResponse.json(
+      { error: "Проверьте номер: нужен настоящий телефон, например +998 90 123-45-67" },
+      { status: 400 }
+    );
+  }
+  if (!isValidArea(area)) {
+    return NextResponse.json({ error: "Площадь — число, например 1200" }, { status: 400 });
+  }
+
+  // Лимит считаем только по заявкам, прошедшим проверку: опечатка в телефоне
+  // не должна отнимать у человека попытки.
+  if (tooMany(ip)) {
+    return NextResponse.json({ error: "Слишком много заявок. Попробуйте позже." }, { status: 429 });
+  }
+
+  // Чертёж кладём в хранилище последним — чтобы не писать файлы от ботов.
+  if (drawing) {
+    attachment = await storeAttachment(drawing);
+    if (!attachment) {
+      return NextResponse.json(
+        { error: "Файл не подошёл: проверьте формат и размер (до 15 МБ)." },
+        { status: 400 }
+      );
+    }
   }
 
   const details = isCalc
@@ -158,7 +179,7 @@ export async function POST(request: Request) {
         [
           ["Компания", clean(body.company, 160)],
           ["Тип объекта", clean(body.objectType, 120)],
-          ["Площадь фасада, м²", clean(body.area, 40)],
+          ["Площадь фасада, м²", area],
           ["Необходимый материал", clean(body.material, 160)],
           ["Стадия проекта", clean(body.stage, 120)],
         ] as [string, string][]
@@ -173,7 +194,7 @@ export async function POST(request: Request) {
 
   const draft = {
     name,
-    phone,
+    phone: normalizePhone(phone),
     message,
     source,
     page: clean(body.page, 200),

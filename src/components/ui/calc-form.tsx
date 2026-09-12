@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { Paperclip, Send, X } from "lucide-react";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { cn } from "@/lib/utils";
+import { isValidArea, isValidName, isValidPhone, normalizePhone } from "@/lib/validate";
 
 /** 15 МБ — столько же принимает сервер. */
 const MAX_FILE = 15 * 1024 * 1024;
@@ -34,16 +35,22 @@ function TextField({
   label,
   value,
   onChange,
+  onBlur,
   required,
   type = "text",
   inputMode,
+  placeholder,
+  error,
 }: {
   label: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   required?: boolean;
   type?: string;
   inputMode?: "numeric" | "tel";
+  placeholder?: string;
+  error?: string;
 }) {
   return (
     <label className="block">
@@ -52,13 +59,16 @@ function TextField({
         {required && <span className="text-gold"> *</span>}
       </span>
       <input
-        className={field}
+        className={cn(field, error && "border-red-400 focus:border-red-500")}
         type={type}
         inputMode={inputMode}
-        required={required}
+        placeholder={placeholder}
         value={value}
         onChange={(event) => onChange(event.target.value)}
+        onBlur={onBlur}
+        aria-invalid={error ? true : undefined}
       />
+      {error && <span className="mt-1 block text-[12px] leading-[16px] text-red-600">{error}</span>}
     </label>
   );
 }
@@ -131,10 +141,33 @@ export default function CalcForm({
   const [file, setFile] = useState<File | null>(null);
   const [state, setState] = useState<"idle" | "sending" | "sent" | "error">("idle");
   const [error, setError] = useState("");
+  // какие поля человек уже трогал — до этого ошибки не показываем
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const set = (key: keyof Values, value: string) =>
+  const set = (key: keyof Values, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }));
+    // человек начал исправлять — общее сообщение об ошибке убираем
+    if (state === "error") {
+      setState("idle");
+      setError("");
+    }
+  };
+
+  const touch = (key: string) => setTouched((prev) => ({ ...prev, [key]: true }));
+
+  /** Ошибки по полям: имя — минимум две буквы, телефон — настоящий номер. */
+  const problems = {
+    name: values.name.trim() && !isValidName(values.name) ? t.errName : "",
+    phone: values.phone.trim() && !isValidPhone(values.phone) ? t.errPhone : "",
+    area: !isValidArea(values.area) ? t.errArea : "",
+  };
+
+  const shown = (key: keyof typeof problems) =>
+    touched[key] || state === "error" ? problems[key] : "";
+
+  const canSend =
+    isValidName(values.name) && isValidPhone(values.phone) && isValidArea(values.area);
 
   const pickFile = (chosen: File | null) => {
     if (chosen && chosen.size > MAX_FILE) {
@@ -149,8 +182,15 @@ export default function CalcForm({
   async function submit(event: React.FormEvent) {
     event.preventDefault();
 
+    setTouched({ name: true, phone: true, area: true });
+
     if (!values.name.trim() || !values.phone.trim()) {
       setError(t.required);
+      setState("error");
+      return;
+    }
+    if (!canSend) {
+      setError(problems.name || problems.phone || problems.area || t.required);
       setState("error");
       return;
     }
@@ -160,7 +200,9 @@ export default function CalcForm({
 
     try {
       const body = new FormData();
-      Object.entries(values).forEach(([key, value]) => body.append(key, value));
+      Object.entries({ ...values, phone: normalizePhone(values.phone) }).forEach(
+        ([key, value]) => body.append(key, value)
+      );
       body.append("source", source);
       body.append("page", window.location.pathname);
       body.append("locale", document.documentElement.lang || "ru");
@@ -172,6 +214,7 @@ export default function CalcForm({
 
       setState("sent");
       setValues(empty);
+      setTouched({});
       setFile(null);
       if (fileRef.current) fileRef.current.value = "";
     } catch (e) {
@@ -201,21 +244,33 @@ export default function CalcForm({
       )}
 
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
-        <TextField label={t.name} required value={values.name} onChange={(v) => set("name", v)} />
+        <TextField
+          label={t.name}
+          required
+          value={values.name}
+          onChange={(v) => set("name", v)}
+          onBlur={() => touch("name")}
+          error={shown("name")}
+        />
         <TextField label={t.company} value={values.company} onChange={(v) => set("company", v)} />
         <TextField
           label={t.phone}
           required
           type="tel"
           inputMode="tel"
+          placeholder={t.phoneHint}
           value={values.phone}
-          onChange={(v) => set("phone", v)}
+          onChange={(v) => set("phone", v.replace(/[^\d+()\-\s]/g, ""))}
+          onBlur={() => touch("phone")}
+          error={shown("phone")}
         />
         <TextField
           label={t.area}
           inputMode="numeric"
           value={values.area}
-          onChange={(v) => set("area", v)}
+          onChange={(v) => set("area", v.replace(/[^\d\s.,]/g, ""))}
+          onBlur={() => touch("area")}
+          error={shown("area")}
         />
         <SelectField
           label={t.objectType}
