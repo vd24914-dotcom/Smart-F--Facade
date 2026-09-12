@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import ImageEditor from "./ImageEditor";
 
@@ -271,6 +271,50 @@ export function Button({
     >
       {children}
     </button>
+  );
+}
+
+/**
+ * Кнопка с подтверждением прямо в себе: первый клик меняет надпись на «Точно?»,
+ * второй — выполняет действие. Через 4 секунды возвращается в исходный вид.
+ * Всплывающих окон браузера не используем — они блокируют страницу.
+ */
+export function ConfirmButton({
+  children,
+  confirmLabel = "Точно?",
+  variant = "danger",
+  className = "",
+  onConfirm,
+}: {
+  children: React.ReactNode;
+  confirmLabel?: string;
+  variant?: "primary" | "ghost" | "danger";
+  className?: string;
+  onConfirm: () => void;
+}) {
+  const [armed, setArmed] = useState(false);
+
+  useEffect(() => {
+    if (!armed) return;
+    const timer = window.setTimeout(() => setArmed(false), 4000);
+    return () => window.clearTimeout(timer);
+  }, [armed]);
+
+  return (
+    <Button
+      variant={armed ? "danger" : variant}
+      className={className}
+      onClick={() => {
+        if (!armed) {
+          setArmed(true);
+          return;
+        }
+        setArmed(false);
+        onConfirm();
+      }}
+    >
+      {armed ? confirmLabel : children}
+    </Button>
   );
 }
 

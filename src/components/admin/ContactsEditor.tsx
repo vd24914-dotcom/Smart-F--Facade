@@ -97,10 +97,7 @@ export default function ContactsEditor({
                 <IconButton
                   title="Удалить"
                   danger
-                  onClick={() => {
-                    if (confirm("Удалить этот раздел?"))
-                      setBlocks((prev) => prev.filter((_, i) => i !== index));
-                  }}
+                  onClick={() => setBlocks((prev) => prev.filter((_, i) => i !== index))}
                 >
                   ✕
                 </IconButton>

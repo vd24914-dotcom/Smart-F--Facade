@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { BeforeAfterContent, BeforeAfterItem, SiteContent, TextsContent } from "@/content/store";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import { Block, ContentProvider, PageShell, T, useContentState, useSaveAll } from "./page-kit";
-import { Button, Card, Field, ImageField, SaveBar } from "./ui";
+import { Button, Card, ConfirmButton, Field, ImageField, SaveBar } from "./ui";
 
 const empty = (): BeforeAfterItem => ({
   id: `ba-${Date.now()}`,
@@ -135,14 +135,9 @@ export default function BeforeAfterEditor({
             + Добавить пару «до / после»
           </Button>
           {items.length > 0 && (
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (confirm("Убрать все пары? Нажмите «Сохранить», чтобы применить.")) setItems([]);
-              }}
-            >
+            <ConfirmButton confirmLabel="Точно убрать все?" onConfirm={() => setItems([])}>
               Очистить список
-            </Button>
+            </ConfirmButton>
           )}
         </div>
       </PageShell>

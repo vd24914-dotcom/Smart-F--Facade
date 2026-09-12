@@ -5,7 +5,7 @@ import type { Project, SiteContent, TextsContent } from "@/content/store";
 import type { Dictionary } from "@/i18n/dictionaries";
 import { buildings, materials, type Building, type Material } from "@/data/portfolio";
 import { Block, ContentProvider, PageShell, T, useContentState, useSaveAll } from "./page-kit";
-import { Area, Button, Card, Field, ImageField, SaveBar } from "./ui";
+import { Area, Button, Card, ConfirmButton, Field, ImageField, SaveBar } from "./ui";
 
 const emptyText = {
   title: "",
@@ -118,17 +118,15 @@ export default function ProjectsEditor({
           <Button onClick={addProject}>+ Добавить проект</Button>
           <span className="text-[13px] text-slate-500">Всего: {projects.length}</span>
           {projects.length > 0 && (
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (confirm("Убрать все объекты из списка? Нажмите «Сохранить», чтобы применить.")) {
-                  setProjects([]);
-                  setOpenId(null);
-                }
+            <ConfirmButton
+              confirmLabel="Точно убрать все?"
+              onConfirm={() => {
+                setProjects([]);
+                setOpenId(null);
               }}
             >
               Очистить список
-            </Button>
+            </ConfirmButton>
           )}
         </div>
 
@@ -172,16 +170,11 @@ export default function ProjectsEditor({
                   <Button variant="ghost" onClick={() => setOpenId(open ? null : project.id)}>
                     {open ? "Свернуть" : "Изменить"}
                   </Button>
-                  <Button
-                    variant="danger"
-                    onClick={() => {
-                      if (confirm(`Удалить проект «${text.title || project.id}»?`)) {
-                        setProjects((prev) => prev.filter((p) => p.id !== project.id));
-                      }
-                    }}
+                  <ConfirmButton
+                    onConfirm={() => setProjects((prev) => prev.filter((p) => p.id !== project.id))}
                   >
                     Удалить
-                  </Button>
+                  </ConfirmButton>
                 </div>
 
                 {open && (
