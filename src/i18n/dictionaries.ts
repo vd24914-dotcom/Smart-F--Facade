@@ -5,6 +5,8 @@ export type Dictionary = {
     services: string;
     projects: string;
     partners: string;
+    /** пункт меню «Материалы» — ведёт к блоку материалов на главной */
+    materials: string;
     /** ссылка на страницу контактов (меню, подвал) */
     contacts: string;
     /** надпись на кнопке, которая открывает форму заявки */
@@ -38,6 +40,58 @@ export type Dictionary = {
   };
   beforeAfter: { title: string; lead: string; before: string; after: string };
   stats: { value: string; label: string }[];
+  /** Блок «Материалы» на главной */
+  materials: {
+    title: string;
+    lead: string;
+    items: { title: string; text: string }[];
+  };
+  /** Блок «Как мы работаем» */
+  process: {
+    title: string;
+    lead: string;
+    steps: { title: string; text: string }[];
+  };
+  /** Блок «Документы и сертификаты» */
+  docs: {
+    title: string;
+    lead: string;
+    items: { title: string; text: string }[];
+    note: string;
+  };
+  /** Блок «Опыт группы компаний» */
+  group: {
+    title: string;
+    lead: string;
+    text: string;
+    stats: { value: string; label: string }[];
+  };
+  /** Форма «Получить расчёт стоимости» */
+  calc: {
+    button: string;
+    title: string;
+    lead: string;
+    name: string;
+    company: string;
+    phone: string;
+    objectType: string;
+    area: string;
+    material: string;
+    stage: string;
+    file: string;
+    fileHint: string;
+    objectTypes: string[];
+    materials: string[];
+    stages: string[];
+    submit: string;
+    done: string;
+    error: string;
+    telegram: string;
+    choose: string;
+    fileChoose: string;
+    fileRemove: string;
+    required: string;
+  };
   representatives: { title: string };
   partners: { title: string };
   cta: { title: string[]; text: string[]; button: string };

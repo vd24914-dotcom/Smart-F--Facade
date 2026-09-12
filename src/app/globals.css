@@ -366,8 +366,14 @@ body {
 }
 
 /* пропуск по клику или прокрутке */
+.splash-skip .splash,
 .splash.is-skipped {
   animation: splash-out 0.3s ease forwards;
+}
+
+/* отыграла — убираем совсем, но узел оставляем React'у */
+.splash-done .splash {
+  display: none !important;
 }
 
 .splash__logo {

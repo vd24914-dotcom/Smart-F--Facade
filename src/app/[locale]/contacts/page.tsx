@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
 import SocialMark from "@/components/ui/social-mark";
-import ContactForm from "@/components/ContactForm";
+import CalcForm from "@/components/ui/calc-form";
 import { isLocale, locales } from "@/i18n/config";
 import { getDict, getSite, getContacts } from "@/content/store";
 import { pageMetadata } from "@/lib/seo";
@@ -82,7 +82,7 @@ export default async function ContactsPage({ params }: { params: Promise<{ local
             </div>
           </div>
 
-          <ContactForm dict={dict} email={site.email} />
+          <CalcForm dict={dict} source="contacts" className="bg-white p-0 shadow-none sm:p-0" />
         </div>
       </section>
     </>

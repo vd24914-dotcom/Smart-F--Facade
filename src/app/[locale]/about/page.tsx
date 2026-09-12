@@ -42,7 +42,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         title={page.advantagesTitle}
         description={page.advantagesLead}
         items={page.advantages.map((item, index) => ({ ...item, icon: site.icons.advantages[index] }))}
-        highlight={dict.stats[0] ? { value: dict.stats[0].value, label: dict.stats[0].label } : undefined}
+        highlight={dict.group?.stats?.[1] ?? dict.group?.stats?.[0]}
       />
 
       <LogoGrid title={dict.partners.title} logos={partners} />

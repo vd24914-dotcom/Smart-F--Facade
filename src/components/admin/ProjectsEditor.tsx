@@ -50,7 +50,7 @@ export default function ProjectsEditor({
   const save = () =>
     saveAll([
       { file: "projects", data: projects },
-      { file: "texts", data: store.texts },
+      { file: "texts", data: store.texts, base: store.base.texts },
     ]);
 
   const patch = (id: string, updater: (project: Project) => Project) =>
@@ -117,6 +117,19 @@ export default function ProjectsEditor({
           <h2 className="text-[15px] font-bold text-slate-900">Объекты</h2>
           <Button onClick={addProject}>+ Добавить проект</Button>
           <span className="text-[13px] text-slate-500">Всего: {projects.length}</span>
+          {projects.length > 0 && (
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (confirm("Убрать все объекты из списка? Нажмите «Сохранить», чтобы применить.")) {
+                  setProjects([]);
+                  setOpenId(null);
+                }
+              }}
+            >
+              Очистить список
+            </Button>
+          )}
         </div>
 
         <div className="space-y-3">

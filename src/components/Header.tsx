@@ -49,12 +49,14 @@ export default function Header({ locale, dict, logo }: Props) {
     };
   }, []);
 
+  // «Проекты» и «Партнёры» временно убраны из меню — страницы остались доступны
+  // по прямым ссылкам, вернём пункты после съёмки объектов в Ташкенте
   const links = [
     { href: "", label: dict.nav.home },
     { href: "/about", label: dict.nav.about },
     { href: "/services", label: dict.nav.services },
-    { href: "/projects", label: dict.nav.projects },
-    { href: "/partners", label: dict.nav.partners },
+    { href: "#materials", label: dict.nav.materials },
+    { href: "/contacts", label: dict.nav.contacts },
   ].map((link) => ({ ...link, url: `/${locale}${link.href}` }));
 
   // Путь без префикса локали — чтобы переключатель языка оставался на той же странице

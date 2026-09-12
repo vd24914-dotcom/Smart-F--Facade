@@ -72,7 +72,7 @@ export function alternates(path: string, locale: Locale, siteUrl: string) {
 }
 
 /** Метатеги страницы: берём из админки, пустые поля закрываем запасным текстом. */
-export async function pageMetadata(page: SeoPage, locale: Locale): Promise<Metadata> {
+async function buildPageMetadata(page: SeoPage, locale: Locale): Promise<Metadata> {
   const seo = await getSeo();
   const saved = seo.pages[page]?.[locale];
   const spare = fallback[page][locale];
@@ -120,7 +120,7 @@ export async function pageMetadata(page: SeoPage, locale: Locale): Promise<Metad
 }
 
 /** Метатеги страницы одного объекта. */
-export async function projectMetadata({
+async function buildProjectMetadata({
   locale,
   slug,
   title,
@@ -172,4 +172,29 @@ export async function projectMetadata({
   if (seo.favicon.trim()) meta.icons = { icon: seo.favicon.trim() };
 
   return meta;
+}
+
+/* ─────────────── защита от плохих настроек ─────────────── */
+
+/**
+ * Настройки SEO приходят из админки, то есть их пишет человек.
+ * Одна опечатка не должна ронять страницу: если собрать метатеги не вышло,
+ * отдаём самое необходимое, а страница открывается как обычно.
+ */
+export async function pageMetadata(page: SeoPage, locale: Locale): Promise<Metadata> {
+  try {
+    return await buildPageMetadata(page, locale);
+  } catch {
+    return { title: fallback[page][locale].title };
+  }
+}
+
+export async function projectMetadata(
+  input: Parameters<typeof buildProjectMetadata>[0]
+): Promise<Metadata> {
+  try {
+    return await buildProjectMetadata(input);
+  } catch {
+    return { title: input.seoTitle?.trim() || input.title };
+  }
 }

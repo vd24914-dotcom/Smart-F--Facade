@@ -7,18 +7,20 @@
       "projects": "Проекты",
       "partners": "Партнеры",
       "contacts": "Контакты",
-      "contactButton": "Связаться"
+      "contactButton": "Получить расчёт стоимости",
+      "materials": "Материалы"
     },
     "hero": {
       "title": [
         "Фасадные материалы",
-        "и решения"
+        "и комплектные решения",
+        "в Узбекистане"
       ],
       "phonesLabel": "Наши телефоны:",
       "contact": "Связаться",
       "whatsapp": "WhatsApp",
       "instagram": "Instagram",
-      "lead": "Полный комплекс услуг в фасадном сегменте: подбор материалов, подсистемы, монтаж и готовые решения под ключ."
+      "lead": "Поставляем материалы для вентилируемых фасадов напрямую от заводов-производителей: подбор под объект, расчёт по чертежам, комплектация и поставка в Ташкент и по всему Узбекистану."
     },
     "about": {
       "title": "О нас",
@@ -54,20 +56,7 @@
         "жилой комплекс дипломат"
       ]
     },
-    "stats": [
-      {
-        "value": "200",
-        "label": "Клиентов в год"
-      },
-      {
-        "value": "200",
-        "label": "Проектов в год"
-      },
-      {
-        "value": "200,000",
-        "label": "м² площади фасадов"
-      }
-    ],
+    "stats": [],
     "representatives": {
       "title": "мы являемся официальными представителями"
     },
@@ -76,14 +65,14 @@
     },
     "cta": {
       "title": [
-        "Мы создаем качественные",
-        "и безопасные фасады!"
+        "Подберём материалы",
+        "и посчитаем ваш фасад"
       ],
       "text": [
-        "Для этого вам нужно всего лишь оставить заявку и наш менеджер",
-        "свяжется с вами в рабочее время."
+        "Пришлите чертежи или спецификацию — подготовим предварительный расчёт",
+        "и предложим варианты материалов под ваш объект и бюджет."
       ],
-      "button": "Оставить заявку"
+      "button": "Получить расчёт стоимости"
     },
     "footer": {
       "contactsTitle": "Контакты",
@@ -92,8 +81,7 @@
       "links": [
         "О нас",
         "Услуги",
-        "Наши проекты",
-        "Партнеры"
+        "Материалы"
       ],
       "copyright": "Smart Facade © 2026 Smart Facade",
       "socialTitle": "Мы в соцсетях",
@@ -117,11 +105,11 @@
           },
           {
             "title": "Опыт работы",
-            "text": "Более 10 лет успешной деятельности на строительном рынке. Выполнили более 200 000 м² фасадов в КР."
+            "text": "Более 10 лет успешной работы на строительном рынке Кыргызстана — выполнено свыше 200 000 м² фасадов. Этот опыт мы переносим на объекты в Узбекистане."
           },
           {
-            "title": "Все по ГОСТу",
-            "text": "Имеем все необходимые дилерские соглашения, технические свидетельства, сертификаты качества и разрешительные документы."
+            "title": "Документы и сертификаты",
+            "text": "Материалы поставляем с сертификатами соответствия, техническими паспортами и протоколами пожарных испытаний, действующими на территории Узбекистана."
           },
           {
             "title": "Всегда вовремя",
@@ -194,18 +182,20 @@
       "projects": "Loyihalar",
       "partners": "Hamkorlar",
       "contacts": "Kontaktlar",
-      "contactButton": "Bog‘lanish"
+      "contactButton": "Narx hisob-kitobini olish",
+      "materials": "Materiallar"
     },
     "hero": {
       "title": [
         "Fasad materiallari",
-        "va yechimlari"
+        "va kompleks yechimlar",
+        "O‘zbekistonda"
       ],
       "phonesLabel": "Telefonlarimiz:",
       "contact": "Bog‘lanish",
       "whatsapp": "WhatsApp",
       "instagram": "Instagram",
-      "lead": "Fasad sohasida to‘liq xizmatlar majmuasi: materiallarni tanlash, quyi tizimlar, montaj va kalit topshirish yechimlari."
+      "lead": "Ventilyatsiyalanadigan fasadlar uchun materiallarni bevosita ishlab chiqaruvchi zavodlardan yetkazamiz: obyektga moslab tanlash, chizmalar bo‘yicha hisob, komplektlash va Toshkent hamda butun O‘zbekiston bo‘ylab yetkazib berish."
     },
     "about": {
       "title": "Biz haqimizda",
@@ -241,20 +231,7 @@
         "Diplomat turar-joy majmuasi"
       ]
     },
-    "stats": [
-      {
-        "value": "200",
-        "label": "Yiliga mijozlar"
-      },
-      {
-        "value": "200",
-        "label": "Yiliga loyihalar"
-      },
-      {
-        "value": "200,000",
-        "label": "m² fasad maydoni"
-      }
-    ],
+    "stats": [],
     "representatives": {
       "title": "biz rasmiy vakillarmiz"
     },
@@ -263,14 +240,14 @@
     },
     "cta": {
       "title": [
-        "Biz sifatli va xavfsiz",
-        "fasadlar yaratamiz!"
+        "Materiallarni tanlaymiz",
+        "va fasadingizni hisoblaymiz"
       ],
       "text": [
-        "Buning uchun ariza qoldirishingiz kifoya — menejerimiz",
-        "ish vaqtida siz bilan bog‘lanadi."
+        "Chizma yoki spetsifikatsiyani yuboring — dastlabki hisobni tayyorlaymiz",
+        "va obyektingiz hamda byudjetingizga mos material variantlarini taklif qilamiz."
       ],
-      "button": "Ariza qoldirish"
+      "button": "Narx hisob-kitobini olish"
     },
     "footer": {
       "contactsTitle": "Kontaktlar",
@@ -279,8 +256,7 @@
       "links": [
         "Biz haqimizda",
         "Xizmatlar",
-        "Loyihalarimiz",
-        "Hamkorlar"
+        "Materiallar"
       ],
       "copyright": "Smart Facade © 2026 Smart Facade",
       "socialTitle": "Ijtimoiy tarmoqlarda",
@@ -304,11 +280,11 @@
           },
           {
             "title": "Tajriba",
-            "text": "Qurilish bozorida 10 yildan ortiq muvaffaqiyatli faoliyat. Qirg‘izistonda 200 000 m² dan ortiq fasad bajarilgan."
+            "text": "Qirg‘iziston qurilish bozorida 10 yildan ortiq muvaffaqiyatli faoliyat — 200 000 m² dan ortiq fasad bajarilgan. Bu tajribani O‘zbekistondagi obyektlarga olib kelmoqdamiz."
           },
           {
-            "title": "Standartlarga muvofiq",
-            "text": "Barcha zarur diler shartnomalari, texnik guvohnomalar, sifat sertifikatlari va ruxsat hujjatlari mavjud."
+            "title": "Hujjatlar va sertifikatlar",
+            "text": "Materiallarni O‘zbekiston hududida amal qiluvchi muvofiqlik sertifikatlari, texnik passportlar va yong‘in sinovi bayonnomalari bilan yetkazamiz."
           },
           {
             "title": "Har doim o‘z vaqtida",
@@ -381,18 +357,20 @@
       "projects": "Projects",
       "partners": "Partners",
       "contacts": "Contacts",
-      "contactButton": "Contact us"
+      "contactButton": "Get a cost estimate",
+      "materials": "Materials"
     },
     "hero": {
       "title": [
         "Facade materials",
-        "and solutions"
+        "and complete solutions",
+        "in Uzbekistan"
       ],
       "phonesLabel": "Our phones:",
       "contact": "Get in touch",
       "whatsapp": "WhatsApp",
       "instagram": "Instagram",
-      "lead": "A full range of facade services: material selection, subsystems, installation and turnkey solutions."
+      "lead": "We supply ventilated-facade materials directly from the manufacturing plants: selection for the building, estimates from your drawings, complete sets and delivery in Tashkent and across Uzbekistan."
     },
     "about": {
       "title": "About us",
@@ -428,20 +406,7 @@
         "Diplomat Residential Complex"
       ]
     },
-    "stats": [
-      {
-        "value": "200",
-        "label": "Clients per year"
-      },
-      {
-        "value": "200",
-        "label": "Projects per year"
-      },
-      {
-        "value": "200,000",
-        "label": "m² of facade area"
-      }
-    ],
+    "stats": [],
     "representatives": {
       "title": "we are official representatives of"
     },
@@ -450,14 +415,14 @@
     },
     "cta": {
       "title": [
-        "We build high-quality",
-        "and safe facades!"
+        "We will select the materials",
+        "and price your facade"
       ],
       "text": [
-        "Just leave a request and our manager",
-        "will contact you during business hours."
+        "Send us drawings or a specification — we will prepare a preliminary estimate",
+        "and suggest material options for your building and budget."
       ],
-      "button": "Leave a request"
+      "button": "Get a cost estimate"
     },
     "footer": {
       "contactsTitle": "Contacts",
@@ -466,8 +431,7 @@
       "links": [
         "About us",
         "Services",
-        "Our projects",
-        "Partners"
+        "Materials"
       ],
       "copyright": "Smart Facade © 2026 Smart Facade",
       "socialTitle": "Follow us",
@@ -491,11 +455,11 @@
           },
           {
             "title": "Experience",
-            "text": "More than 10 years of successful work in the construction market. Over 200,000 m² of facades completed in Kyrgyzstan."
+            "text": "More than 10 years on the construction market of Kyrgyzstan — over 200,000 m² of facades completed. We bring that experience to projects in Uzbekistan."
           },
           {
-            "title": "Fully certified",
-            "text": "We hold all the necessary dealer agreements, technical certificates, quality certificates and permits."
+            "title": "Documents and certificates",
+            "text": "Materials are supplied with certificates of conformity, technical data sheets and fire test reports valid in Uzbekistan."
           },
           {
             "title": "Always on time",

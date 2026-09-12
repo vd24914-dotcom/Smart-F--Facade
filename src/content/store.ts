@@ -1,5 +1,6 @@
-import type { Locale } from "@/i18n/config";
+import { locales, type Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
+import { defaultTexts, mergeDefaults } from "@/i18n/defaults";
 import type { Building, Material } from "@/data/portfolio";
 import { seoPages, type SeoPage } from "@/data/seo";
 import type { SocialLink } from "@/data/socials";
@@ -89,6 +90,11 @@ export type Lead = {
   page: string;
   locale: string;
   status: "new" | "done";
+  /** поля формы расчёта — показываются в админке отдельными строками */
+  details?: { label: string; value: string }[];
+  /** приложенный чертёж или спецификация */
+  fileUrl?: string;
+  fileName?: string;
 };
 
 export type LeadsContent = { items: Lead[] };
@@ -204,7 +210,12 @@ export async function getSite(): Promise<SiteContent> {
 }
 
 export async function getTexts(): Promise<TextsContent> {
-  return read<TextsContent>("texts", {} as TextsContent);
+  const stored = await read<Partial<TextsContent>>("texts", {} as TextsContent);
+  // Новые блоки могли ещё не попасть в сохранённые тексты — подставляем заготовки,
+  // но всё, что человек уже написал в админке, всегда важнее.
+  return Object.fromEntries(
+    locales.map((locale) => [locale, mergeDefaults(defaultTexts[locale], stored?.[locale])])
+  ) as TextsContent;
 }
 
 export async function getDict(locale: Locale): Promise<Dictionary> {
@@ -235,6 +246,11 @@ export async function writeContent(file: ContentFile, data: unknown) {
 
 export async function readContent(file: ContentFile): Promise<unknown> {
   return read<unknown>(file, null);
+}
+
+/** То же, но мимо кэша — нужно перед точечным сохранением, чтобы не потерять чужие правки. */
+export async function readContentFresh(file: ContentFile): Promise<unknown> {
+  return readStored<unknown>(files[file], null, true);
 }
 
 /* ─────────── заявки, статистика, интеграции ─────────── */

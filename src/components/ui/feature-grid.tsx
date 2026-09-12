@@ -10,11 +10,14 @@ export type Feature = {
 };
 
 type Props = {
+  id?: string;
   title?: string;
   description?: string;
   items: Feature[];
   /** крупная цифра в первой карточке, например «10+ лет на рынке» */
   highlight?: { value: string; label: string };
+  /** фон блока: серый (по умолчанию) или белый — чтобы соседние блоки не сливались */
+  tone?: "mist" | "white";
   className?: string;
 };
 
@@ -35,7 +38,15 @@ const Blob = () => (
 );
 
 /** Преимущества плитками разного размера: крупная цифра и карточки с иконками. */
-export default function FeatureGrid({ title, description, items, highlight, className }: Props) {
+export default function FeatureGrid({
+  id,
+  title,
+  description,
+  items,
+  highlight,
+  tone = "mist",
+  className,
+}: Props) {
   if (items.length === 0) return null;
 
   // раскладка на 6 колонок: строки должны складываться ровно в 6
@@ -49,7 +60,14 @@ export default function FeatureGrid({ title, description, items, highlight, clas
     "group relative col-span-full overflow-hidden rounded-2xl border border-navy/10 bg-white p-6 shadow-[0_25px_60px_-45px_rgba(8,19,36,0.55)] transition duration-300 hover:-translate-y-1 hover:border-navy/25 sm:col-span-3";
 
   return (
-    <section className={cn("relative isolate overflow-hidden bg-mist py-16 lg:py-20", className)}>
+    <section
+      id={id}
+      className={cn(
+        "relative isolate overflow-hidden py-16 lg:py-20 scroll-mt-24",
+        tone === "white" ? "bg-white" : "bg-mist",
+        className
+      )}
+    >
       <div
         className="absolute -top-72 left-1/2 -z-10 size-[520px] -translate-x-1/2 rounded-full bg-navy/20 blur-[300px]"
         aria-hidden

@@ -19,8 +19,11 @@ function formatDate(iso: string) {
 }
 
 const sources: Record<string, string> = {
-  modal: "Модальное окно",
+  modal: "Всплывающее окно",
+  calc: "Форма расчёта",
+  cta: "Блок заявки",
   contacts: "Страница контактов",
+  footer: "Обратный звонок",
   form: "Форма",
 };
 
@@ -66,12 +69,23 @@ export default function LeadsEditor({
   const remove = (id: string) => persist(items.filter((lead) => lead.id !== id));
 
   const exportCsv = () => {
-    const head = ["Дата", "Имя", "Телефон", "Комментарий", "Откуда", "Страница", "Язык", "Статус"];
+    const head = [
+      "Дата", "Имя", "Телефон", "Компания", "Тип объекта", "Площадь", "Материал",
+      "Стадия", "Комментарий", "Файл", "Откуда", "Страница", "Язык", "Статус",
+    ];
+    const detail = (lead: Lead, label: string) =>
+      lead.details?.find((item) => item.label.startsWith(label))?.value ?? "";
     const rows = items.map((l) => [
       formatDate(l.createdAt),
       l.name,
       l.phone,
-      l.message.replace(/\s+/g, " "),
+      detail(l, "Компания"),
+      detail(l, "Тип объекта"),
+      detail(l, "Площадь"),
+      detail(l, "Необходимый материал"),
+      detail(l, "Стадия"),
+      l.details?.length ? "" : (l.message ?? "").replace(/\s+/g, " "),
+      l.fileUrl ?? "",
       sources[l.source] ?? l.source,
       l.page,
       l.locale,
@@ -166,10 +180,33 @@ export default function LeadsEditor({
                 )}
               </div>
 
-              {lead.message && (
-                <p className="mt-2 whitespace-pre-wrap text-[14px] leading-[22px] text-slate-700">
-                  {lead.message}
-                </p>
+              {lead.details && lead.details.length > 0 ? (
+                <dl className="mt-3 grid gap-x-6 gap-y-1 sm:grid-cols-2">
+                  {lead.details.map((item) => (
+                    <div key={item.label} className="flex gap-2 text-[14px] leading-[22px]">
+                      <dt className="shrink-0 text-slate-400">{item.label}:</dt>
+                      <dd className="font-semibold text-slate-700">{item.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+              ) : (
+                lead.message && (
+                  <p className="mt-2 whitespace-pre-wrap text-[14px] leading-[22px] text-slate-700">
+                    {lead.message}
+                  </p>
+                )
+              )}
+
+              {lead.fileUrl && (
+                <a
+                  href={lead.fileUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex max-w-full items-center gap-2 rounded-lg border border-slate-300 px-3 py-2 text-[13px] font-semibold text-slate-700 transition hover:border-slate-500"
+                >
+                  <span aria-hidden>📎</span>
+                  <span className="truncate">{lead.fileName || "Файл заявки"}</span>
+                </a>
               )}
 
               <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[12px] text-slate-400">

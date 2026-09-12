@@ -25,8 +25,8 @@ export default function ServicesEditor({
 
   const save = () =>
     saveAll([
-      { file: "texts", data: store.texts },
-      { file: "site", data: store.site },
+      { file: "texts", data: store.texts, base: store.base.texts },
+      { file: "site", data: store.site, base: store.base.site },
     ]);
 
   return (

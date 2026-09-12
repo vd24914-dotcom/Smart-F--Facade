@@ -30,7 +30,7 @@ export default function BeforeAfterEditor({
   const save = () =>
     saveAll([
       { file: "beforeafter", data: { items } },
-      { file: "texts", data: store.texts },
+      { file: "texts", data: store.texts, base: store.base.texts },
     ]);
 
   const patch = (id: string, next: Partial<BeforeAfterItem>) =>
@@ -130,9 +130,21 @@ export default function BeforeAfterEditor({
           </Card>
         ))}
 
-        <Button variant="ghost" onClick={() => setItems((prev) => [...prev, empty()])}>
-          + Добавить пару «до / после»
-        </Button>
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="ghost" onClick={() => setItems((prev) => [...prev, empty()])}>
+            + Добавить пару «до / после»
+          </Button>
+          {items.length > 0 && (
+            <Button
+              variant="danger"
+              onClick={() => {
+                if (confirm("Убрать все пары? Нажмите «Сохранить», чтобы применить.")) setItems([]);
+              }}
+            >
+              Очистить список
+            </Button>
+          )}
+        </div>
       </PageShell>
     </ContentProvider>
   );

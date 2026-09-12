@@ -42,6 +42,12 @@
   },
   "socials": [
     {
+      "id": "telegram",
+      "label": "Telegram",
+      "url": "",
+      "icon": ""
+    },
+    {
       "id": "whatsapp",
       "label": "WhatsApp",
       "url": "https://wa.me/996773999777",

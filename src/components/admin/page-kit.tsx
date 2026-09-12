@@ -1,6 +1,7 @@
 "use client";
 
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useRef, useState } from "react";
+import { diffChanges } from "@/lib/patch";
 import type { SiteContent, TextsContent } from "@/content/store";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
@@ -56,6 +57,8 @@ export function useContentState(initialTexts: TextsContent, initialSite: SiteCon
   const [texts, setTexts] = useState(initialTexts);
   const [site, setSite] = useState(initialSite);
   const [locale, setLocale] = useState<Locale>("ru");
+  // каким раздел был при открытии — с этим сравниваем при сохранении
+  const base = useRef({ texts: initialTexts, site: initialSite });
 
   const api = useMemo<Api>(
     () => ({
@@ -85,7 +88,7 @@ export function useContentState(initialTexts: TextsContent, initialSite: SiteCon
     [texts, site, locale]
   );
 
-  return { api, texts, site, setSite, setTexts, locale, setLocale };
+  return { api, texts, site, setSite, setTexts, locale, setLocale, base: base.current };
 }
 
 export function ContentProvider({ api, children }: { api: Api; children: React.ReactNode }) {
@@ -488,13 +491,106 @@ export function AdvantageRows({ hint }: { hint?: string }) {
   );
 }
 
-/** Цифры «200 клиентов в год»: значение и подпись. */
-export function StatRows() {
-  const { dict, setTx, setTxEveryLocale } = useContent();
-  const stats = dict.stats ?? [];
+/**
+ * Список карточек «заголовок + текст»: материалы, шаги работы, документы.
+ * Добавление и удаление меняет список во всех языках сразу, чтобы они не разъезжались.
+ */
+export function TitleTextRows({
+  path,
+  itemLabel,
+  addLabel,
+  hint,
+  rows = 3,
+}: {
+  /** путь до массива, например "materials.items" */
+  path: string;
+  itemLabel: string;
+  addLabel: string;
+  hint?: string;
+  rows?: number;
+}) {
+  const { tx, setTx, setTxEveryLocale } = useContent();
+  const items = ((tx(path) as { title: string; text: string }[]) ?? []).slice();
 
   const mutateEvery = (mutate: (list: unknown[]) => unknown[]) =>
-    setTxEveryLocale("stats", (list) => mutate(list as unknown[]) as string[]);
+    setTxEveryLocale(path, (list) => mutate(list as unknown[]) as string[]);
+
+  const setField = (index: number, key: "title" | "text", value: string) =>
+    setTx(
+      path,
+      items.map((item, i) => (i === index ? { ...item, [key]: value } : item))
+    );
+
+  const move = (index: number, delta: number) => {
+    const j = index + delta;
+    if (j < 0 || j >= items.length) return;
+    mutateEvery((list) => {
+      const next = list.slice();
+      [next[index], next[j]] = [next[j], next[index]];
+      return next;
+    });
+  };
+
+  return (
+    <div className="space-y-3">
+      {hint && <p className="text-[13px] leading-[19px] text-slate-500">{hint}</p>}
+
+      {items.map((item, index) => (
+        <div key={index} className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-[13px] font-bold text-slate-700">
+              {itemLabel} {index + 1}
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <IconButton title="Выше" onClick={() => move(index, -1)}>
+                ↑
+              </IconButton>
+              <IconButton title="Ниже" onClick={() => move(index, 1)}>
+                ↓
+              </IconButton>
+              <IconButton
+                title="Удалить"
+                danger
+                onClick={() => mutateEvery((list) => list.filter((_, i) => i !== index))}
+              >
+                ✕
+              </IconButton>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Field
+              label="Заголовок"
+              value={item?.title ?? ""}
+              onChange={(value) => setField(index, "title", value)}
+            />
+            <Area
+              label="Текст"
+              rows={rows}
+              value={item?.text ?? ""}
+              onChange={(value) => setField(index, "text", value)}
+            />
+          </div>
+        </div>
+      ))}
+
+      <Button
+        variant="ghost"
+        onClick={() => mutateEvery((list) => [...list, { title: "", text: "" }])}
+      >
+        + {addLabel}
+      </Button>
+    </div>
+  );
+}
+
+/** Цифры «200 000 м² фасадов»: значение и подпись. */
+export function StatRows({ path = "stats" }: { path?: string } = {}) {
+  const { tx, setTx, setTxEveryLocale } = useContent();
+  const stats = ((tx(path) as { value: string; label: string }[]) ?? []).slice();
+
+  const mutateEvery = (mutate: (list: unknown[]) => unknown[]) =>
+    setTxEveryLocale(path, (list) => mutate(list as unknown[]) as string[]);
 
   return (
     <div className="space-y-3">
@@ -505,7 +601,7 @@ export function StatRows() {
             value={stat.value}
             onChange={(v) =>
               setTx(
-                "stats",
+                path,
                 stats.map((s, i) => (i === index ? { ...s, value: v } : s))
               )
             }
@@ -515,7 +611,7 @@ export function StatRows() {
             value={stat.label}
             onChange={(v) =>
               setTx(
-                "stats",
+                path,
                 stats.map((s, i) => (i === index ? { ...s, label: v } : s))
               )
             }
@@ -585,15 +681,25 @@ export function useSaveAll() {
   const [state, setState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [message, setMessage] = useState("");
 
-  async function saveAll(parts: { file: string; data: unknown }[]) {
+  /**
+   * Отправляет только то, что человек изменил на этой странице.
+   * `base` — как раздел выглядел при открытии; без него уходит файл целиком
+   * (так было раньше, и так одна вкладка затирала правки другой).
+   */
+  async function saveAll(parts: { file: string; data: unknown; base?: unknown }[]) {
     setState("saving");
     setMessage("");
     try {
       for (const part of parts) {
+        const body =
+          part.base === undefined
+            ? { file: part.file, data: part.data }
+            : { file: part.file, changes: diffChanges(part.base, part.data) };
+
         const res = await fetch("/api/admin/save", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(part),
+          body: JSON.stringify(body),
         });
         const json = await res.json();
         if (!res.ok) throw new Error(json.error || "Не удалось сохранить");

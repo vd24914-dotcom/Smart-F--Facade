@@ -3,7 +3,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 import type { SiteContent } from "@/content/store";
 
-const linkPaths = ["/about", "/services", "/projects", "/partners"];
+const linkPaths = ["/about", "/services", "#materials", "/projects", "/partners"];
 
 export default function Footer({
   dict,
@@ -15,6 +15,7 @@ export default function Footer({
   site: SiteContent;
 }) {
   const links = [
+    // «#materials» — якорь блока на главной, остальное — обычные страницы
     ...dict.footer.links.map((label, index) => ({
       label,
       href: `/${locale}${linkPaths[index] ?? ""}`,

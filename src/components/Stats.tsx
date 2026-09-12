@@ -3,13 +3,17 @@ import CountUp from "@/components/ui/count-up";
 
 /** Полоса с цифрами: числа набегают, черты прочерчиваются от центра. Цикл 10 секунд. */
 export default function Stats({ dict }: { dict: Dictionary }) {
+  // цифры относятся к опыту в Кыргызстане и живут в блоке «Опыт группы компаний»
+  const stats = (dict.group?.stats ?? []).filter((stat) => stat.value?.trim());
+  if (stats.length === 0) return null;
+
   return (
     <section className="stats-row bg-white py-12">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 sm:grid-cols-3 sm:gap-0">
-        {dict.stats.map((stat, index) => (
+      <div className="mx-auto grid max-w-[1200px] grid-cols-1 gap-8 px-5 sm:grid-cols-2 sm:gap-0">
+        {stats.map((stat, index) => (
           <div
             key={stat.label}
-            className={`stats-row__item px-2.5 ${index < dict.stats.length - 1 ? "sm:border-r sm:border-hairline/40" : ""}`}
+            className={`stats-row__item px-2.5 ${index < stats.length - 1 ? "sm:border-r sm:border-hairline/40" : ""}`}
             style={{ ["--stat-delay" as string]: `${index * 180}ms` }}
           >
             <div className="flex items-center gap-4">

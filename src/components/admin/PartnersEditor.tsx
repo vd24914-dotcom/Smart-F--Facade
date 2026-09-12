@@ -48,7 +48,7 @@ export default function PartnersEditor({
   const save = () =>
     saveAll([
       { file: "partners", data },
-      { file: "texts", data: store.texts },
+      { file: "texts", data: store.texts, base: store.base.texts },
     ]);
 
   return (

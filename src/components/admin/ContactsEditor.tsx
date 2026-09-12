@@ -52,7 +52,7 @@ export default function ContactsEditor({
   const save = () =>
     saveAll([
       { file: "contacts", data: { blocks } },
-      { file: "texts", data: store.texts },
+      { file: "texts", data: store.texts, base: store.base.texts },
     ]);
 
   return (
