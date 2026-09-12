@@ -58,6 +58,8 @@ export type Dictionary = {
     lead: string;
     items: { title: string; text: string }[];
     note: string;
+    /** подпись ссылки на прикреплённый файл */
+    open: string;
   };
   /** Блок «Опыт группы компаний» */
   group: {

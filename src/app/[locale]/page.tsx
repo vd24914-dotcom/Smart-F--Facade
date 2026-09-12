@@ -74,7 +74,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           id="docs"
           title={dict.docs?.title}
           description={dict.docs?.lead}
-          items={dict.docs?.items ?? []}
+          fileLabel={dict.docs?.open}
+          items={(dict.docs?.items ?? []).map((item, index) => ({
+            ...item,
+            file: site.files?.docs?.[index] ?? "",
+          }))}
         />
 
         {/* объекты появятся после съёмки в Ташкенте — пустой раздел не показываем */}

@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FileText } from "lucide-react";
 import Reveal, { RevealGroup } from "@/components/ui/reveal";
 import { cn } from "@/lib/utils";
 
@@ -7,6 +8,8 @@ export type Feature = {
   text: string;
   /** путь к иконке из public/; без неё карточка покажет номер */
   icon?: string;
+  /** прикреплённый документ: под карточкой появится ссылка */
+  file?: string;
 };
 
 type Props = {
@@ -14,6 +17,8 @@ type Props = {
   title?: string;
   description?: string;
   items: Feature[];
+  /** подпись ссылки на прикреплённый документ */
+  fileLabel?: string;
   /** крупная цифра в первой карточке, например «10+ лет на рынке» */
   highlight?: { value: string; label: string };
   /** фон блока: серый (по умолчанию) или белый — чтобы соседние блоки не сливались */
@@ -43,6 +48,7 @@ export default function FeatureGrid({
   title,
   description,
   items,
+  fileLabel,
   highlight,
   tone = "mist",
   className,
@@ -136,6 +142,18 @@ export default function FeatureGrid({
                 </h3>
                 <p className="text-[15px] font-light leading-[25px] text-graphite">{item.text}</p>
               </div>
+
+              {item.file?.trim() && (
+                <a
+                  href={item.file}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="relative mt-4 inline-flex items-center gap-2 rounded-full border border-navy/20 bg-white px-4 py-2 text-[13px] font-semibold text-navy transition hover:border-navy hover:bg-navy hover:text-white"
+                >
+                  <FileText className="size-4" strokeWidth={1.8} />
+                  {fileLabel || "Смотреть документ"}
+                </a>
+              )}
 
               <div
                 aria-hidden

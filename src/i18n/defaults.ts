@@ -142,6 +142,7 @@ export const defaultTexts: DictionaryDefaults = {
         { title: "Гарантия производителя", text: "Официальные гарантийные обязательства заводов, чьими представителями мы являемся." },
       ],
       note: "Полный пакет документов по конкретному материалу отправим по запросу.",
+      open: "Смотреть документ",
     },
     group: {
       title: "Опыт группы компаний",
@@ -259,6 +260,7 @@ export const defaultTexts: DictionaryDefaults = {
         { title: "Ishlab chiqaruvchi kafolati", text: "Biz vakili bo‘lgan zavodlarning rasmiy kafolat majburiyatlari." },
       ],
       note: "Aniq material bo‘yicha to‘liq hujjatlar to‘plamini so‘rov bo‘yicha yuboramiz.",
+      open: "Hujjatni ko‘rish",
     },
     group: {
       title: "Kompaniyalar guruhi tajribasi",
@@ -376,6 +378,7 @@ export const defaultTexts: DictionaryDefaults = {
         { title: "Manufacturer warranty", text: "Official warranty obligations of the plants we represent." },
       ],
       note: "We will send the full document package for a specific material on request.",
+      open: "View document",
     },
     group: {
       title: "Experience of the group",

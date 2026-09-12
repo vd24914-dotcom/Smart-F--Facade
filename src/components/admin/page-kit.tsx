@@ -5,7 +5,7 @@ import { diffChanges } from "@/lib/patch";
 import type { SiteContent, TextsContent } from "@/content/store";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { Area, Button, Card, Field, IconButton, ImageField, LocaleTabs, Preview, StringList } from "./ui";
+import { Area, Button, Card, Field, FileField, IconButton, ImageField, LocaleTabs, Preview, StringList } from "./ui";
 
 /* ─────────────── работа с вложенными путями ─────────────── */
 
@@ -41,6 +41,8 @@ type Api = {
   setTxEveryLocale: (path: string, mutate: (list: string[]) => string[]) => void;
   setImage: (key: keyof SiteContent["images"], value: string) => void;
   setIcons: (group: keyof SiteContent["icons"], value: string[]) => void;
+  /** прикреплённые файлы, например документы к карточкам */
+  setFiles: (group: keyof SiteContent["files"], value: string[]) => void;
   setSite: React.Dispatch<React.SetStateAction<SiteContent>>;
 };
 
@@ -83,6 +85,8 @@ export function useContentState(initialTexts: TextsContent, initialSite: SiteCon
         setSite((prev) => ({ ...prev, images: { ...prev.images, [key]: value } })),
       setIcons: (group, value) =>
         setSite((prev) => ({ ...prev, icons: { ...prev.icons, [group]: value } })),
+      setFiles: (group, value) =>
+        setSite((prev) => ({ ...prev, files: { ...prev.files, [group]: value } })),
       setSite,
     }),
     [texts, site, locale]
@@ -501,6 +505,9 @@ export function TitleTextRows({
   addLabel,
   hint,
   rows = 3,
+  fileGroup,
+  fileLabel = "Прикреплённый файл",
+  fileHint,
 }: {
   /** путь до массива, например "materials.items" */
   path: string;
@@ -508,9 +515,26 @@ export function TitleTextRows({
   addLabel: string;
   hint?: string;
   rows?: number;
+  /** если задано — к каждой карточке можно прикрепить документ (site.files[group]) */
+  fileGroup?: keyof SiteContent["files"];
+  fileLabel?: string;
+  fileHint?: string;
 }) {
-  const { tx, setTx, setTxEveryLocale } = useContent();
+  const { tx, setTx, setTxEveryLocale, site, setFiles } = useContent();
   const items = ((tx(path) as { title: string; text: string }[]) ?? []).slice();
+  const attached = fileGroup ? site.files?.[fileGroup] ?? [] : [];
+
+  /** файлы хранятся отдельным списком — держим его той же длины, что и карточки */
+  const padFiles = (length: number) =>
+    Array.from({ length }, (_, i) => attached[i] ?? "");
+
+  const setFile = (index: number, value: string) => {
+    if (!fileGroup) return;
+    setFiles(
+      fileGroup,
+      padFiles(Math.max(items.length, index + 1)).map((item, i) => (i === index ? value : item))
+    );
+  };
 
   const mutateEvery = (mutate: (list: unknown[]) => unknown[]) =>
     setTxEveryLocale(path, (list) => mutate(list as unknown[]) as string[]);
@@ -529,6 +553,21 @@ export function TitleTextRows({
       [next[index], next[j]] = [next[j], next[index]];
       return next;
     });
+    if (fileGroup) {
+      const next = padFiles(items.length);
+      [next[index], next[j]] = [next[j], next[index]];
+      setFiles(fileGroup, next);
+    }
+  };
+
+  const removeRow = (index: number) => {
+    mutateEvery((list) => list.filter((_, i) => i !== index));
+    if (fileGroup) setFiles(fileGroup, padFiles(items.length).filter((_, i) => i !== index));
+  };
+
+  const addRow = () => {
+    mutateEvery((list) => [...list, { title: "", text: "" }]);
+    if (fileGroup) setFiles(fileGroup, [...padFiles(items.length), ""]);
   };
 
   return (
@@ -548,11 +587,7 @@ export function TitleTextRows({
               <IconButton title="Ниже" onClick={() => move(index, 1)}>
                 ↓
               </IconButton>
-              <IconButton
-                title="Удалить"
-                danger
-                onClick={() => mutateEvery((list) => list.filter((_, i) => i !== index))}
-              >
+              <IconButton title="Удалить" danger onClick={() => removeRow(index)}>
                 ✕
               </IconButton>
             </div>
@@ -570,14 +605,19 @@ export function TitleTextRows({
               value={item?.text ?? ""}
               onChange={(value) => setField(index, "text", value)}
             />
+            {fileGroup && (
+              <FileField
+                label={fileLabel}
+                hint={fileHint}
+                value={attached[index] ?? ""}
+                onChange={(value) => setFile(index, value)}
+              />
+            )}
           </div>
         </div>
       ))}
 
-      <Button
-        variant="ghost"
-        onClick={() => mutateEvery((list) => [...list, { title: "", text: "" }])}
-      >
+      <Button variant="ghost" onClick={addRow}>
         + {addLabel}
       </Button>
     </div>

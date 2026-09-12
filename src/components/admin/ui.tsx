@@ -274,6 +274,88 @@ export function Button({
   );
 }
 
+/** Документ к карточке: PDF или скан. На сайте появится ссылка «Смотреть документ». */
+export function FileField({
+  label,
+  value,
+  onChange,
+  hint,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  hint?: string;
+}) {
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
+
+  async function upload(file: File) {
+    setBusy(true);
+    setError("");
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("kind", "doc");
+      const res = await fetch("/api/admin/upload", { method: "POST", body });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || "Не удалось загрузить");
+      onChange(json.url);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Ошибка загрузки");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  const fileName = value ? decodeURIComponent(value.split("/").pop() || value) : "";
+
+  return (
+    <div className="rounded-xl border border-slate-200 bg-white p-3">
+      <span className="mb-2 block text-[13px] font-semibold text-slate-700">{label}</span>
+
+      {value ? (
+        <div className="mb-2 flex flex-wrap items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+          <span aria-hidden>📄</span>
+          <a
+            href={value}
+            target="_blank"
+            rel="noreferrer"
+            className="min-w-0 flex-1 truncate text-[13px] font-semibold text-slate-700 underline-offset-2 hover:underline"
+          >
+            {fileName}
+          </a>
+        </div>
+      ) : (
+        <p className="mb-2 text-[13px] text-slate-400">Файл не прикреплён</p>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="cursor-pointer rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700">
+          {busy ? "Загрузка…" : value ? "Заменить файл" : "Прикрепить файл"}
+          <input
+            type="file"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.png,.jpg,.jpeg,.webp"
+            className="hidden"
+            onChange={(e) => {
+              const file = e.target.files?.[0];
+              if (file) upload(file);
+              e.target.value = "";
+            }}
+          />
+        </label>
+        {value && (
+          <Button variant="ghost" onClick={() => onChange("")}>
+            Убрать
+          </Button>
+        )}
+      </div>
+
+      {hint && <p className="mt-1 text-[12px] text-slate-500">{hint}</p>}
+      {error && <p className="mt-1 text-[12px] text-red-600">{error}</p>}
+    </div>
+  );
+}
+
 /**
  * Кнопка с подтверждением прямо в себе: первый клик меняет надпись на «Точно?»,
  * второй — выполняет действие. Через 4 секунды возвращается в исходный вид.

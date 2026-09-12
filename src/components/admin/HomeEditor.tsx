@@ -121,7 +121,15 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         <Block title="8. Блок «Документы и сертификаты»">
           <T path="docs.title" label="Заголовок" />
           <T path="docs.lead" label="Текст под заголовком" kind="area" rows={2} />
-          <TitleTextRows path="docs.items" itemLabel="Документ" addLabel="Добавить документ" />
+          <TitleTextRows
+            path="docs.items"
+            itemLabel="Документ"
+            addLabel="Добавить документ"
+            fileGroup="docs"
+            fileLabel="Файл документа"
+            fileHint="PDF, DOC, XLS, PNG или JPG — до 20 МБ. На сайте под карточкой появится ссылка «Смотреть документ»."
+          />
+          <T path="docs.open" label="Подпись ссылки на файл" />
           <T path="docs.note" label="Примечание под блоком" kind="area" rows={2} />
         </Block>
 

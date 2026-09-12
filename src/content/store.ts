@@ -28,6 +28,8 @@ export type SiteContent = {
     footer: string;
   };
   icons: { specs: string[]; services: string[]; advantages: string[] };
+  /** Прикреплённые файлы: docs[i] — документ к карточке «Документы и сертификаты» */
+  files: { docs: string[] };
 };
 
 export type ProjectText = {
@@ -206,7 +208,12 @@ function normalizeSocials(site: SiteContent): SocialLink[] {
 
 export async function getSite(): Promise<SiteContent> {
   const site = await read<SiteContent>("site", {} as SiteContent);
-  return { ...site, socials: normalizeSocials(site) };
+  return {
+    ...site,
+    socials: normalizeSocials(site),
+    // раздела может не быть в сохранённом файле — тогда просто пустой список
+    files: { docs: Array.isArray(site?.files?.docs) ? site.files.docs : [] },
+  };
 }
 
 export async function getTexts(): Promise<TextsContent> {

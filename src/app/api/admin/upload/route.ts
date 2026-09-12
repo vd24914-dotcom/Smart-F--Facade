@@ -7,6 +7,10 @@ import { cloudEnabled, BLOB_ACCESS } from "@/content/storage";
 const allowed = ["image/png", "image/jpeg", "image/webp", "image/svg+xml", "image/gif"];
 const maxBytes = 8 * 1024 * 1024;
 
+/** Документы для карточек «Документы и сертификаты» — их можно открыть с сайта. */
+const docExt = [".pdf", ".doc", ".docx", ".xls", ".xlsx", ".png", ".jpg", ".jpeg", ".webp"];
+const docMaxBytes = 20 * 1024 * 1024;
+
 function safeName(name: string) {
   const ext = path.extname(name).toLowerCase() || ".png";
   const base = path
@@ -29,11 +33,27 @@ export async function POST(request: Request) {
   if (!(file instanceof File)) {
     return NextResponse.json({ error: "Файл не получен" }, { status: 400 });
   }
-  if (!allowed.includes(file.type)) {
-    return NextResponse.json({ error: "Можно загружать только PNG, JPG, WEBP, SVG или GIF" }, { status: 400 });
-  }
-  if (file.size > maxBytes) {
-    return NextResponse.json({ error: "Файл больше 8 МБ" }, { status: 400 });
+
+  // kind=doc — документ (PDF и т.п.), иначе картинка
+  const isDoc = form.get("kind") === "doc";
+
+  if (isDoc) {
+    if (!docExt.includes(path.extname(file.name).toLowerCase())) {
+      return NextResponse.json(
+        { error: "Можно загружать PDF, DOC, DOCX, XLS, XLSX, PNG или JPG" },
+        { status: 400 }
+      );
+    }
+    if (file.size > docMaxBytes) {
+      return NextResponse.json({ error: "Файл больше 20 МБ" }, { status: 400 });
+    }
+  } else {
+    if (!allowed.includes(file.type)) {
+      return NextResponse.json({ error: "Можно загружать только PNG, JPG, WEBP, SVG или GIF" }, { status: 400 });
+    }
+    if (file.size > maxBytes) {
+      return NextResponse.json({ error: "Файл больше 8 МБ" }, { status: 400 });
+    }
   }
 
   let data = Buffer.from(await file.arrayBuffer());
@@ -50,14 +70,15 @@ export async function POST(request: Request) {
   }
 
   const name = safeName(file.name);
+  const folder = isDoc ? "docs" : "uploads";
 
   // На сервере файлы класть некуда — отправляем в облачное хранилище.
   if (cloudEnabled()) {
     try {
       const { put } = await import("@vercel/blob");
-      const blob = await put(`uploads/${name}`, data, {
+      const blob = await put(`${folder}/${name}`, data, {
         access: BLOB_ACCESS,
-        contentType: file.type,
+        contentType: file.type || "application/octet-stream",
         addRandomSuffix: false,
       });
       return NextResponse.json({ url: blob.url });
@@ -69,7 +90,7 @@ export async function POST(request: Request) {
 
   // На своём компьютере — как раньше, в папку public/uploads
   try {
-    const dir = path.join(process.cwd(), "public", "uploads");
+    const dir = path.join(process.cwd(), "public", folder);
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(path.join(dir, name), data);
   } catch {
@@ -83,5 +104,5 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json({ url: `/uploads/${name}` });
+  return NextResponse.json({ url: `/${folder}/${name}` });
 }
