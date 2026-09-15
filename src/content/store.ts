@@ -106,8 +106,24 @@ export type StatsContent = { days: Record<string, { views: number; visits: numbe
 
 export type { SeoPage };
 
+/** Кому уходит уведомление о заявке: человек или рабочий чат. */
+export type TelegramRecipient = {
+  id: string;
+  /** Подпись для админки — «Каралина», «Отдел продаж» */
+  label: string;
+  /** ID чата: число для личных сообщений, со знаком минус для групп */
+  chatId: string;
+  enabled: boolean;
+};
+
 export type IntegrationsContent = {
-  telegram: { enabled: boolean; token: string; chatId: string };
+  telegram: {
+    enabled: boolean;
+    token: string;
+    /** Прежнее поле «ID чата» — остаётся как основной получатель */
+    chatId: string;
+    recipients: TelegramRecipient[];
+  };
 };
 
 /* ─────────── SEO ─────────── */
@@ -336,9 +352,24 @@ export async function trackView(firstInSession: boolean) {
   await writeContent("stats", { days: trimmed });
 }
 
+function normalizeRecipients(list: unknown): TelegramRecipient[] {
+  if (!Array.isArray(list)) return [];
+  return list
+    .map((item, index) => {
+      const row = (item ?? {}) as Partial<TelegramRecipient>;
+      return {
+        id: String(row.id ?? "").trim() || `tg-${index}`,
+        label: String(row.label ?? "").trim(),
+        chatId: String(row.chatId ?? "").trim(),
+        enabled: row.enabled !== false,
+      };
+    })
+    .filter((row) => row.chatId || row.label);
+}
+
 export async function getIntegrations(): Promise<IntegrationsContent> {
   const data = await read<IntegrationsContent>("integrations", {
-    telegram: { enabled: false, token: "", chatId: "" },
+    telegram: { enabled: false, token: "", chatId: "", recipients: [] },
   });
   // на хостинге ключи удобнее держать в настройках проекта, а не в файле
   const token = (process.env.TELEGRAM_BOT_TOKEN || data?.telegram?.token || "").trim();
@@ -350,6 +381,7 @@ export async function getIntegrations(): Promise<IntegrationsContent> {
       enabled: fromEnv || Boolean(data?.telegram?.enabled),
       token,
       chatId,
+      recipients: normalizeRecipients(data?.telegram?.recipients),
     },
   };
 }

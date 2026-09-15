@@ -4,6 +4,7 @@ import path from "node:path";
 import { addLead, getIntegrations } from "@/content/store";
 import { cloudEnabled, BLOB_ACCESS } from "@/content/storage";
 import { isValidArea, isValidName, isValidPhone, normalizePhone } from "@/lib/validate";
+import { escapeHtml, sendTelegramAll } from "@/lib/telegram";
 
 /** Простая защита от спама: не больше 5 заявок за 10 минут с одного IP. */
 const recent = new Map<string, number[]>();
@@ -74,30 +75,16 @@ async function storeAttachment(file: File): Promise<{ url: string; name: string 
   }
 }
 
-/** Возвращает true, если сообщение действительно ушло в телеграм. */
+/** Рассылает заявку всем получателям. True — если дошло хотя бы до одного. */
 async function notifyTelegram(text: string) {
   const { telegram } = await getIntegrations();
-  if (!telegram.enabled || !telegram.token || !telegram.chatId) return false;
+  if (!telegram.enabled || !telegram.token) return false;
 
-  try {
-    const res = await fetch(`https://api.telegram.org/bot${telegram.token}/sendMessage`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        chat_id: telegram.chatId,
-        text,
-        parse_mode: "HTML",
-        disable_web_page_preview: false,
-      }),
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
+  const results = await sendTelegramAll(telegram, text);
+  return results.some((item) => item.ok);
 }
 
-const escape = (value: string) =>
-  value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+const escape = escapeHtml;
 
 export async function POST(request: Request) {
   const ip =

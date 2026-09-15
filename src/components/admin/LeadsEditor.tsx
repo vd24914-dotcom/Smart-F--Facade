@@ -1,8 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { IntegrationsContent, Lead } from "@/content/store";
-import { Button, Card, Field, useSave } from "./ui";
+import { Button, Card, useSave } from "./ui";
 
 type Filter = "all" | "new" | "done";
 
@@ -36,10 +37,9 @@ export default function LeadsEditor({
 }) {
   const [items, setItems] = useState<Lead[]>(initial);
   const [filter, setFilter] = useState<Filter>("all");
-  const [telegram, setTelegram] = useState(integrations.telegram);
+  const telegram = integrations.telegram;
 
   const leadsSave = useSave("leads");
-  const integrationsSave = useSave("integrations");
 
   const visible = useMemo(
     () => (filter === "all" ? items : items.filter((lead) => lead.status === filter)),
@@ -234,39 +234,18 @@ export default function LeadsEditor({
         </div>
       )}
 
-      <Card title="Телеграм-бот (уведомления о заявках)">
+      <Card title="Уведомления о заявках">
         <p className="text-[13px] text-slate-500">
-          Создайте бота через @BotFather, добавьте его в чат и вставьте токен и ID чата. После включения
-          каждая заявка будет приходить сообщением.
+          {telegram.enabled
+            ? "Заявки приходят в телеграм. Кому именно — настраивается в разделе «Телеграм»."
+            : "Пока заявки видны только здесь. В разделе «Телеграм» можно подключить бота, и каждая заявка будет приходить сообщением."}
         </p>
-        <Field
-          label="Токен бота"
-          value={telegram.token}
-          onChange={(token) => setTelegram({ ...telegram, token })}
-          hint="Вид: 1234567890:AA..."
-        />
-        <Field
-          label="ID чата"
-          value={telegram.chatId}
-          onChange={(chatId) => setTelegram({ ...telegram, chatId })}
-          hint="Свой ID можно узнать у @userinfobot"
-        />
-        <label className="flex items-center gap-2 text-[14px] text-slate-700">
-          <input
-            type="checkbox"
-            checked={telegram.enabled}
-            onChange={(e) => setTelegram({ ...telegram, enabled: e.target.checked })}
-          />
-          Присылать заявки в телеграм
-        </label>
-        <div className="flex items-center gap-3">
-          <Button onClick={() => integrationsSave.save({ telegram })}>
-            {integrationsSave.state === "saving" ? "Сохраняю…" : "Сохранить настройки"}
-          </Button>
-          {integrationsSave.message && (
-            <span className="text-[13px] text-slate-500">{integrationsSave.message}</span>
-          )}
-        </div>
+        <Link
+          href="/admin/telegram"
+          className="inline-block rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700"
+        >
+          Настроить телеграм →
+        </Link>
       </Card>
     </div>
   );

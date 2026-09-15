@@ -28,6 +28,19 @@ export const BLOB_ACCESS = (process.env.BLOB_ACCESS?.trim() === "private" ? "pri
   | "public"
   | "private";
 
+/**
+ * Содержимое сайта (заявки с телефонами, токен бота, настройки) хранится
+ * закрыто: у открытого хранилища адрес файла можно угадать, и тогда
+ * `content/leads.json` читает кто угодно. Картинки остаются открытыми —
+ * их нужно показывать на сайте.
+ *
+ * Если закрытый режим по какой-то причине недоступен, запись и чтение
+ * возвращаются к прежнему открытому — сайт не ломается.
+ */
+const CONTENT_ACCESS = (process.env.BLOB_CONTENT_ACCESS?.trim() === "public" ? "public" : "private") as
+  | "public"
+  | "private";
+
 export function cloudEnabled() {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim() || process.env.BLOB_STORE_ID?.trim());
 }
@@ -65,18 +78,25 @@ async function fetchCloud<T>(file: string): Promise<T | null> {
   const recent = recentWrite<T>(file);
   if (recent !== null) return recent;
 
-  try {
-    const { get } = await import("@vercel/blob");
-    // useCache: false — берём последнюю версию, а не копию из кэша сети
-    const result = await get(`${PREFIX}/${file}`, { access: BLOB_ACCESS, useCache: false });
-    if (!result || result.statusCode !== 200) return null;
+  // сначала закрытый режим, потом прежний открытый — пока не все файлы
+  // переписаны, часть может лежать ещё по-старому
+  const order: Array<"public" | "private"> =
+    CONTENT_ACCESS === "private" ? ["private", "public"] : ["public", "private"];
 
-    const text = await new Response(result.stream).text();
-    return JSON.parse(text) as T;
-  } catch {
-    // файла ещё нет в хранилище или оно недоступно — вернёмся к файлам проекта
-    return null;
+  for (const access of order) {
+    try {
+      const { get } = await import("@vercel/blob");
+      // useCache: false — берём последнюю версию, а не копию из кэша сети
+      const result = await get(`${PREFIX}/${file}`, { access, useCache: false });
+      if (!result || result.statusCode !== 200) continue;
+
+      const text = await new Response(result.stream).text();
+      return JSON.parse(text) as T;
+    } catch {
+      // файла ещё нет в хранилище или режим недоступен — пробуем второй способ
+    }
   }
+  return null;
 }
 
 /**
@@ -131,13 +151,21 @@ function writeFile(file: string, data: unknown) {
 
 async function writeCloud(file: string, data: unknown) {
   const { put } = await import("@vercel/blob");
-  await put(`${PREFIX}/${file}`, JSON.stringify(data, null, 2) + "\n", {
-    access: BLOB_ACCESS,
+  const body = JSON.stringify(data, null, 2) + "\n";
+  const options = {
     contentType: "application/json; charset=utf-8",
     addRandomSuffix: false,
     allowOverwrite: true,
     cacheControlMaxAge: 0,
-  });
+  } as const;
+
+  try {
+    await put(`${PREFIX}/${file}`, body, { ...options, access: CONTENT_ACCESS });
+  } catch (error) {
+    if (CONTENT_ACCESS === "public") throw error;
+    // закрытый режим недоступен — не теряем правку, пишем как раньше
+    await put(`${PREFIX}/${file}`, body, { ...options, access: "public" });
+  }
 }
 
 export async function writeStored(file: string, data: unknown) {
