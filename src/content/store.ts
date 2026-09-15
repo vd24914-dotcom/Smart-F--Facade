@@ -123,6 +123,14 @@ export type IntegrationsContent = {
     /** Прежнее поле «ID чата» — остаётся как основной получатель */
     chatId: string;
     recipients: TelegramRecipient[];
+    /** Пароль, которым телеграм подписывает свои запросы к сайту */
+    secret: string;
+    /** Бот отвечает клиентам: меню, заявка, ссылки на сайт */
+    botEnabled: boolean;
+    /** Что бот пишет клиенту первым сообщением; пусто — текст по умолчанию */
+    welcome: string;
+    /** Отчёт «сайт работает» раз в 12 часов */
+    healthEnabled: boolean;
   };
 };
 
@@ -367,10 +375,19 @@ function normalizeRecipients(list: unknown): TelegramRecipient[] {
     .filter((row) => row.chatId || row.label);
 }
 
+const emptyTelegram = (): IntegrationsContent["telegram"] => ({
+  enabled: false,
+  token: "",
+  chatId: "",
+  recipients: [],
+  secret: "",
+  botEnabled: false,
+  welcome: "",
+  healthEnabled: false,
+});
+
 export async function getIntegrations(): Promise<IntegrationsContent> {
-  const data = await read<IntegrationsContent>("integrations", {
-    telegram: { enabled: false, token: "", chatId: "", recipients: [] },
-  });
+  const data = await read<IntegrationsContent>("integrations", { telegram: emptyTelegram() });
   // на хостинге ключи удобнее держать в настройках проекта, а не в файле
   const token = (process.env.TELEGRAM_BOT_TOKEN || data?.telegram?.token || "").trim();
   const chatId = (process.env.TELEGRAM_CHAT_ID || data?.telegram?.chatId || "").trim();
@@ -382,6 +399,18 @@ export async function getIntegrations(): Promise<IntegrationsContent> {
       token,
       chatId,
       recipients: normalizeRecipients(data?.telegram?.recipients),
+      secret: String(data?.telegram?.secret ?? "").trim(),
+      botEnabled: Boolean(data?.telegram?.botEnabled),
+      welcome: String(data?.telegram?.welcome ?? ""),
+      healthEnabled: data?.telegram?.healthEnabled !== false,
     },
   };
+}
+
+/** Записывает настройки телеграма, не трогая остальные интеграции. */
+export async function saveTelegram(patch: Partial<IntegrationsContent["telegram"]>) {
+  const current = (await readContentFresh("integrations")) as Partial<IntegrationsContent> | null;
+  const telegram = { ...emptyTelegram(), ...(current?.telegram ?? {}), ...patch };
+  await writeContent("integrations", { ...(current ?? {}), telegram });
+  return telegram;
 }

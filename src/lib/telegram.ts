@@ -29,11 +29,23 @@ export function telegramTargets(telegram: Telegram) {
 
 export type SendResult = { chatId: string; label: string; ok: boolean; error?: string };
 
+/** Кнопка меню: либо открывает ссылку, либо шлёт команду боту. */
+export type Button = { text: string; url?: string; data?: string };
+
+export function keyboard(rows: Button[][]) {
+  return {
+    inline_keyboard: rows.map((row) =>
+      row.map((b) => (b.url ? { text: b.text, url: b.url } : { text: b.text, callback_data: b.data ?? "menu" }))
+    ),
+  };
+}
+
 /** Одно сообщение одному чату. Ошибку возвращаем текстом — она видна в админке. */
 export async function sendTelegram(
   token: string,
   chatId: string,
-  text: string
+  text: string,
+  extra: Record<string, unknown> = {}
 ): Promise<{ ok: boolean; error?: string }> {
   if (!token || !chatId) return { ok: false, error: "Не заполнен токен или ID чата" };
 
@@ -45,7 +57,8 @@ export async function sendTelegram(
         chat_id: chatId,
         text,
         parse_mode: "HTML",
-        disable_web_page_preview: false,
+        disable_web_page_preview: true,
+        ...extra,
       }),
     });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
@@ -53,6 +66,94 @@ export async function sendTelegram(
     return { ok: false, error: json?.description || `Телеграм ответил ${res.status}` };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
+  }
+}
+
+/** Файл в чат — выгрузка заявок или посещаемости таблицей. */
+export async function sendTelegramDocument(
+  token: string,
+  chatId: string,
+  fileName: string,
+  content: string,
+  caption = ""
+) {
+  if (!token || !chatId) return { ok: false, error: "Не заполнен токен или ID чата" };
+  try {
+    const form = new FormData();
+    form.append("chat_id", chatId);
+    if (caption) {
+      form.append("caption", caption);
+      form.append("parse_mode", "HTML");
+    }
+    // «﻿» — чтобы Excel открыл кириллицу правильно
+    form.append("document", new Blob(["﻿" + content], { type: "text/csv;charset=utf-8" }), fileName);
+
+    const res = await fetch(`${API}/bot${token}/sendDocument`, { method: "POST", body: form });
+    const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
+    if (res.ok && json?.ok) return { ok: true };
+    return { ok: false, error: json?.description || `Телеграм ответил ${res.status}` };
+  } catch (error) {
+    return { ok: false, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
+  }
+}
+
+/** Гасит «часики» на нажатой кнопке. */
+export async function answerCallback(token: string, id: string, text = "") {
+  try {
+    await fetch(`${API}/bot${token}/answerCallbackQuery`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ callback_query_id: id, text }),
+    });
+  } catch {
+    // не критично: кнопка просто подольше подумает
+  }
+}
+
+/** Подписывает сайт на сообщения бота. */
+export async function setTelegramWebhook(token: string, url: string, secret: string) {
+  try {
+    const res = await fetch(`${API}/bot${token}/setWebhook`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        url,
+        secret_token: secret,
+        allowed_updates: ["message", "callback_query"],
+        drop_pending_updates: true,
+      }),
+    });
+    const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
+    if (res.ok && json?.ok) return { ok: true as const };
+    return { ok: false as const, error: json?.description || `Телеграм ответил ${res.status}` };
+  } catch (error) {
+    return { ok: false as const, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
+  }
+}
+
+export async function deleteTelegramWebhook(token: string) {
+  try {
+    await fetch(`${API}/bot${token}/deleteWebhook`, { method: "POST" });
+    return { ok: true as const };
+  } catch {
+    return { ok: false as const, error: "Нет связи с телеграмом" };
+  }
+}
+
+export async function telegramWebhookInfo(token: string) {
+  try {
+    const res = await fetch(`${API}/bot${token}/getWebhookInfo`);
+    const json = (await res.json().catch(() => null)) as
+      | { ok?: boolean; result?: { url?: string; last_error_message?: string; pending_update_count?: number } }
+      | null;
+    if (!res.ok || !json?.ok) return null;
+    return {
+      url: json.result?.url ?? "",
+      error: json.result?.last_error_message ?? "",
+      pending: json.result?.pending_update_count ?? 0,
+    };
+  } catch {
+    return null;
   }
 }
 

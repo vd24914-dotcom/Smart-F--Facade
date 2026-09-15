@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import type { IntegrationsContent, TelegramRecipient } from "@/content/store";
-import { Button, Card, Field, IconButton, useSave } from "./ui";
+import { Area, Button, Card, Field, IconButton } from "./ui";
 
 type Telegram = IntegrationsContent["telegram"];
 type SendResult = { chatId: string; label: string; ok: boolean; error?: string };
@@ -68,6 +68,23 @@ function ResultList({ results }: { results: SendResult[] }) {
   );
 }
 
+function Check({
+  checked,
+  onChange,
+  children,
+}: {
+  checked: boolean;
+  onChange: (value: boolean) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <label className="flex items-center gap-2 text-[14px] font-semibold text-slate-700">
+      <input type="checkbox" checked={checked} onChange={(e) => onChange(e.target.checked)} />
+      {children}
+    </label>
+  );
+}
+
 export default function TelegramEditor({ initial }: { initial: IntegrationsContent }) {
   const [telegram, setTelegram] = useState<Telegram>({
     ...initial.telegram,
@@ -76,13 +93,16 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
 
   const [botName, setBotName] = useState("");
   const [chats, setChats] = useState<FoundChat[]>([]);
-  const [busy, setBusy] = useState<"" | "check" | "test">("");
+  const [busy, setBusy] = useState("");
   const [note, setNote] = useState("");
   const [error, setError] = useState("");
   const [results, setResults] = useState<SendResult[]>([]);
+  const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const [botLink, setBotLink] = useState("");
+  const [botStatus, setBotStatus] = useState("");
+  const [health, setHealth] = useState("");
   const [secure, setSecure] = useState("");
 
-  const save = useSave("integrations");
   const set = (patch: Partial<Telegram>) => setTelegram((prev) => ({ ...prev, ...patch }));
 
   const setRecipient = (id: string, patch: Partial<TelegramRecipient>) =>
@@ -105,16 +125,43 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
     const res = await fetch("/api/admin/telegram", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...body, token: telegram.token }),
+      body: JSON.stringify({ token: telegram.token, ...body }),
     });
     return { ok: res.ok, json: await res.json().catch(() => ({})) };
   }
 
-  async function check() {
-    setBusy("check");
+  const clear = () => {
     setError("");
     setNote("");
     setResults([]);
+  };
+
+  async function save() {
+    setSaveState("saving");
+    clear();
+    const { ok, json } = await call({
+      action: "save",
+      settings: {
+        enabled: telegram.enabled,
+        token: telegram.token,
+        chatId: telegram.chatId,
+        recipients: telegram.recipients,
+        botEnabled: telegram.botEnabled,
+        welcome: telegram.welcome,
+        healthEnabled: telegram.healthEnabled,
+      },
+    });
+    if (!ok) {
+      setSaveState("error");
+      return setError(json.error || "Не удалось сохранить");
+    }
+    setSaveState("saved");
+    setTimeout(() => setSaveState("idle"), 2500);
+  }
+
+  async function check() {
+    setBusy("check");
+    clear();
     const { ok, json } = await call({ action: "check" });
     setBusy("");
     if (!ok) return setError(json.error || "Не удалось проверить бота");
@@ -129,12 +176,60 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
 
   async function test(chatId?: string, label?: string) {
     setBusy("test");
-    setError("");
-    setNote("");
-    setResults([]);
+    clear();
     const { ok, json } = await call({ action: "test", chatId, label });
     setBusy("");
     if (!ok) return setError(json.error || "Не удалось отправить");
+    setResults(Array.isArray(json.results) ? json.results : []);
+  }
+
+  async function connect() {
+    setBusy("connect");
+    clear();
+    setBotStatus("");
+    const { ok, json } = await call({ action: "connect" });
+    setBusy("");
+    if (!ok) return setError(json.error || "Не удалось подключить бота");
+    set({ botEnabled: true });
+    setBotLink(json.link || "");
+    setBotStatus("Бот подключён и отвечает клиентам.");
+  }
+
+  async function disconnect() {
+    setBusy("connect");
+    clear();
+    const { ok, json } = await call({ action: "disconnect" });
+    setBusy("");
+    if (!ok) return setError(json.error || "Не удалось отключить");
+    set({ botEnabled: false });
+    setBotStatus("Бот отключён — клиентам он больше не отвечает.");
+  }
+
+  async function webhook() {
+    setBusy("connect");
+    clear();
+    const { ok, json } = await call({ action: "webhook" });
+    setBusy("");
+    if (!ok) return setError(json.error || "Не удалось узнать состояние");
+    setBotLink(json.link || "");
+    const url = json.webhook?.url;
+    setBotStatus(
+      !url
+        ? "Бот пока не подключён к сайту."
+        : url === json.expected
+          ? `Подключён правильно${json.webhook.error ? `, но телеграм жалуется: ${json.webhook.error}` : "."}`
+          : `Подключён к другому адресу: ${url}. Нажмите «Подключить бота», чтобы переключить на этот сайт.`
+    );
+  }
+
+  async function runHealth() {
+    setBusy("health");
+    clear();
+    setHealth("");
+    const { ok, json } = await call({ action: "health" });
+    setBusy("");
+    if (!ok) return setError(json.error || "Не удалось проверить");
+    setHealth((json.report || "").replace(/<[^>]+>/g, ""));
     setResults(Array.isArray(json.results) ? json.results : []);
   }
 
@@ -160,7 +255,7 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
       <div>
         <h1 className="text-[20px] font-extrabold text-slate-900">Телеграм-бот</h1>
         <p className="mt-1 text-[14px] text-slate-500">
-          Заявки с сайта приходят сообщением в телеграм — себе и всем, кого вы добавите ниже.
+          Заявки с сайта приходят в телеграм, а сам бот отвечает клиентам и выдаёт вам выгрузки по кнопке.
         </p>
       </div>
 
@@ -187,21 +282,17 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
           {botName && <span className="text-[13px] font-semibold text-green-700">Бот {botName} на связи</span>}
         </div>
 
-        <label className="flex items-center gap-2 text-[14px] font-semibold text-slate-700">
-          <input
-            type="checkbox"
-            checked={telegram.enabled}
-            onChange={(e) => set({ enabled: e.target.checked })}
-          />
+        <Check checked={telegram.enabled} onChange={(enabled) => set({ enabled })}>
           Присылать заявки в телеграм
-        </label>
+        </Check>
       </Card>
 
       <Card title="Шаг 2. Кому присылать">
         <p className="text-[13px] leading-[20px] text-slate-600">
           Чтобы бот мог написать человеку, этот человек должен сначала сам написать боту — хотя бы
           «Привет». Для рабочей группы добавьте бота в группу. После этого нажмите «Проверить» выше и
-          добавьте чат одной кнопкой.
+          добавьте чат одной кнопкой. Все, кто здесь есть, видят в боте рабочие кнопки: заявки,
+          статистику и проверку сайта.
         </p>
 
         <Field
@@ -282,16 +373,87 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
         )}
       </Card>
 
-      <Card title="Шаг 3. Проверка">
+      <Card title="Шаг 3. Бот для клиентов">
+        <p className="text-[13px] leading-[20px] text-slate-600">
+          Ссылку на бота можно давать клиентам. Он поздоровается на языке собеседника — русском,
+          узбекском или английском, — покажет кнопки разделов сайта и примет заявку: клиент отправляет
+          номер одной кнопкой, заявка падает в админку и вам в чат.
+        </p>
+
+        <Check checked={telegram.botEnabled} onChange={(botEnabled) => set({ botEnabled })}>
+          Бот отвечает клиентам
+        </Check>
+
+        <Area
+          label="Приветствие (необязательно)"
+          rows={3}
+          value={telegram.welcome}
+          onChange={(welcome) => set({ welcome })}
+        />
+        <p className="-mt-2 text-[12px] text-slate-500">
+          Оставьте пустым — бот поздоровается сам и переведёт приветствие на язык клиента. Свой текст
+          показывается всем на одном языке.
+        </p>
+
         <div className="flex flex-wrap items-center gap-3">
-          <Button onClick={() => save.save({ telegram })} disabled={save.state === "saving"}>
-            {save.state === "saving" ? "Сохраняю…" : "Сохранить настройки"}
+          <Button onClick={connect} disabled={busy === "connect" || !telegram.token.trim()}>
+            {busy === "connect" ? "Минуту…" : "Подключить бота"}
           </Button>
-          {save.state === "saved" && (
+          <Button variant="ghost" onClick={webhook} disabled={busy === "connect"}>
+            Состояние
+          </Button>
+          <Button variant="ghost" onClick={disconnect} disabled={busy === "connect"}>
+            Отключить
+          </Button>
+        </div>
+
+        {botStatus && <p className="text-[13px] text-slate-600">{botStatus}</p>}
+        {botLink && (
+          <p className="text-[13px] text-slate-700">
+            Ссылка для клиентов:{" "}
+            <a
+              href={botLink}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-slate-900 underline underline-offset-2"
+            >
+              {botLink}
+            </a>
+          </p>
+        )}
+      </Card>
+
+      <Card title="Шаг 4. Отчёт о работе сайта">
+        <p className="text-[13px] leading-[20px] text-slate-600">
+          Раз в 12 часов бот открывает сайт на трёх языках, проверяет хранилище и пишет сводку: всё ли
+          работает, сколько заявок и посетителей было. Если сайт лежит целиком, сообщение просто не
+          придёт — само молчание и есть тревожный сигнал.
+        </p>
+
+        <Check checked={telegram.healthEnabled} onChange={(healthEnabled) => set({ healthEnabled })}>
+          Присылать отчёт раз в 12 часов
+        </Check>
+
+        <div className="flex flex-wrap items-center gap-3">
+          <Button variant="ghost" onClick={runHealth} disabled={busy === "health" || !telegram.token.trim()}>
+            {busy === "health" ? "Проверяю…" : "Проверить сайт сейчас"}
+          </Button>
+        </div>
+
+        {health && (
+          <pre className="whitespace-pre-wrap rounded-xl border border-slate-200 bg-slate-50 p-3 text-[13px] leading-[20px] text-slate-700">
+            {health}
+          </pre>
+        )}
+      </Card>
+
+      <Card title="Сохранить и проверить">
+        <div className="flex flex-wrap items-center gap-3">
+          <Button onClick={save} disabled={saveState === "saving"}>
+            {saveState === "saving" ? "Сохраняю…" : "Сохранить настройки"}
+          </Button>
+          {saveState === "saved" && (
             <span className="text-[13px] font-semibold text-green-700">Сохранено ✓</span>
-          )}
-          {save.state === "error" && (
-            <span className="text-[13px] font-semibold text-red-600">{save.message}</span>
           )}
           <Button variant="ghost" onClick={() => test()} disabled={busy === "test"}>
             {busy === "test" ? "Отправляю…" : "Отправить тестовое сообщение всем"}
