@@ -86,7 +86,10 @@ export default function GeneralEditor({
           <SocialRows hint="Кнопки «Написать в WhatsApp» и «Instagram» во всплывающем окне заявки берут ссылки отсюда — они появятся, если такие соцсети есть в списке." />
         </Block>
 
-        <Block title="Подвал" hint="Нижняя часть каждой страницы: логотип, ссылки, форма обратного звонка.">
+        <Block
+          title="Подвал"
+          hint="Нижняя часть каждой страницы. Ссылки в подвале повторяют меню — отдельно их задавать не нужно."
+        >
           <Img imgKey="logoFooter" label="Логотип в подвале" hint="PNG или SVG" />
           <div className="grid gap-4 sm:grid-cols-2">
             <T path="footer.companyTitle" label="Заголовок «Компания»" />
@@ -94,7 +97,6 @@ export default function GeneralEditor({
             <T path="footer.socialTitle" label="Заголовок «Мы в соцсетях»" />
             <T path="footer.address" label="Адрес" />
           </div>
-          <T path="footer.links" label="Ссылки в подвале" kind="list" />
           <T path="footer.copyright" label="Копирайт" />
 
           <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">

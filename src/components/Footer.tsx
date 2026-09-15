@@ -3,7 +3,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
 import type { Locale } from "@/i18n/config";
 import type { SiteContent } from "@/content/store";
 
-const linkPaths = ["/about", "/services", "#materials", "/projects", "/partners"];
+
 
 export default function Footer({
   dict,
@@ -14,12 +14,13 @@ export default function Footer({
   locale: Locale;
   site: SiteContent;
 }) {
+  // Раньше подписи брались из отдельного списка и сопоставлялись со ссылками
+  // по порядку — стоило поменять порядок, и «Проекты» вели на материалы.
+  // Теперь подпись и адрес заданы вместе.
   const links = [
-    // «#materials» — якорь блока на главной, остальное — обычные страницы
-    ...dict.footer.links.map((label, index) => ({
-      label,
-      href: `/${locale}${linkPaths[index] ?? ""}`,
-    })),
+    { label: dict.nav.about, href: `/${locale}/about` },
+    { label: dict.nav.services, href: `/${locale}/services` },
+    { label: dict.nav.materials, href: `/${locale}#materials` },
     { label: dict.nav.contacts, href: `/${locale}/contacts` },
   ];
 

@@ -30,7 +30,10 @@ export type Dictionary = {
   services: {
     title: string;
     lead: string;
+    /** старый ряд из четырёх слов — остаётся в данных, на сайте больше не показывается */
     items: string[];
+    /** конкретные услуги с результатом для клиента */
+    list: { title: string; text: string }[];
   };
   projects: {
     title: string;

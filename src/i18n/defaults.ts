@@ -62,11 +62,11 @@ export const defaultTexts: DictionaryDefaults = {
         "Другое",
       ],
       materials: [
+        "Навесная фасадная система «Альт-Фасад»",
         "Алюминиевые композитные панели (АКП)",
         "Клинкерная плитка",
         "Керамогранит",
         "HPL-панели",
-        "Подсистема",
         "Крепёж",
         "Пока не определились",
       ],
@@ -90,17 +90,41 @@ export const defaultTexts: DictionaryDefaults = {
       errArea: "Площадь — число, например 1200",
       phoneHint: "+998 90 123-45-67",
     },
+    services: {
+      list: [
+        {
+          title: "Подбор материала под проект",
+          text: "Предлагаем два-три варианта под архитектуру, требования по пожарной безопасности и бюджет. На выходе — сравнение по цене, срокам поставки и характеристикам.",
+        },
+        {
+          title: "Расчёт спецификации по чертежам",
+          text: "Считаем облицовку, подсистему и крепёж по вашим чертежам или ведомости. Отдаём спецификацию и смету, которые можно заложить в проект и в тендер.",
+        },
+        {
+          title: "Комплектация и поставка",
+          text: "Везём от заводов весь узел одной поставкой: облицовка, навесная система, крепёж и доборные элементы — партиями под график монтажа.",
+        },
+        {
+          title: "Техническое сопровождение монтажа",
+          text: "Консультируем подрядчика по узлам и примыканиям, проверяем соответствие проекту, передаём документы для сдачи объекта.",
+        },
+      ],
+    },
     materials: {
       title: "Материалы",
-      lead: "Поставляем фасадные материалы напрямую от заводов-производителей и подбираем их под конкретный объект и бюджет.",
+      lead: "Поставляем навесные фасадные системы и облицовку напрямую от заводов-производителей и подбираем их под конкретный объект и бюджет.",
       items: [
         {
+          title: "Навесные фасадные системы «Альт-Фасад»",
+          text: "Оцинкованные подконструкции — наше основное направление: расчёт под ветровую нагрузку и шаг несущих элементов. Есть и алюминиевые варианты системы.",
+        },
+        {
           title: "Алюминиевые композитные панели",
-          text: "АКП для вентилируемых фасадов: широкая палитра, стабильная геометрия, негорючие варианты сердечника.",
+          text: "АКП для фасадов и интерьеров: широкая палитра, стабильная геометрия, негорючие варианты сердечника.",
         },
         {
           title: "Клинкерная плитка",
-          text: "Фасадная клинкерная плитка и термопанели: натуральный цвет, стойкость к морозу и выгоранию.",
+          text: "Фасадная клинкерная плитка: натуральный цвет, стойкость к морозу и выгоранию.",
         },
         {
           title: "Керамогранит",
@@ -111,12 +135,8 @@ export const defaultTexts: DictionaryDefaults = {
           text: "Панели высокого давления для фасадов и интерьеров: ударопрочные, с широким выбором декоров.",
         },
         {
-          title: "Подсистемы",
-          text: "Алюминиевые и оцинкованные подконструкции с расчётом под ветровую нагрузку и шаг несущих элементов.",
-        },
-        {
           title: "Крепёж",
-          text: "Заклёпки, кляммеры, анкеры и уплотнители — комплектуем весь узел, чтобы на объекте ничего не пришлось искать.",
+          text: "Заклёпки и анкеры под выбранную систему — комплектуем узел целиком, чтобы на объекте ничего не пришлось искать.",
         },
       ],
     },
@@ -180,11 +200,11 @@ export const defaultTexts: DictionaryDefaults = {
         "Boshqa",
       ],
       materials: [
+        "«Alt-Fasad» osma fasad tizimi",
         "Alyuminiy kompozit panellar (AKP)",
         "Klinker plitka",
         "Keramogranit",
         "HPL panellar",
-        "Quyi tizim",
         "Mahkamlagichlar",
         "Hali aniqlanmagan",
       ],
@@ -208,17 +228,41 @@ export const defaultTexts: DictionaryDefaults = {
       errArea: "Maydon — son, masalan 1200",
       phoneHint: "+998 90 123-45-67",
     },
+    services: {
+      list: [
+        {
+          title: "Loyihaga mos material tanlash",
+          text: "Arxitektura, yong‘in xavfsizligi talablari va byudjetga mos ikki-uchta variantni taklif qilamiz. Natijada — narx, yetkazib berish muddati va xususiyatlar bo‘yicha taqqoslash.",
+        },
+        {
+          title: "Chizmalar bo‘yicha spetsifikatsiya hisobi",
+          text: "Chizmangiz yoki qaydnomangiz bo‘yicha qoplama, quyi tizim va mahkamlagichlarni hisoblaymiz. Loyiha va tenderga kiritsa bo‘ladigan spetsifikatsiya hamda smeta beramiz.",
+        },
+        {
+          title: "Komplektlash va yetkazib berish",
+          text: "Zavodlardan butun tugunni bir yetkazib berishda olib kelamiz: qoplama, osma tizim, mahkamlagich va qo‘shimcha elementlar — montaj jadvaliga mos partiyalar bilan.",
+        },
+        {
+          title: "Montajni texnik kuzatish",
+          text: "Pudratchiga tugunlar va tutashuvlar bo‘yicha maslahat beramiz, loyihaga muvofiqlikni tekshiramiz, obyektni topshirish uchun hujjatlarni topshiramiz.",
+        },
+      ],
+    },
     materials: {
       title: "Materiallar",
-      lead: "Fasad materiallarini bevosita ishlab chiqaruvchi zavodlardan yetkazib beramiz va ularni obyekt hamda byudjetga moslab tanlaymiz.",
+      lead: "Osma fasad tizimlari va qoplamani bevosita ishlab chiqaruvchi zavodlardan yetkazamiz hamda obyekt va byudjetga moslab tanlaymiz.",
       items: [
         {
+          title: "«Alt-Fasad» osma fasad tizimlari",
+          text: "Rux qoplamali quyi konstruksiyalar — asosiy yo‘nalishimiz: shamol yuki va qadam bo‘yicha hisob bilan. Tizimning alyuminiy variantlari ham bor.",
+        },
+        {
           title: "Alyuminiy kompozit panellar",
-          text: "Ventilyatsiyalanadigan fasadlar uchun AKP: keng rang palitrasi, barqaror geometriya, yonmaydigan o‘zak variantlari.",
+          text: "Fasad va interyer uchun AKP: keng rang palitrasi, barqaror geometriya, yonmaydigan o‘zak variantlari.",
         },
         {
           title: "Klinker plitka",
-          text: "Fasad klinker plitkasi va termopanellar: tabiiy rang, sovuq va quyoshga chidamlilik.",
+          text: "Fasad klinker plitkasi: tabiiy rang, sovuq va quyoshga chidamlilik.",
         },
         {
           title: "Keramogranit",
@@ -229,12 +273,8 @@ export const defaultTexts: DictionaryDefaults = {
           text: "Fasad va interyer uchun yuqori bosimli panellar: zarbaga chidamli, dekorlar tanlovi keng.",
         },
         {
-          title: "Quyi tizimlar",
-          text: "Alyuminiy va rux qoplamali quyi konstruksiyalar — shamol yuki va qadam bo‘yicha hisob bilan.",
-        },
-        {
           title: "Mahkamlagichlar",
-          text: "Parchinlar, klyammerlar, ankerlar va zichlagichlar — butun tugunni to‘liq komplektlaymiz.",
+          text: "Tanlangan tizimga mos parchin va ankerlar — tugunni to‘liq komplektlaymiz, obyektda hech narsa qidirishga to‘g‘ri kelmaydi.",
         },
       ],
     },
@@ -298,11 +338,11 @@ export const defaultTexts: DictionaryDefaults = {
         "Other",
       ],
       materials: [
+        "Alt-Fasad curtain-wall system",
         "Aluminium composite panels (ACP)",
         "Clinker tiles",
         "Porcelain stoneware",
         "HPL panels",
-        "Subframe",
         "Fasteners",
         "Not decided yet",
       ],
@@ -326,17 +366,41 @@ export const defaultTexts: DictionaryDefaults = {
       errArea: "Area must be a number, e.g. 1200",
       phoneHint: "+998 90 123-45-67",
     },
+    services: {
+      list: [
+        {
+          title: "Material selection for the project",
+          text: "We propose two or three options that suit the architecture, the fire-safety requirements and the budget, compared by price, lead time and performance.",
+        },
+        {
+          title: "Specification from your drawings",
+          text: "We calculate cladding, subframe and fasteners from your drawings or bill of quantities and hand over a specification and estimate ready for the design package or a tender.",
+        },
+        {
+          title: "Supply of the complete assembly",
+          text: "Cladding, curtain-wall system, fasteners and trim arrive from the plants as one supply, in batches that follow the installation schedule.",
+        },
+        {
+          title: "Technical support during installation",
+          text: "We advise the contractor on assemblies and junctions, check compliance with the design and hand over the documents needed to sign off the building.",
+        },
+      ],
+    },
     materials: {
       title: "Materials",
-      lead: "We supply facade materials directly from the manufacturing plants and match them to the building and the budget.",
+      lead: "We supply curtain-wall systems and cladding directly from the manufacturing plants and match them to the building and the budget.",
       items: [
         {
+          title: "Alt-Fasad curtain-wall systems",
+          text: "Galvanised substructures are our main line: calculated for wind load and bracket spacing. Aluminium versions of the system are available too.",
+        },
+        {
           title: "Aluminium composite panels",
-          text: "ACP for ventilated facades: a wide colour range, stable geometry and non-combustible core options.",
+          text: "ACP for facades and interiors: a wide colour range, stable geometry and non-combustible core options.",
         },
         {
           title: "Clinker tiles",
-          text: "Facade clinker tiles and thermal panels: natural colour, frost and fade resistance.",
+          text: "Facade clinker tiles: natural colour, frost and fade resistance.",
         },
         {
           title: "Porcelain stoneware",
@@ -347,12 +411,8 @@ export const defaultTexts: DictionaryDefaults = {
           text: "High-pressure laminate panels for facades and interiors: impact resistant, with a wide choice of decors.",
         },
         {
-          title: "Subframes",
-          text: "Aluminium and galvanised substructures calculated for wind load and bracket spacing.",
-        },
-        {
           title: "Fasteners",
-          text: "Rivets, clamps, anchors and seals — we supply the complete assembly so nothing is missing on site.",
+          text: "Rivets and anchors for the chosen system — we supply the complete assembly so nothing is missing on site.",
         },
       ],
     },

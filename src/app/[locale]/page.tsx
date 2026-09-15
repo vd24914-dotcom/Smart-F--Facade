@@ -2,7 +2,6 @@ import { notFound } from "next/navigation";
 import Hero from "@/components/Hero";
 import AboutSplit from "@/components/ui/about-split";
 import FeatureGrid from "@/components/ui/feature-grid";
-import Services from "@/components/Services";
 import ProcessSteps from "@/components/ProcessSteps";
 import GroupExperience from "@/components/GroupExperience";
 import BentoGallery from "@/components/ui/bento-gallery";
@@ -53,8 +52,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           description={dict.materials?.lead}
           items={dict.materials?.items ?? []}
         />
-
-        <Services dict={dict} icons={site.icons.services} />
 
         <ProcessSteps dict={dict} />
 

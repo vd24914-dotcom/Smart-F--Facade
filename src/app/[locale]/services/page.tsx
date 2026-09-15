@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import PageHero from "@/components/PageHero";
-import Services from "@/components/Services";
+import FeatureGrid from "@/components/ui/feature-grid";
 import Stats from "@/components/Stats";
 import CallToAction from "@/components/CallToAction";
 import { isLocale, locales } from "@/i18n/config";
@@ -35,7 +35,12 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
         </div>
       </section>
 
-      <Services dict={dict} icons={site.icons.services} />
+      <FeatureGrid
+        title={dict.services.title}
+        description={dict.services.lead}
+        items={dict.services.list ?? []}
+        tone="white"
+      />
       <Stats dict={dict} />
       <CallToAction dict={dict} image={site.images.cta} site={site} />
     </>

@@ -86,19 +86,14 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
           />
         </Block>
 
-        <Block title="4. Заголовок блока «Услуги»" hint="Сами услуги с иконками — в разделе «Услуги».">
-          <T path="services.title" label="Заголовок" />
-          <T path="services.lead" label="Текст под заголовком" kind="area" rows={2} />
-        </Block>
-
-        <Block title="5. Блок «Как мы работаем»" hint="Шаги нумеруются автоматически, по порядку.">
+        <Block title="4. Блок «Как мы работаем»" hint="Шаги нумеруются автоматически, по порядку.">
           <T path="process.title" label="Заголовок" />
           <T path="process.lead" label="Текст под заголовком" kind="area" rows={2} />
           <TitleTextRows path="process.steps" itemLabel="Шаг" addLabel="Добавить шаг" />
         </Block>
 
         <Block
-          title="6. Блок «Опыт группы компаний»"
+          title="5. Блок «Опыт группы компаний»"
           hint="Цифры по Кыргызстану показываются здесь — с честной подписью, а не на первом экране."
         >
           <T path="group.title" label="Заголовок" />
@@ -111,14 +106,14 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         </Block>
 
         <Block
-          title="7. Заголовок блока «Наши преимущества»"
+          title="6. Заголовок блока «Наши преимущества»"
           hint="Сами преимущества с иконками — в разделе «О нас», они показываются и там, и здесь."
         >
           <T path="pages.about.advantagesTitle" label="Заголовок" />
           <T path="pages.about.advantagesLead" label="Текст под заголовком" kind="area" rows={2} />
         </Block>
 
-        <Block title="8. Блок «Документы и сертификаты»">
+        <Block title="7. Блок «Документы и сертификаты»">
           <T path="docs.title" label="Заголовок" />
           <T path="docs.lead" label="Текст под заголовком" kind="area" rows={2} />
           <TitleTextRows
@@ -134,7 +129,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         </Block>
 
         <Block
-          title="9. Заголовок блока «Проекты»"
+          title="8. Заголовок блока «Проекты»"
           hint="Сами объекты — в разделе «Проекты». Пока объектов нет, блок на сайте не показывается."
         >
           <T path="projects.title" label="Заголовок" />
@@ -143,7 +138,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         </Block>
 
         <Block
-          title="10. Заголовки блока «До / После»"
+          title="9. Заголовки блока «До / После»"
           hint="Сами пары фото — в разделе «До / После». Пока пар нет, блок на сайте не показывается."
         >
           <T path="beforeAfter.title" label="Заголовок" />
@@ -154,7 +149,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
           </div>
         </Block>
 
-        <Block title="11. Блок «Оставить заявку»" hint="Последний блок перед подвалом.">
+        <Block title="10. Блок «Оставить заявку»" hint="Последний блок перед подвалом.">
           <Img imgKey="cta" label="Фон блока" hint="Широкое фото" aspect={21 / 9} />
           <T path="cta.title" label="Заголовок (каждая строка — отдельно)" kind="list" />
           <T path="cta.text" label="Текст (каждая строка — отдельно)" kind="list" />
@@ -162,7 +157,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         </Block>
 
         <Block
-          title="12. Форма «Получить расчёт стоимости»"
+          title="11. Форма «Получить расчёт стоимости»"
           hint="Одна и та же форма во всплывающем окне, в блоке заявки и на странице «Контакты»."
         >
           <T path="calc.button" label="Надпись на кнопке" />

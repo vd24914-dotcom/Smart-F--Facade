@@ -4,9 +4,9 @@ import type { SiteContent, TextsContent } from "@/content/store";
 import {
   Block,
   ContentProvider,
-  IconTextRows,
   PageShell,
   T,
+  TitleTextRows,
   useContentState,
   useSaveAll,
 } from "./page-kit";
@@ -33,23 +33,20 @@ export default function ServicesEditor({
     <ContentProvider api={store.api}>
       <PageShell
         title="Услуги"
-        lead="Этот блок показывается и на главной, и на странице «Услуги»."
+        lead="Показывается на странице «Услуги»."
         preview="/services"
         bar={<SaveBar state={state} message={message} onSave={save} />}
       >
         <Block title="Заголовки блока">
-          <T path="services.title" label="Заголовок на главной" />
+          <T path="services.title" label="Заголовок блока" />
           <T path="services.lead" label="Текст под заголовком" kind="area" rows={2} />
         </Block>
 
-        <Block title="Услуги: иконка и название">
-          <IconTextRows
-            group="services"
-            path="services.items"
-            itemLabel="Услуга"
-            addLabel="Добавить услугу"
-            hint="Иконки рисуются на сайте штрихом — лучше всего подходит простой контурный SVG."
-          />
+        <Block
+          title="Услуги"
+          hint="Одна услуга — одна карточка: что делаем и что клиент получает на выходе."
+        >
+          <TitleTextRows path="services.list" itemLabel="Услуга" addLabel="Добавить услугу" />
         </Block>
 
         <Block title="Страница «Услуги»">
