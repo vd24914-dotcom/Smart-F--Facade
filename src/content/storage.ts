@@ -42,7 +42,29 @@ function readFile<T>(file: string): T | null {
   }
 }
 
+/**
+ * Хранилище отдаёт файл через сеть доставки, и сразу после записи чтение
+ * какое-то время возвращает предыдущую версию. Из-за этого два сохранения
+ * подряд затирали друг друга: второе читало устаревшую копию. Поэтому мы
+ * помним последнюю записанную версию и отдаём её, пока облако не догонит.
+ */
+const justWritten = new Map<string, { data: unknown; at: number }>();
+const FRESH_WINDOW = 2 * 60 * 1000;
+
+function recentWrite<T>(file: string): T | null {
+  const recent = justWritten.get(file);
+  if (!recent) return null;
+  if (Date.now() - recent.at > FRESH_WINDOW) {
+    justWritten.delete(file);
+    return null;
+  }
+  return recent.data as T;
+}
+
 async function fetchCloud<T>(file: string): Promise<T | null> {
+  const recent = recentWrite<T>(file);
+  if (recent !== null) return recent;
+
   try {
     const { get } = await import("@vercel/blob");
     // useCache: false — берём последнюю версию, а не копию из кэша сети
@@ -121,6 +143,7 @@ async function writeCloud(file: string, data: unknown) {
 export async function writeStored(file: string, data: unknown) {
   if (cloudEnabled()) {
     await writeCloud(file, data);
+    justWritten.set(file, { data, at: Date.now() });
     return;
   }
   writeFile(file, data);
