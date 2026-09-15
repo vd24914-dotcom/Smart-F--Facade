@@ -41,7 +41,7 @@ export default function Hero({
           sizes="100vw"
           className="object-cover object-[72%_50%]"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-white via-white/85 to-white/70 dark:from-[#0b1523] dark:via-[#0b1523]/90 dark:to-[#0b1523]/75 lg:hidden" />
+        <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/78 to-white/58 dark:from-[#0b1523]/95 dark:via-[#0b1523]/85 dark:to-[#0b1523]/70 lg:hidden" />
         <div
           className="absolute inset-0 hidden lg:block dark:lg:hidden"
           style={{

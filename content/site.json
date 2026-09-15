@@ -1,72 +1,57 @@
 {
-  "name": "Smart Facade",
-  "email": "smartfacadekg@gmail.com",
-  "phones": [
-    "+996 (777) 997-200",
-    "+996 (773) 999-777",
-    "+996 (772) 163-376"
+ "name": "Smart Facade",
+ "email": "info@smartfacade.uz",
+ "phones": [
+  "+998 70 489-70-70"
+ ],
+ "social": {
+  "facebook": "#",
+  "whatsapp": "https://wa.me/996773999777",
+  "instagram": "#"
+ },
+ "images": {
+  "logoHeader": "/uploads/1789025166214-121212.svg",
+  "logoFooter": "",
+  "hero": "/img/page-hero.jpg",
+  "pageHero": "/img/page-hero.jpg",
+  "aboutPhoto": "/img/about-photo.png",
+  "aboutCompany": "/img/about-company.jpg",
+  "cta": "",
+  "footer": ""
+ },
+ "icons": {
+  "specs": [
+   "/icons/spec-facades.svg",
+   "/icons/spec-interiors.svg"
   ],
-  "social": {
-    "facebook": "#",
-    "whatsapp": "https://wa.me/996773999777",
-    "instagram": "#"
-  },
-  "images": {
-    "logoHeader": "/uploads/1789025166214-121212.svg",
-    "logoFooter": "",
-    "hero": "/uploads/1788955736317-1666397693_19-mykaleidoscope-ru-p-fasadi.jpg",
-    "pageHero": "/img/page-hero.jpg",
-    "aboutPhoto": "/img/about-photo.png",
-    "aboutCompany": "/img/about-company.jpg",
-    "cta": "",
-    "footer": ""
-  },
-  "icons": {
-    "specs": [
-      "/icons/spec-facades.svg",
-      "/icons/spec-interiors.svg",
-      "/icons/spec-furniture.svg"
-    ],
-    "services": [
-      "/icons/service-materials.svg",
-      "/icons/service-subsystems.svg",
-      "/icons/service-installation.svg",
-      "/icons/service-solutions.svg"
-    ],
-    "advantages": [
-      "/icons/adv-dealers.png",
-      "/icons/adv-experience.png",
-      "/icons/adv-standards.png",
-      "/icons/adv-ontime.png"
-    ]
-  },
-  "socials": [
-    {
-      "id": "telegram",
-      "label": "Telegram",
-      "url": "",
-      "icon": ""
-    },
-    {
-      "id": "whatsapp",
-      "label": "WhatsApp",
-      "url": "https://wa.me/996773999777",
-      "icon": ""
-    },
-    {
-      "id": "instagram",
-      "label": "Instagram",
-      "url": "",
-      "icon": ""
-    },
-    {
-      "id": "facebook",
-      "label": "Facebook",
-      "url": "",
-      "icon": ""
-    }
+  "services": [
+   "/icons/service-materials.svg",
+   "/icons/service-subsystems.svg",
+   "/icons/service-installation.svg",
+   "/icons/service-solutions.svg"
   ],
-  "files": {
-    "docs": []
+  "advantages": [
+   "/icons/adv-dealers.png",
+   "/icons/adv-experience.png",
+   "/icons/adv-standards.png",
+   "/icons/adv-ontime.png"
+  ]
+ },
+ "socials": [
+  {
+   "id": "telegram",
+   "label": "Telegram",
+   "url": "",
+   "icon": ""
+  },
+  {
+   "id": "instagram",
+   "label": "Instagram",
+   "url": "",
+   "icon": ""
   }
+ ],
+ "files": {
+  "docs": []
+ }
 }
