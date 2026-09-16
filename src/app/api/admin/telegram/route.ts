@@ -6,7 +6,9 @@ import { storageIsWritable } from "@/content/storage";
 import { siteOrigin } from "@/data/seo";
 import { healthReport } from "@/lib/report";
 import {
+  TOKEN_HINT,
   deleteTelegramWebhook,
+  isTelegramToken,
   sendTelegram,
   sendTelegramAll,
   setTelegramWebhook,
@@ -66,6 +68,10 @@ export async function POST(request: Request) {
 
   if (!token) {
     return NextResponse.json({ error: "Сначала вставьте токен бота" }, { status: 400 });
+  }
+  // «Not Found» от телеграма мало что объясняет — ловим подмену токена заранее
+  if (!isTelegramToken(token)) {
+    return NextResponse.json({ error: TOKEN_HINT }, { status: 400 });
   }
 
   if (body.action === "check") {

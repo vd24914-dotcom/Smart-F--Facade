@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import type { IntegrationsContent, TelegramRecipient } from "@/content/store";
+import { isTelegramToken } from "@/lib/telegram";
 import { Area, Button, Card, Field, IconButton } from "./ui";
 
 type Telegram = IntegrationsContent["telegram"];
@@ -275,6 +276,14 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
           hint="Токен видит только админка. Никому его не пересылайте: по нему можно управлять ботом."
         />
 
+        {telegram.token.trim() && !isTelegramToken(telegram.token) && (
+          <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[13px] leading-[20px] text-amber-900">
+            В поле сейчас не токен, а что-то другое — {telegram.token.trim().length} символов без
+            двоеточия. Токен выглядит как <b>1234567890:AAH5f…</b>: номер бота, двоеточие и длинный
+            ключ. Имя бота и пароль сюда не подходят — телеграм на них отвечает «Not Found».
+          </p>
+        )}
+
         <div className="flex flex-wrap items-center gap-3">
           <Button variant="ghost" onClick={check} disabled={busy === "check" || !telegram.token.trim()}>
             {busy === "check" ? "Проверяю…" : "Проверить"}
@@ -383,6 +392,13 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
         <Check checked={telegram.botEnabled} onChange={(botEnabled) => set({ botEnabled })}>
           Бот отвечает клиентам
         </Check>
+
+        {telegram.botEnabled && !initial.telegram.secret && (
+          <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[13px] leading-[20px] text-amber-900">
+            Галочка стоит, но бот ещё не связан с сайтом — одной галочки мало. Нажмите
+            «Подключить бота» ниже: тогда телеграм начнёт пересылать сюда сообщения клиентов.
+          </p>
+        )}
 
         <Area
           label="Приветствие (необязательно)"

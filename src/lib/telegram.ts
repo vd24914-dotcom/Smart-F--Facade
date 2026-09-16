@@ -29,6 +29,35 @@ export function telegramTargets(telegram: Telegram) {
 
 export type SendResult = { chatId: string; label: string; ok: boolean; error?: string };
 
+/**
+ * Токен от BotFather выглядит так: 1234567890:AAH5f…
+ * Номер бота, двоеточие, длинный ключ. Имя бота или пароль сюда не подходят,
+ * а телеграм на них отвечает сухим «Not Found» — проверяем заранее.
+ */
+export function isTelegramToken(value: string) {
+  return /^\d{5,16}:[A-Za-z0-9_-]{30,}$/.test((value ?? "").trim());
+}
+
+export const TOKEN_HINT =
+  "Это не похоже на токен бота. Токен выдаёт @BotFather после команды /newbot, " +
+  "он выглядит как 1234567890:AAH5f… — цифры, двоеточие и длинный ключ.";
+
+/** Переводит сухие ответы телеграма на человеческий язык. */
+export function explain(error: string | undefined, token: string) {
+  const text = (error ?? "").trim();
+  if (/not found/i.test(text)) {
+    return isTelegramToken(token)
+      ? "Телеграм не знает такого бота: токен отозван или бот удалён. Возьмите новый у @BotFather."
+      : TOKEN_HINT;
+  }
+  if (/unauthorized/i.test(text)) return "Токен не подошёл — проверьте, что скопировали его целиком.";
+  if (/chat not found/i.test(text))
+    return "Чат не найден: человек ещё не написал боту «Привет», или ID указан с ошибкой.";
+  if (/bot was blocked/i.test(text)) return "Человек заблокировал бота — он не получит сообщения.";
+  if (/bot is not a member/i.test(text)) return "Бота нет в этой группе — добавьте его участником.";
+  return text || "Неизвестная ошибка";
+}
+
 /** Кнопка меню: либо открывает ссылку, либо шлёт команду боту. */
 export type Button = { text: string; url?: string; data?: string };
 
@@ -63,7 +92,7 @@ export async function sendTelegram(
     });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
     if (res.ok && json?.ok) return { ok: true };
-    return { ok: false, error: json?.description || `Телеграм ответил ${res.status}` };
+    return { ok: false, error: explain(json?.description, token) || `Телеграм ответил ${res.status}` };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
   }
@@ -91,7 +120,7 @@ export async function sendTelegramDocument(
     const res = await fetch(`${API}/bot${token}/sendDocument`, { method: "POST", body: form });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
     if (res.ok && json?.ok) return { ok: true };
-    return { ok: false, error: json?.description || `Телеграм ответил ${res.status}` };
+    return { ok: false, error: explain(json?.description, token) || `Телеграм ответил ${res.status}` };
   } catch (error) {
     return { ok: false, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
   }
@@ -125,7 +154,7 @@ export async function setTelegramWebhook(token: string, url: string, secret: str
     });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
     if (res.ok && json?.ok) return { ok: true as const };
-    return { ok: false as const, error: json?.description || `Телеграм ответил ${res.status}` };
+    return { ok: false as const, error: explain(json?.description, token) || `Телеграм ответил ${res.status}` };
   } catch (error) {
     return { ok: false as const, error: error instanceof Error ? error.message : "Нет связи с телеграмом" };
   }
@@ -171,12 +200,14 @@ export async function sendTelegramAll(telegram: Telegram, text: string): Promise
 /** Проверка токена: вернёт имя бота или причину отказа. */
 export async function telegramBotInfo(token: string) {
   if (!token) return { ok: false as const, error: "Токен не заполнен" };
+  if (!isTelegramToken(token)) return { ok: false as const, error: TOKEN_HINT };
   try {
     const res = await fetch(`${API}/bot${token}/getMe`);
     const json = (await res.json().catch(() => null)) as
       | { ok?: boolean; description?: string; result?: { username?: string; first_name?: string } }
       | null;
-    if (!res.ok || !json?.ok) return { ok: false as const, error: json?.description || "Токен не подошёл" };
+    if (!res.ok || !json?.ok)
+      return { ok: false as const, error: explain(json?.description, token) || "Токен не подошёл" };
     return {
       ok: true as const,
       username: json.result?.username ?? "",
