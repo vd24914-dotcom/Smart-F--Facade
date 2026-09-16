@@ -23,6 +23,12 @@ type Props = {
   highlight?: { value: string; label: string };
   /** фон блока: серый (по умолчанию) или белый — чтобы соседние блоки не сливались */
   tone?: "mist" | "white";
+  /**
+   * Разрешить фотографии. В блоках с иконками (услуги, преимущества) картинка
+   * всегда маленькая, в кружке: там лежат PNG-иконки, и растягивать их нельзя.
+   * Для материалов и документов фото уместно — там это включено.
+   */
+  allowPhoto?: boolean;
   className?: string;
 };
 
@@ -40,6 +46,11 @@ function pictureKind(src?: string) {
   if (value.endsWith(".svg")) return "icon" as const;
   if (value.endsWith(".png")) return "contain" as const;
   return "cover" as const;
+}
+
+/** Блоки с иконками: любая картинка остаётся маленькой, в кружке. */
+function iconKind(src?: string) {
+  return (src ?? "").trim() ? ("icon" as const) : ("none" as const);
 }
 
 /** Рисованный овал под крупной цифрой. */
@@ -67,6 +78,7 @@ export default function FeatureGrid({
   fileLabel,
   highlight,
   tone = "mist",
+  allowPhoto = false,
   className,
 }: Props) {
   if (items.length === 0) return null;
@@ -137,7 +149,7 @@ export default function FeatureGrid({
               className={cn(cardBase, pattern[index % pattern.length])}
             >
               {(() => {
-                const kind = pictureKind(item.icon);
+                const kind = allowPhoto ? pictureKind(item.icon) : iconKind(item.icon);
 
                 if (kind === "cover" || kind === "contain") {
                   return (

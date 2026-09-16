@@ -48,6 +48,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         {/* Материалы — главный блок для рынка Узбекистана */}
         <FeatureGrid
           id="materials"
+          allowPhoto
           title={dict.materials?.title}
           description={dict.materials?.lead}
           items={(dict.materials?.items ?? []).map((item, index) => ({
@@ -72,6 +73,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
         <FeatureGrid
           id="docs"
+          allowPhoto
           title={dict.docs?.title}
           description={dict.docs?.lead}
           fileLabel={dict.docs?.open}

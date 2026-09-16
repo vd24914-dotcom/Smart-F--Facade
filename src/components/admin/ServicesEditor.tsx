@@ -52,7 +52,7 @@ export default function ServicesEditor({
             addLabel="Добавить услугу"
             iconGroup="services"
             iconLabel="Иконка услуги"
-            iconHint="SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
+            iconHint="SVG или PNG на прозрачном фоне. Показывается маленькой иконкой в кружке. Без картинки останется номер."
           />
         </Block>
 

@@ -510,7 +510,7 @@ export function TitleTextRows({
   fileHint,
   iconGroup,
   iconLabel = "Иконка или фото",
-  iconHint = "SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер.",
+  iconHint = "SVG или PNG на прозрачном фоне. Показывается маленькой иконкой в кружке. Без картинки останется номер.",
 }: {
   /** путь до массива, например "materials.items" */
   path: string;
