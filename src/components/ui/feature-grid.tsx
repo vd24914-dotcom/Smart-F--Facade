@@ -26,6 +26,22 @@ type Props = {
   className?: string;
 };
 
+/**
+ * Как показать картинку карточки.
+ *
+ * SVG — это всегда иконка, её рисуем в кружке. Фотографию в кружок 28 пикселей
+ * не разглядеть, поэтому растровые картинки показываем полосой над текстом.
+ * JPG обрезаем по краям — так фото смотрится лучше, PNG вписываем целиком,
+ * чтобы не срезать логотип.
+ */
+function pictureKind(src?: string) {
+  const value = (src ?? "").trim().toLowerCase().split("?")[0];
+  if (!value) return "none" as const;
+  if (value.endsWith(".svg")) return "icon" as const;
+  if (value.endsWith(".png")) return "contain" as const;
+  return "cover" as const;
+}
+
 /** Рисованный овал под крупной цифрой. */
 const Blob = () => (
   <svg
@@ -120,21 +136,43 @@ export default function FeatureGrid({
               key={item.title || index}
               className={cn(cardBase, pattern[index % pattern.length])}
             >
-              <div className="relative flex aspect-square size-14 rounded-full border border-navy/15 before:absolute before:-inset-2 before:rounded-full before:border before:border-navy/10">
-                {item.icon ? (
-                  <Image
-                    src={item.icon}
-                    alt=""
-                    width={56}
-                    height={56}
-                    className="m-auto h-7 w-7 object-contain"
-                  />
-                ) : (
-                  <span className="m-auto text-[15px] font-bold text-navy">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                )}
-              </div>
+              {(() => {
+                const kind = pictureKind(item.icon);
+
+                if (kind === "cover" || kind === "contain") {
+                  return (
+                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-mist">
+                      <Image
+                        src={item.icon as string}
+                        alt=""
+                        fill
+                        sizes="(max-width: 1024px) 100vw, 400px"
+                        className={cn(
+                          kind === "cover" ? "object-cover" : "object-contain p-4"
+                        )}
+                      />
+                    </div>
+                  );
+                }
+
+                return (
+                  <div className="relative flex aspect-square size-14 rounded-full border border-navy/15 before:absolute before:-inset-2 before:rounded-full before:border before:border-navy/10">
+                    {kind === "icon" ? (
+                      <Image
+                        src={item.icon as string}
+                        alt=""
+                        width={56}
+                        height={56}
+                        className="m-auto h-7 w-7 object-contain"
+                      />
+                    ) : (
+                      <span className="m-auto text-[15px] font-bold text-navy">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
 
               <div className="mt-6 space-y-2">
                 <h3 className="text-[17px] font-bold uppercase leading-[24px] text-navy">

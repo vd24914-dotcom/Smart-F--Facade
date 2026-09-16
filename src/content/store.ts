@@ -27,7 +27,15 @@ export type SiteContent = {
     cta: string;
     footer: string;
   };
-  icons: { specs: string[]; services: string[]; advantages: string[] };
+  /** Иконки к карточкам: индекс иконки совпадает с индексом карточки в текстах */
+  icons: {
+    specs: string[];
+    services: string[];
+    advantages: string[];
+    materials: string[];
+    process: string[];
+    docs: string[];
+  };
   /** Прикреплённые файлы: docs[i] — документ к карточке «Документы и сертификаты» */
   files: { docs: string[] };
 };
@@ -248,11 +256,24 @@ function normalizeSocials(site: SiteContent): SocialLink[] {
   ];
 }
 
+/** Иконок для нового блока в сохранённом файле ещё нет — отдаём пустой список. */
+function iconList(value: unknown) {
+  return Array.isArray(value) ? (value as string[]) : [];
+}
+
 export async function getSite(): Promise<SiteContent> {
   const site = await read<SiteContent>("site", {} as SiteContent);
   return {
     ...site,
     socials: normalizeSocials(site),
+    icons: {
+      specs: iconList(site?.icons?.specs),
+      services: iconList(site?.icons?.services),
+      advantages: iconList(site?.icons?.advantages),
+      materials: iconList(site?.icons?.materials),
+      process: iconList(site?.icons?.process),
+      docs: iconList(site?.icons?.docs),
+    },
     // раздела может не быть в сохранённом файле — тогда просто пустой список
     files: { docs: Array.isArray(site?.files?.docs) ? site.files.docs : [] },
   };

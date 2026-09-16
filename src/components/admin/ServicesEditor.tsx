@@ -46,7 +46,14 @@ export default function ServicesEditor({
           title="Услуги"
           hint="Одна услуга — одна карточка: что делаем и что клиент получает на выходе."
         >
-          <TitleTextRows path="services.list" itemLabel="Услуга" addLabel="Добавить услугу" />
+          <TitleTextRows
+            path="services.list"
+            itemLabel="Услуга"
+            addLabel="Добавить услугу"
+            iconGroup="services"
+            iconLabel="Иконка услуги"
+            iconHint="SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
+          />
         </Block>
 
         <Block title="Страница «Услуги»">

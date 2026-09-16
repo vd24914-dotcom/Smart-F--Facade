@@ -1,8 +1,16 @@
+import Image from "next/image";
 import Reveal, { RevealGroup } from "@/components/ui/reveal";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 /** «Как мы работаем»: пронумерованные шаги от заявки до сопровождения монтажа. */
-export default function ProcessSteps({ dict }: { dict: Dictionary }) {
+export default function ProcessSteps({
+  dict,
+  icons = [],
+}: {
+  dict: Dictionary;
+  /** иконка к шагу из админки; без неё в кружке остаётся номер */
+  icons?: string[];
+}) {
   const steps = (dict.process?.steps ?? []).filter((step) => step.title?.trim());
   if (steps.length === 0) return null;
 
@@ -38,9 +46,21 @@ export default function ProcessSteps({ dict }: { dict: Dictionary }) {
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              <div className="flex size-10 items-center justify-center rounded-full bg-navy text-[14px] font-bold text-white">
-                {index + 1}
-              </div>
+              {icons[index] ? (
+                <div className="flex size-10 items-center justify-center rounded-full bg-navy/5">
+                  <Image
+                    src={icons[index]}
+                    alt=""
+                    width={24}
+                    height={24}
+                    className="size-6 object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="flex size-10 items-center justify-center rounded-full bg-navy text-[14px] font-bold text-white">
+                  {index + 1}
+                </div>
+              )}
 
               <h3 className="relative mt-5 text-[17px] font-bold uppercase leading-[24px] text-navy">
                 {step.title}

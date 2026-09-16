@@ -508,6 +508,9 @@ export function TitleTextRows({
   fileGroup,
   fileLabel = "Прикреплённый файл",
   fileHint,
+  iconGroup,
+  iconLabel = "Иконка или фото",
+  iconHint = "SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер.",
 }: {
   /** путь до массива, например "materials.items" */
   path: string;
@@ -519,20 +522,37 @@ export function TitleTextRows({
   fileGroup?: keyof SiteContent["files"];
   fileLabel?: string;
   fileHint?: string;
+  /** если задано — у каждой карточки своя картинка (site.icons[group]) */
+  iconGroup?: keyof SiteContent["icons"];
+  iconLabel?: string;
+  iconHint?: string;
 }) {
-  const { tx, setTx, setTxEveryLocale, site, setFiles } = useContent();
+  const { tx, setTx, setTxEveryLocale, site, setFiles, setIcons } = useContent();
   const items = ((tx(path) as { title: string; text: string }[]) ?? []).slice();
   const attached = fileGroup ? site.files?.[fileGroup] ?? [] : [];
+  const pictures = iconGroup ? site.icons?.[iconGroup] ?? [] : [];
 
   /** файлы хранятся отдельным списком — держим его той же длины, что и карточки */
   const padFiles = (length: number) =>
     Array.from({ length }, (_, i) => attached[i] ?? "");
+
+  /** то же самое для картинок: их порядок обязан совпадать с порядком карточек */
+  const padIcons = (length: number) =>
+    Array.from({ length }, (_, i) => pictures[i] ?? "");
 
   const setFile = (index: number, value: string) => {
     if (!fileGroup) return;
     setFiles(
       fileGroup,
       padFiles(Math.max(items.length, index + 1)).map((item, i) => (i === index ? value : item))
+    );
+  };
+
+  const setIcon = (index: number, value: string) => {
+    if (!iconGroup) return;
+    setIcons(
+      iconGroup,
+      padIcons(Math.max(items.length, index + 1)).map((item, i) => (i === index ? value : item))
     );
   };
 
@@ -558,16 +578,23 @@ export function TitleTextRows({
       [next[index], next[j]] = [next[j], next[index]];
       setFiles(fileGroup, next);
     }
+    if (iconGroup) {
+      const next = padIcons(items.length);
+      [next[index], next[j]] = [next[j], next[index]];
+      setIcons(iconGroup, next);
+    }
   };
 
   const removeRow = (index: number) => {
     mutateEvery((list) => list.filter((_, i) => i !== index));
     if (fileGroup) setFiles(fileGroup, padFiles(items.length).filter((_, i) => i !== index));
+    if (iconGroup) setIcons(iconGroup, padIcons(items.length).filter((_, i) => i !== index));
   };
 
   const addRow = () => {
     mutateEvery((list) => [...list, { title: "", text: "" }]);
     if (fileGroup) setFiles(fileGroup, [...padFiles(items.length), ""]);
+    if (iconGroup) setIcons(iconGroup, [...padIcons(items.length), ""]);
   };
 
   return (
@@ -594,6 +621,14 @@ export function TitleTextRows({
           </div>
 
           <div className="space-y-3">
+            {iconGroup && (
+              <ImageField
+                label={iconLabel}
+                hint={iconHint}
+                value={pictures[index] ?? ""}
+                onChange={(value) => setIcon(index, value)}
+              />
+            )}
             <Field
               label="Заголовок"
               value={item?.title ?? ""}

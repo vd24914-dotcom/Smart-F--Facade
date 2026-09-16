@@ -38,7 +38,10 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
       <FeatureGrid
         title={dict.services.title}
         description={dict.services.lead}
-        items={dict.services.list ?? []}
+        items={(dict.services.list ?? []).map((item, index) => ({
+          ...item,
+          icon: site.icons.services[index],
+        }))}
         tone="white"
       />
       <Stats dict={dict} />

@@ -83,13 +83,23 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             itemLabel="Материал"
             addLabel="Добавить материал"
             hint="АКП, клинкерная плитка, керамогранит, HPL, подсистемы, крепёж и всё, что добавите."
+            iconGroup="materials"
+            iconLabel="Иконка или фото материала"
+            iconHint="SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
           />
         </Block>
 
         <Block title="4. Блок «Как мы работаем»" hint="Шаги нумеруются автоматически, по порядку.">
           <T path="process.title" label="Заголовок" />
           <T path="process.lead" label="Текст под заголовком" kind="area" rows={2} />
-          <TitleTextRows path="process.steps" itemLabel="Шаг" addLabel="Добавить шаг" />
+          <TitleTextRows
+            path="process.steps"
+            itemLabel="Шаг"
+            addLabel="Добавить шаг"
+            iconGroup="process"
+            iconLabel="Иконка шага"
+            iconHint="SVG или PNG на прозрачном фоне. Без иконки останется номер шага."
+          />
         </Block>
 
         <Block
@@ -120,6 +130,9 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             path="docs.items"
             itemLabel="Документ"
             addLabel="Добавить документ"
+            iconGroup="docs"
+            iconLabel="Иконка или фото документа"
+            iconHint="Скан или фото сертификата подойдёт. SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
             fileGroup="docs"
             fileLabel="Файл документа"
             fileHint="PDF, DOC, XLS, PNG или JPG — до 20 МБ. На сайте под карточкой появится ссылка «Смотреть документ»."

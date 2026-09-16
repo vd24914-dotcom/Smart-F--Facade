@@ -50,10 +50,13 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           id="materials"
           title={dict.materials?.title}
           description={dict.materials?.lead}
-          items={dict.materials?.items ?? []}
+          items={(dict.materials?.items ?? []).map((item, index) => ({
+            ...item,
+            icon: site.icons.materials[index],
+          }))}
         />
 
-        <ProcessSteps dict={dict} />
+        <ProcessSteps dict={dict} icons={site.icons.process} />
 
         <GroupExperience dict={dict} />
 
@@ -74,6 +77,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           fileLabel={dict.docs?.open}
           items={(dict.docs?.items ?? []).map((item, index) => ({
             ...item,
+            icon: site.icons.docs[index],
             file: site.files?.docs?.[index] ?? "",
           }))}
         />
