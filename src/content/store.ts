@@ -101,6 +101,23 @@ export type Lead = {
 
 export type LeadsContent = { items: Lead[] };
 
+/** Незаконченный разговор с ботом: на каком вопросе остановились и что уже ответили. */
+export type BotSession = {
+  chatId: string;
+  /** ключ текущего вопроса, "summary" — показана сводка перед отправкой */
+  step: string;
+  locale: string;
+  answers: Record<string, string>;
+  fileId?: string;
+  fileName?: string;
+  at: number;
+};
+
+/** Язык, который человек выбрал сам — он важнее настроек его телеграма. */
+export type BotLang = { chatId: string; locale: string; at: number };
+
+export type BotStateContent = { sessions: BotSession[]; langs?: BotLang[] };
+
 /** Посещаемость по дням: { "2026-09-09": { views, visits } } */
 export type StatsContent = { days: Record<string, { views: number; visits: number }> };
 
@@ -184,6 +201,7 @@ export const files = {
   leads: "leads.json",
   stats: "stats.json",
   integrations: "integrations.json",
+  tgstate: "tgstate.json",
   seo: "seo.json",
 } as const;
 
@@ -193,7 +211,7 @@ const MAX_LEADS = 1000;
 const MAX_DAYS = 400;
 
 /** Разделы, которые пишет сам сайт — их всегда читаем свежими. */
-const liveFiles = new Set<ContentFile>(["leads", "stats"]);
+const liveFiles = new Set<ContentFile>(["leads", "stats", "tgstate"]);
 
 /** Читает раздел содержимого: сначала облако, потом файл проекта. */
 function read<T>(file: ContentFile, fallback: T): Promise<T> {
@@ -309,6 +327,74 @@ export async function addLead(input: Omit<Lead, "id" | "createdAt" | "status">):
   const { items } = await getLeads();
   await writeContent("leads", { items: [lead, ...items].slice(0, MAX_LEADS) });
   return lead;
+}
+
+/* ─────────── разговоры с ботом ─────────── */
+
+const SESSION_LIFE = 2 * 60 * 60 * 1000;
+const LANG_LIFE = 180 * 24 * 60 * 60 * 1000;
+const MAX_SESSIONS = 100;
+const MAX_LANGS = 2000;
+
+function liveSessions(list: unknown): BotSession[] {
+  if (!Array.isArray(list)) return [];
+  const now = Date.now();
+  return list.filter((item): item is BotSession => {
+    const row = item as BotSession;
+    return Boolean(row?.chatId) && now - (row.at ?? 0) < SESSION_LIFE;
+  });
+}
+
+function liveLangs(list: unknown): BotLang[] {
+  if (!Array.isArray(list)) return [];
+  const now = Date.now();
+  return list.filter((item): item is BotLang => {
+    const row = item as BotLang;
+    return Boolean(row?.chatId) && Boolean(row?.locale) && now - (row.at ?? 0) < LANG_LIFE;
+  });
+}
+
+function readBotState() {
+  return read<BotStateContent>("tgstate", { sessions: [], langs: [] });
+}
+
+/** Пишет оба списка разом — иначе сохранение шага стёрло бы выбранный язык. */
+async function writeBotState(sessions: BotSession[], langs: BotLang[]) {
+  await writeContent("tgstate", {
+    sessions: sessions.slice(0, MAX_SESSIONS),
+    langs: langs.slice(0, MAX_LANGS),
+  });
+}
+
+/** На чём остановился разговор с этим человеком. */
+export async function getBotSession(chatId: string): Promise<BotSession | null> {
+  const data = await readBotState();
+  return liveSessions(data?.sessions).find((row) => row.chatId === chatId) ?? null;
+}
+
+/** Запоминает шаг и ответы. Заодно выбрасывает разговоры старше двух часов. */
+export async function setBotSession(session: BotSession) {
+  const data = await readBotState();
+  const rest = liveSessions(data?.sessions).filter((row) => row.chatId !== session.chatId);
+  await writeBotState([{ ...session, at: Date.now() }, ...rest], liveLangs(data?.langs));
+}
+
+export async function clearBotSession(chatId: string) {
+  const data = await readBotState();
+  const sessions = liveSessions(data?.sessions).filter((row) => row.chatId !== chatId);
+  await writeBotState(sessions, liveLangs(data?.langs));
+}
+
+/** Язык, выбранный кнопкой; null — человек ещё не выбирал. */
+export async function getBotLocale(chatId: string): Promise<string | null> {
+  const data = await readBotState();
+  return liveLangs(data?.langs).find((row) => row.chatId === chatId)?.locale ?? null;
+}
+
+export async function setBotLocale(chatId: string, locale: string) {
+  const data = await readBotState();
+  const rest = liveLangs(data?.langs).filter((row) => row.chatId !== chatId);
+  await writeBotState(liveSessions(data?.sessions), [{ chatId, locale, at: Date.now() }, ...rest]);
 }
 
 /** Настройки SEO. Раздела может не быть — тогда пустая заготовка. */

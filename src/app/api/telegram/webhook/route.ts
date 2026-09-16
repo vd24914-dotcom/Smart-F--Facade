@@ -1,12 +1,44 @@
 import { NextResponse } from "next/server";
-import { addLead, getIntegrations, getLeads, getSeo, getSite, getStats } from "@/content/store";
+import {
+  addLead,
+  clearBotSession,
+  getBotLocale,
+  getBotSession,
+  getDict,
+  getIntegrations,
+  getLeads,
+  getSeo,
+  getSite,
+  getStats,
+  setBotLocale,
+  setBotSession,
+  type BotSession,
+} from "@/content/store";
 import { storageIsWritable } from "@/content/storage";
 import { siteOrigin } from "@/data/seo";
-import { adminMenu, botLocale, botTexts, clientMenu, parseContactMessage } from "@/lib/bot";
+import { isLocale, type Locale } from "@/i18n/config";
+import {
+  adminMenu,
+  botLocale,
+  botTexts,
+  chooseLanguageText,
+  clientMenu,
+  formSteps,
+  languageMenu,
+  nextStep,
+  parseContactMessage,
+  prevStep,
+  stepByKey,
+  stepIndex,
+  type FormStep,
+} from "@/lib/bot";
 import { healthReport, leadsCsv, leadsText, statsCsv, statsText } from "@/lib/report";
+import { storeLeadFile } from "@/lib/attachment";
 import {
   answerCallback,
+  downloadTelegramFile,
   escapeHtml,
+  forwardTelegramFile,
   keyboard,
   sendTelegram,
   sendTelegramAll,
@@ -14,24 +46,32 @@ import {
   telegramTargets,
   type Button,
 } from "@/lib/telegram";
-import { normalizePhone } from "@/lib/validate";
+import { isValidArea, isValidName, isValidPhone, normalizePhone } from "@/lib/validate";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 30;
 
 type Chat = { id: number };
 type From = { id: number; first_name?: string; last_name?: string; username?: string; language_code?: string };
 type Contact = { phone_number: string; first_name?: string; last_name?: string };
+type Doc = { file_id: string; file_name?: string; file_size?: number; mime_type?: string };
+type Photo = { file_id: string; file_size?: number };
 type Message = {
   chat: Chat;
   from?: From;
   text?: string;
   contact?: Contact;
-  document?: { file_name?: string };
+  document?: Doc;
+  photo?: Photo[];
 };
 type Update = {
   message?: Message;
   callback_query?: { id: string; data?: string; from?: From; message?: { chat: Chat } };
 };
+
+type Calc = NonNullable<Awaited<ReturnType<typeof getDict>>["calc"]>;
+type Texts = (typeof botTexts)[Locale];
+type Telegram = Awaited<ReturnType<typeof getIntegrations>>["telegram"];
 
 /** Не больше трёх заявок с одного чата в час — от случайных повторов. */
 const recent = new Map<string, number[]>();
@@ -42,6 +82,17 @@ function tooOften(chatId: string) {
   if (list.length >= 3) return true;
   list.push(now);
   return false;
+}
+
+/**
+ * Какой язык показывать. Выбранный кнопкой важнее настроек телеграма:
+ * у половины клиентов в Ташкенте интерфейс русский, а говорить они хотят
+ * по-узбекски — угадывать тут нельзя.
+ */
+async function localeFor(chatId: string, from?: From): Promise<Locale> {
+  const saved = await getBotLocale(chatId);
+  if (saved && isLocale(saved)) return saved;
+  return botLocale(from?.language_code);
 }
 
 async function origin() {
@@ -66,13 +117,72 @@ export async function POST(request: Request) {
 
   try {
     await handle(update, telegram);
-  } catch {
+  } catch (error) {
     // ответ телеграму всегда 200: иначе он будет слать это же обновление снова
+    console.error("Бот споткнулся на обновлении:", error);
   }
   return NextResponse.json({ ok: true });
 }
 
-type Telegram = Awaited<ReturnType<typeof getIntegrations>>["telegram"];
+/* ─────────────── вопросы формы ─────────────── */
+
+const labels: Record<FormStep["key"], keyof Calc> = {
+  name: "name",
+  company: "company",
+  phone: "phone",
+  objectType: "objectType",
+  area: "area",
+  material: "material",
+  stage: "stage",
+  file: "file",
+};
+
+function optionsOf(step: FormStep, calc: Calc): string[] {
+  if (!step.options) return [];
+  const list = calc[step.options];
+  return Array.isArray(list) ? (list as string[]) : [];
+}
+
+/** Что показать человеку: для выбора из списка в ответе хранится номер варианта. */
+function shown(step: FormStep, value: string, calc: Calc) {
+  if (step.kind !== "choice") return value;
+  const index = Number(value);
+  return optionsOf(step, calc)[index] ?? "";
+}
+
+/** Клавиатура под вопросом: варианты ответа плюс «пропустить», «назад», «отмена». */
+function stepKeyboard(step: FormStep, calc: Calc, t: Texts) {
+  const rows: { text: string; request_contact?: boolean }[][] = [];
+
+  if (step.kind === "choice") {
+    for (const option of optionsOf(step, calc)) rows.push([{ text: option }]);
+  }
+  if (step.kind === "phone") {
+    rows.push([{ text: t.contactButton, request_contact: true }]);
+  }
+
+  const nav: { text: string }[] = [];
+  if (step.optional) nav.push({ text: t.skip });
+  if (prevStep(step.key)) nav.push({ text: t.back });
+  nav.push({ text: t.cancel });
+  rows.push(nav);
+
+  return { keyboard: rows, resize_keyboard: true, is_persistent: true };
+}
+
+function questionText(step: FormStep, calc: Calc, t: Texts) {
+  const position = `${stepIndex(step.key) + 1}/${formSteps.length}`;
+  const label = String(calc[labels[step.key]] ?? step.key);
+  const hint =
+    step.kind === "phone" ? t.askPhone
+    : step.kind === "file" ? t.askFile
+    : step.kind === "choice" ? t.chooseOption
+    : "";
+
+  return `<b>${position} · ${escapeHtml(label)}</b>${hint ? `\n${hint}` : ""}`;
+}
+
+/* ─────────────── обработка ─────────────── */
 
 async function handle(update: Update, telegram: Telegram) {
   const token = telegram.token;
@@ -83,26 +193,51 @@ async function handle(update: Update, telegram: Telegram) {
   const isAdmin = (chatId: string) =>
     telegramTargets(telegram).some((target) => target.chatId === chatId);
 
-  const menu = (chatId: string, locale: ReturnType<typeof botLocale>): Button[][] =>
+  const menu = (chatId: string, locale: Locale): Button[][] =>
     isAdmin(chatId) ? adminMenu(locale, site, socials) : clientMenu(locale, site, socials);
 
-  /* ─── нажали кнопку ─── */
+  /* ─── нажали кнопку под сообщением ─── */
   if (update.callback_query) {
     const query = update.callback_query;
     const chatId = String(query.message?.chat.id ?? query.from?.id ?? "");
-    const locale = botLocale(query.from?.language_code);
-    const t = botTexts[locale];
     await answerCallback(token, query.id);
     if (!chatId) return;
 
-    if (query.data === "lead") {
-      await sendTelegram(token, chatId, t.leadPrompt, {
-        reply_markup: {
-          keyboard: [[{ text: t.contactButton, request_contact: true }]],
-          resize_keyboard: true,
-          one_time_keyboard: true,
-        },
+    // человек выбрал язык кнопкой — запоминаем и переводим разговор
+    if (query.data?.startsWith("lang:")) {
+      const picked = query.data.slice(5);
+      if (!isLocale(picked)) return;
+      await setBotLocale(chatId, picked);
+      const chosen = botTexts[picked];
+
+      const running = await getBotSession(chatId);
+      if (running) {
+        // форма уже идёт — продолжаем с того же вопроса, только на новом языке
+        const step = stepByKey(running.step);
+        await setBotSession({ ...running, locale: picked });
+        await sendTelegram(token, chatId, chosen.languageSet, { reply_markup: { remove_keyboard: true } });
+        const calc = (await getDict(picked)).calc as Calc;
+        if (step) return askAgain(token, chatId, step, calc, chosen);
+        return showSummary(token, chatId, { ...running, locale: picked }, calc, chosen);
+      }
+
+      const welcome = telegram.welcome.trim() || chosen.welcome;
+      await sendTelegram(token, chatId, `${chosen.languageSet}\n\n${welcome}\n\n${chosen.ask}`, {
+        reply_markup: keyboard(menu(chatId, picked)),
       });
+      return;
+    }
+
+    const locale = await localeFor(chatId, query.from);
+    const t = botTexts[locale];
+
+    if (query.data === "language") {
+      await sendTelegram(token, chatId, chooseLanguageText, { reply_markup: keyboard(languageMenu()) });
+      return;
+    }
+
+    if (query.data === "lead") {
+      await startForm(token, chatId, locale);
       return;
     }
 
@@ -158,23 +293,23 @@ async function handle(update: Update, telegram: Telegram) {
   if (!message) return;
 
   const chatId = String(message.chat.id);
-  const locale = botLocale(message.from?.language_code);
+  const saved = await getBotLocale(chatId);
+  const locale = saved && isLocale(saved) ? saved : botLocale(message.from?.language_code);
   const t = botTexts[locale];
   const text = (message.text ?? "").trim();
 
-  // прислали контакт кнопкой
-  if (message.contact?.phone_number) {
-    const name =
-      [message.contact.first_name, message.contact.last_name].filter(Boolean).join(" ") ||
-      [message.from?.first_name, message.from?.last_name].filter(Boolean).join(" ") ||
-      "Клиент из телеграма";
-    await saveBotLead({ telegram, chatId, name, phone: message.contact.phone_number, locale, from: message.from });
-    await sendTelegram(token, chatId, t.thanks, { reply_markup: { remove_keyboard: true } });
-    await sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menu(chatId, locale)) });
-    return;
-  }
-
+  // команды всегда обрывают начатый разговор
   if (/^\/start|^\/menu|^\/help/.test(text)) {
+    await clearBotSession(chatId);
+
+    // первым делом спрашиваем язык: угадывать по настройкам телеграма ненадёжно
+    if (!saved || /^\/lang/.test(text)) {
+      await sendTelegram(token, chatId, chooseLanguageText, {
+        reply_markup: keyboard(languageMenu()),
+      });
+      return;
+    }
+
     const welcome = telegram.welcome.trim() || t.welcome;
     await sendTelegram(token, chatId, `${welcome}\n\n${t.ask}`, {
       reply_markup: keyboard(menu(chatId, locale)),
@@ -182,12 +317,36 @@ async function handle(update: Update, telegram: Telegram) {
     return;
   }
 
-  // написали имя и телефон обычным сообщением
+  if (/^\/lang/.test(text)) {
+    await sendTelegram(token, chatId, chooseLanguageText, { reply_markup: keyboard(languageMenu()) });
+    return;
+  }
+
+  const session = await getBotSession(chatId);
+  if (session) {
+    await continueForm(message, session, telegram, menu(chatId, locale));
+    return;
+  }
+
+  // отдельная быстрая дорожка: прислали контакт или телефон, не начиная форму
+  if (message.contact?.phone_number) {
+    const name =
+      [message.contact.first_name, message.contact.last_name].filter(Boolean).join(" ") ||
+      [message.from?.first_name, message.from?.last_name].filter(Boolean).join(" ") ||
+      "Клиент из телеграма";
+    await saveQuickLead({ telegram, chatId, name, phone: message.contact.phone_number, locale, from: message.from });
+    await sendTelegram(token, chatId, t.thanks, { reply_markup: { remove_keyboard: true } });
+    await sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menu(chatId, locale)) });
+    return;
+  }
+
   const parsed = text ? parseContactMessage(text) : null;
   if (parsed) {
     const name =
-      parsed.name || [message.from?.first_name, message.from?.last_name].filter(Boolean).join(" ") || "Клиент из телеграма";
-    const saved = await saveBotLead({
+      parsed.name ||
+      [message.from?.first_name, message.from?.last_name].filter(Boolean).join(" ") ||
+      "Клиент из телеграма";
+    const saved = await saveQuickLead({
       telegram,
       chatId,
       name,
@@ -202,14 +361,226 @@ async function handle(update: Update, telegram: Telegram) {
     return;
   }
 
-  // всё остальное: показываем меню и объясняем, что нужен телефон
   await sendTelegram(token, chatId, text ? t.needPhone : t.ask, {
     reply_markup: keyboard(menu(chatId, locale)),
   });
 }
 
-/** Сохраняет заявку из бота и сообщает о ней всем получателям. */
-async function saveBotLead(input: {
+/* ─────────────── пошаговая заявка ─────────────── */
+
+async function startForm(token: string, chatId: string, locale: Locale) {
+  const t = botTexts[locale];
+  const calc = (await getDict(locale)).calc as Calc;
+  const first = formSteps[0];
+
+  await setBotSession({ chatId, step: first.key, locale, answers: {}, at: Date.now() });
+  await sendTelegram(token, chatId, t.formIntro, { reply_markup: { remove_keyboard: true } });
+  await sendTelegram(token, chatId, questionText(first, calc, t), {
+    reply_markup: stepKeyboard(first, calc, t),
+  });
+}
+
+async function askAgain(token: string, chatId: string, step: FormStep, calc: Calc, t: Texts, error = "") {
+  await sendTelegram(token, chatId, error ? `${error}\n\n${questionText(step, calc, t)}` : questionText(step, calc, t), {
+    reply_markup: stepKeyboard(step, calc, t),
+  });
+}
+
+async function showSummary(token: string, chatId: string, session: BotSession, calc: Calc, t: Texts) {
+  const lines = formSteps.map((step) => {
+    const raw = session.answers[step.key] ?? "";
+    const value =
+      step.key === "file"
+        ? session.fileName || t.empty
+        : raw
+          ? shown(step, raw, calc)
+          : t.empty;
+    return `${escapeHtml(String(calc[labels[step.key]] ?? step.key))}: <b>${escapeHtml(value)}</b>`;
+  });
+
+  await setBotSession({ ...session, step: "summary" });
+  await sendTelegram(token, chatId, `${t.summary}\n\n${lines.join("\n")}`, {
+    reply_markup: {
+      keyboard: [[{ text: t.send }], [{ text: t.restart }, { text: t.cancel }]],
+      resize_keyboard: true,
+      is_persistent: true,
+    },
+  });
+}
+
+async function continueForm(
+  message: Message,
+  session: BotSession,
+  telegram: Telegram,
+  menuRows: Button[][]
+) {
+  const token = telegram.token;
+  const chatId = String(message.chat.id);
+  const locale = (session.locale as Locale) || botLocale(message.from?.language_code);
+  const t = botTexts[locale];
+  const calc = (await getDict(locale)).calc as Calc;
+  const text = (message.text ?? "").trim();
+
+  const finish = async (reply: string) => {
+    await clearBotSession(chatId);
+    await sendTelegram(token, chatId, reply, { reply_markup: { remove_keyboard: true } });
+    await sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menuRows) });
+  };
+
+  if (text === t.cancel) return finish(t.cancelled);
+
+  /* сводка перед отправкой */
+  if (session.step === "summary") {
+    if (text === t.send) {
+      const done = await submitForm(session, telegram, message.from);
+      return finish(done ? t.thanks : t.tooMany);
+    }
+    if (text === t.restart) {
+      await clearBotSession(chatId);
+      return startForm(token, chatId, locale);
+    }
+    return showSummary(token, chatId, session, calc, t);
+  }
+
+  const step = stepByKey(session.step);
+  if (!step) return finish(t.cancelled);
+
+  if (text === t.back) {
+    const back = prevStep(step.key);
+    if (!back) return finish(t.cancelled);
+    await setBotSession({ ...session, step: back.key });
+    return askAgain(token, chatId, back, calc, t);
+  }
+
+  const answers = { ...session.answers };
+  let fileId = session.fileId;
+  let fileName = session.fileName;
+
+  if (text === t.skip && step.optional) {
+    answers[step.key] = "";
+    if (step.key === "file") {
+      fileId = undefined;
+      fileName = undefined;
+    }
+  } else {
+    /* ─── проверяем ответ ─── */
+    if (step.kind === "file") {
+      const doc = message.document;
+      const photo = message.photo?.[message.photo.length - 1];
+      if (!doc && !photo) return askAgain(token, chatId, step, calc, t, t.notAFile);
+
+      const size = doc?.file_size ?? photo?.file_size ?? 0;
+      if (size > 15 * 1024 * 1024) return askAgain(token, chatId, step, calc, t, t.fileTooBig);
+
+      fileId = doc?.file_id ?? photo?.file_id;
+      fileName = doc?.file_name || `photo-${Date.now()}.jpg`;
+      answers.file = fileName;
+    } else if (step.kind === "phone") {
+      const phone = message.contact?.phone_number || text;
+      if (!isValidPhone(phone)) {
+        return askAgain(token, chatId, step, calc, t, String(calc.errPhone ?? ""));
+      }
+      answers.phone = phone;
+    } else if (step.kind === "choice") {
+      const index = optionsOf(step, calc).indexOf(text);
+      if (index < 0) return askAgain(token, chatId, step, calc, t, t.chooseOption);
+      answers[step.key] = String(index);
+    } else if (step.key === "name") {
+      if (!isValidName(text)) {
+        return askAgain(token, chatId, step, calc, t, String(calc.errName ?? ""));
+      }
+      answers.name = text.slice(0, 80);
+    } else if (step.key === "area") {
+      if (!isValidArea(text)) {
+        return askAgain(token, chatId, step, calc, t, String(calc.errArea ?? ""));
+      }
+      answers.area = text.slice(0, 40);
+    } else {
+      if (!text) return askAgain(token, chatId, step, calc, t);
+      answers[step.key] = text.slice(0, 160);
+    }
+  }
+
+  const next = nextStep(step.key);
+  const updated: BotSession = { ...session, answers, fileId, fileName, at: Date.now() };
+
+  if (!next) return showSummary(token, chatId, updated, calc, t);
+
+  await setBotSession({ ...updated, step: next.key });
+  return askAgain(token, chatId, next, calc, t);
+}
+
+/** Отправляет собранную заявку в админку и всем получателям. */
+async function submitForm(session: BotSession, telegram: Telegram, from?: From) {
+  if (tooOften(session.chatId)) return false;
+
+  const token = telegram.token;
+  // менеджеру удобнее читать заявку по-русски, даже если клиент отвечал на узбекском
+  const ru = (await getDict("ru")).calc as Calc;
+
+  const pick = (key: FormStep["key"]) => {
+    const step = stepByKey(key);
+    const raw = session.answers[key] ?? "";
+    if (!step || !raw) return "";
+    return step.kind === "choice" ? shown(step, raw, ru) : raw;
+  };
+
+  const details = (
+    [
+      ["Компания", pick("company")],
+      ["Тип объекта", pick("objectType")],
+      ["Площадь фасада, м²", pick("area")],
+      ["Необходимый материал", pick("material")],
+      ["Стадия проекта", pick("stage")],
+    ] as [string, string][]
+  )
+    .filter(([, value]) => value)
+    .map(([label, value]) => ({ label, value }));
+
+  // файл перекладываем из телеграма к себе: ссылка телеграма содержит токен бота
+  let attachment: { url: string; name: string } | null = null;
+  if (session.fileId) {
+    const file = await downloadTelegramFile(token, session.fileId);
+    if (file) {
+      attachment = await storeLeadFile(file.data, session.fileName || file.path, "application/octet-stream");
+    }
+  }
+
+  const username = from?.username ? `@${from.username}` : "";
+  const lead = await addLead({
+    name: session.answers.name || "Клиент из телеграма",
+    phone: normalizePhone(session.answers.phone || ""),
+    message: details.map((item) => `${item.label}: ${item.value}`).join("\n"),
+    source: "telegram",
+    page: "telegram",
+    locale: session.locale || "ru",
+    details: [...details, { label: "Телеграм", value: username || `id ${session.chatId}` }],
+    ...(attachment ? { fileUrl: attachment.url, fileName: attachment.name } : {}),
+  });
+
+  const lines = [
+    "<b>Запрос расчёта — телеграм-бот</b>",
+    `Имя: ${escapeHtml(lead.name)}`,
+    `Телефон: ${escapeHtml(lead.phone)}`,
+    ...details.map((item) => `${item.label}: ${escapeHtml(item.value)}`),
+    `Телеграм: ${escapeHtml(username || `id ${session.chatId}`)}`,
+    ...(attachment ? [`Файл: ${escapeHtml(attachment.name)}\n${attachment.url}`] : []),
+  ];
+
+  await sendTelegramAll(telegram, lines.join("\n"));
+
+  // сам чертёж тоже кидаем в чат — так менеджеру не нужно открывать ссылку
+  if (session.fileId) {
+    for (const target of telegramTargets(telegram)) {
+      await forwardTelegramFile(token, target.chatId, session.fileId, `Чертёж к заявке: ${escapeHtml(lead.name)}`);
+    }
+  }
+
+  return true;
+}
+
+/** Короткая заявка: человек просто прислал телефон, не проходя форму. */
+async function saveQuickLead(input: {
   telegram: Telegram;
   chatId: string;
   name: string;

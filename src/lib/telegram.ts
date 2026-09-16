@@ -253,3 +253,51 @@ export async function telegramKnownChats(token: string): Promise<TelegramChat[]>
     return [];
   }
 }
+
+/**
+ * Забирает присланный файл из телеграма.
+ * Ссылка на файл содержит токен бота, поэтому наружу она не уходит —
+ * файл скачивается здесь и дальше живёт в нашем хранилище.
+ */
+export async function downloadTelegramFile(token: string, fileId: string) {
+  try {
+    const res = await fetch(`${API}/bot${token}/getFile?file_id=${encodeURIComponent(fileId)}`);
+    const json = (await res.json().catch(() => null)) as
+      | { ok?: boolean; result?: { file_path?: string; file_size?: number } }
+      | null;
+    if (!res.ok || !json?.ok || !json.result?.file_path) return null;
+
+    const file = await fetch(`${API}/file/bot${token}/${json.result.file_path}`);
+    if (!file.ok) return null;
+
+    return {
+      data: new Uint8Array(await file.arrayBuffer()),
+      path: json.result.file_path,
+    };
+  } catch {
+    return null;
+  }
+}
+
+/** Пересылает уже загруженный в телеграм файл в другой чат — по его id. */
+export async function forwardTelegramFile(
+  token: string,
+  chatId: string,
+  fileId: string,
+  caption = ""
+) {
+  try {
+    const res = await fetch(`${API}/bot${token}/sendDocument`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        chat_id: chatId,
+        document: fileId,
+        ...(caption ? { caption, parse_mode: "HTML" } : {}),
+      }),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

@@ -1,79 +1,25 @@
 import { NextResponse } from "next/server";
-import fs from "node:fs/promises";
-import path from "node:path";
 import { addLead, getIntegrations } from "@/content/store";
-import { cloudEnabled, BLOB_ACCESS } from "@/content/storage";
 import { isValidArea, isValidName, isValidPhone, normalizePhone } from "@/lib/validate";
 import { escapeHtml, sendTelegramAll } from "@/lib/telegram";
+import { MAX_LEAD_FILE, storeLeadFile } from "@/lib/attachment";
 
 /** Простая защита от спама: не больше 5 заявок за 10 минут с одного IP. */
 const recent = new Map<string, number[]>();
 const WINDOW = 10 * 60 * 1000;
 const LIMIT = 5;
 
-const MAX_FILE = 15 * 1024 * 1024;
-
-const allowedExt = [
-  ".pdf", ".dwg", ".dxf", ".doc", ".docx", ".xls", ".xlsx",
-  ".png", ".jpg", ".jpeg", ".webp", ".zip", ".rar", ".7z",
-];
-
 function tooMany(ip: string) {
   const now = Date.now();
-  const list = (recent.get(ip) ?? []).filter((t) => now - t < WINDOW);
+  const list = (recent.get(ip) ?? []).filter((time) => now - time < WINDOW);
   list.push(now);
   recent.set(ip, list);
   return list.length > LIMIT;
 }
 
+/** Приводит присланное поле к строке нужной длины. */
 const clean = (value: unknown, max: number) =>
   typeof value === "string" ? value.trim().slice(0, max) : "";
-
-function safeName(name: string) {
-  const ext = path.extname(name).toLowerCase();
-  const base = path
-    .basename(name, path.extname(name))
-    .toLowerCase()
-    .replace(/[^a-z0-9\-_]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 40);
-  return `${Date.now()}-${base || "file"}${ext}`;
-}
-
-/** Кладёт чертёж в облако (или в public/uploads на своём компьютере). */
-async function storeAttachment(file: File): Promise<{ url: string; name: string } | null> {
-  const ext = path.extname(file.name).toLowerCase();
-  if (!allowedExt.includes(ext)) return null;
-  if (file.size === 0 || file.size > MAX_FILE) return null;
-
-  const data = Buffer.from(await file.arrayBuffer());
-  const name = safeName(file.name);
-
-  if (cloudEnabled()) {
-    try {
-      const { put } = await import("@vercel/blob");
-      const blob = await put(`leads/${name}`, data, {
-        access: BLOB_ACCESS,
-        contentType: file.type || "application/octet-stream",
-        addRandomSuffix: false,
-      });
-      return { url: blob.url, name: file.name };
-    } catch (error) {
-      console.error("Чертёж не удалось загрузить в хранилище:", error);
-      return null;
-    }
-  }
-
-  try {
-    const dir = path.join(process.cwd(), "public", "uploads");
-    await fs.mkdir(dir, { recursive: true });
-    await fs.writeFile(path.join(dir, name), data);
-    return { url: `/uploads/${name}`, name: file.name };
-  } catch (error) {
-    console.error("Чертёж не удалось сохранить:", error);
-    return null;
-  }
-}
 
 /** Рассылает заявку всем получателям. True — если дошло хотя бы до одного. */
 async function notifyTelegram(text: string) {
@@ -152,7 +98,14 @@ export async function POST(request: Request) {
 
   // Чертёж кладём в хранилище последним — чтобы не писать файлы от ботов.
   if (drawing) {
-    attachment = await storeAttachment(drawing);
+    attachment =
+      drawing.size > MAX_LEAD_FILE
+        ? null
+        : await storeLeadFile(
+            new Uint8Array(await drawing.arrayBuffer()),
+            drawing.name,
+            drawing.type || "application/octet-stream"
+          );
     if (!attachment) {
       return NextResponse.json(
         { error: "Файл не подошёл: проверьте формат и размер (до 15 МБ)." },
