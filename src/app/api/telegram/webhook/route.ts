@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addLead, getIntegrations, getLeads, getSeo, getStats } from "@/content/store";
+import { addLead, getIntegrations, getLeads, getSeo, getSite, getStats } from "@/content/store";
 import { storageIsWritable } from "@/content/storage";
 import { siteOrigin } from "@/data/seo";
 import { adminMenu, botLocale, botTexts, clientMenu, parseContactMessage } from "@/lib/bot";
@@ -77,12 +77,14 @@ type Telegram = Awaited<ReturnType<typeof getIntegrations>>["telegram"];
 async function handle(update: Update, telegram: Telegram) {
   const token = telegram.token;
   const site = await origin();
+  // соцсети компании берём из админки — те же ссылки, что в подвале сайта
+  const socials = (await getSite()).socials.map((item) => ({ label: item.label, url: item.url }));
 
   const isAdmin = (chatId: string) =>
     telegramTargets(telegram).some((target) => target.chatId === chatId);
 
   const menu = (chatId: string, locale: ReturnType<typeof botLocale>): Button[][] =>
-    isAdmin(chatId) ? adminMenu(locale, site) : clientMenu(locale, site);
+    isAdmin(chatId) ? adminMenu(locale, site, socials) : clientMenu(locale, site, socials);
 
   /* ─── нажали кнопку ─── */
   if (update.callback_query) {

@@ -149,7 +149,8 @@ export async function setTelegramWebhook(token: string, url: string, secret: str
         url,
         secret_token: secret,
         allowed_updates: ["message", "callback_query"],
-        drop_pending_updates: true,
+        // не выбрасываем очередь: тот, кто уже нажал «старт», получит ответ
+        drop_pending_updates: false,
       }),
     });
     const json = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;

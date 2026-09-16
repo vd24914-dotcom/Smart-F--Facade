@@ -89,8 +89,21 @@ export const botTexts: Record<Locale, Texts> = {
   },
 };
 
-/** Меню клиента: заявка плюс ссылки на разделы сайта. */
-export function clientMenu(locale: Locale, origin: string): Button[][] {
+/** Иконка к соцсети — чтобы кнопка читалась с одного взгляда. */
+function socialIcon(label: string, url: string) {
+  const value = `${label} ${url}`.toLowerCase();
+  if (value.includes("instagram")) return "📸";
+  if (value.includes("t.me") || value.includes("telegram")) return "✈️";
+  if (value.includes("facebook")) return "📘";
+  if (value.includes("youtube")) return "▶️";
+  if (value.includes("wa.me") || value.includes("whatsapp")) return "💬";
+  return "🔗";
+}
+
+export type SocialLink = { label: string; url: string };
+
+/** Меню клиента: заявка, разделы сайта и соцсети компании. */
+export function clientMenu(locale: Locale, origin: string, socials: SocialLink[] = []): Button[][] {
   const t = botTexts[locale];
   const link = (path: string) => `${origin}/${locale}${path}`;
   const rows: Button[][] = [[{ text: t.lead, data: "lead" }]];
@@ -109,18 +122,30 @@ export function clientMenu(locale: Locale, origin: string): Button[][] {
       { text: t.site, url: link("") },
     ]);
   }
+
+  // соцсети берём из админки: пустые ссылки просто не показываем
+  const links = socials.filter((item) => item.url?.trim());
+  for (let i = 0; i < links.length; i += 2) {
+    rows.push(
+      links.slice(i, i + 2).map((item) => ({
+        text: `${socialIcon(item.label, item.url)} ${item.label || "Соцсеть"}`,
+        url: item.url.trim(),
+      }))
+    );
+  }
+
   return rows;
 }
 
 /** То же меню плюс рабочие кнопки — видят только свои. */
-export function adminMenu(locale: Locale, origin: string): Button[][] {
+export function adminMenu(locale: Locale, origin: string, socials: SocialLink[] = []): Button[][] {
   return [
     [
       { text: "📋 Последние заявки", data: "leads" },
       { text: "📊 Статистика сайта", data: "stats" },
     ],
     [{ text: "🩺 Проверить сайт", data: "health" }],
-    ...clientMenu(locale, origin),
+    ...clientMenu(locale, origin, socials),
   ];
 }
 
