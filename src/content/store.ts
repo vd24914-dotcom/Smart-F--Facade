@@ -479,7 +479,9 @@ function normalizeRecipients(list: unknown): TelegramRecipient[] {
         enabled: row.enabled !== false,
       };
     })
-    .filter((row) => row.chatId || row.label);
+    // пустую строку не выбрасываем: человек мог добавить её и сохранить,
+    // не успев заполнить — пусть дождётся своего ID, а не исчезает молча
+    .filter((row) => Boolean(row.id));
 }
 
 const emptyTelegram = (): IntegrationsContent["telegram"] => ({

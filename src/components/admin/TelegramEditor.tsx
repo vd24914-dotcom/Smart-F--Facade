@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import type { IntegrationsContent, TelegramRecipient } from "@/content/store";
 import { isTelegramToken } from "@/lib/telegram";
 import { Area, Button, Card, Field, IconButton } from "./ui";
@@ -101,6 +101,8 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
   const [saveState, setSaveState] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const [botLink, setBotLink] = useState("");
   const [botStatus, setBotStatus] = useState("");
+  /** null — ещё не спросили у телеграма */
+  const [connected, setConnected] = useState<boolean | null>(null);
   const [health, setHealth] = useState("");
   const [secure, setSecure] = useState("");
 
@@ -122,14 +124,39 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
   const removeRecipient = (id: string) =>
     set({ recipients: telegram.recipients.filter((row) => row.id !== id) });
 
-  async function call(body: Record<string, unknown>) {
-    const res = await fetch("/api/admin/telegram", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: telegram.token, ...body }),
-    });
-    return { ok: res.ok, json: await res.json().catch(() => ({})) };
-  }
+  const call = useCallback(
+    async (body: Record<string, unknown>) => {
+      const res = await fetch("/api/admin/telegram", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token: telegram.token, ...body }),
+      });
+      return { ok: res.ok, json: await res.json().catch(() => ({})) };
+    },
+    [telegram.token]
+  );
+
+  /** Состояние берём у телеграма, а не из галочки: она врёт, если её не сохранили. */
+  const readStatus = useCallback(async () => {
+    const { ok, json } = await call({ action: "webhook" });
+    if (!ok) return;
+    const url = json.webhook?.url ?? "";
+    setBotLink(json.link || "");
+    setConnected(Boolean(url) && url === json.expected);
+    if (url && url !== json.expected) {
+      setBotStatus(`Бот подключён к другому адресу: ${url}`);
+    } else if (url && json.webhook?.error) {
+      setBotStatus(`Телеграм жалуется: ${json.webhook.error}`);
+    } else {
+      setBotStatus("");
+    }
+  }, [call]);
+
+  // спрашиваем сразу при открытии страницы — чтобы было видно, работает бот или нет
+  useEffect(() => {
+    if (initial.telegram.token.trim()) void readStatus();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const clear = () => {
     setError("");
@@ -147,7 +174,6 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
         token: telegram.token,
         chatId: telegram.chatId,
         recipients: telegram.recipients,
-        botEnabled: telegram.botEnabled,
         welcome: telegram.welcome,
         healthEnabled: telegram.healthEnabled,
       },
@@ -156,8 +182,11 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
       setSaveState("error");
       return setError(json.error || "Не удалось сохранить");
     }
+    // показываем то, что реально сохранилось, а не то, что было набрано
+    if (json.telegram) setTelegram((prev) => ({ ...prev, ...json.telegram }));
     setSaveState("saved");
     setTimeout(() => setSaveState("idle"), 2500);
+    void readStatus();
   }
 
   async function check() {
@@ -191,9 +220,8 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
     const { ok, json } = await call({ action: "connect" });
     setBusy("");
     if (!ok) return setError(json.error || "Не удалось подключить бота");
-    set({ botEnabled: true });
     setBotLink(json.link || "");
-    setBotStatus("Бот подключён и отвечает клиентам.");
+    await readStatus();
   }
 
   async function disconnect() {
@@ -202,25 +230,14 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
     const { ok, json } = await call({ action: "disconnect" });
     setBusy("");
     if (!ok) return setError(json.error || "Не удалось отключить");
-    set({ botEnabled: false });
-    setBotStatus("Бот отключён — клиентам он больше не отвечает.");
+    await readStatus();
   }
 
   async function webhook() {
     setBusy("connect");
     clear();
-    const { ok, json } = await call({ action: "webhook" });
+    await readStatus();
     setBusy("");
-    if (!ok) return setError(json.error || "Не удалось узнать состояние");
-    setBotLink(json.link || "");
-    const url = json.webhook?.url;
-    setBotStatus(
-      !url
-        ? "Бот пока не подключён к сайту."
-        : url === json.expected
-          ? `Подключён правильно${json.webhook.error ? `, но телеграм жалуется: ${json.webhook.error}` : "."}`
-          : `Подключён к другому адресу: ${url}. Нажмите «Подключить бота», чтобы переключить на этот сайт.`
-    );
   }
 
   async function runHealth() {
@@ -388,15 +405,23 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
           узбекском или английском, — покажет кнопки разделов сайта и примет заявку: клиент отправляет
           номер одной кнопкой, заявка падает в админку и вам в чат.
         </p>
+        <p className="text-[12px] leading-[18px] text-slate-500">
+          Состояние ниже спрашивается у телеграма при каждом открытии страницы — это не галочка,
+          которую можно забыть сохранить, а то, как есть на самом деле.
+        </p>
 
-        <Check checked={telegram.botEnabled} onChange={(botEnabled) => set({ botEnabled })}>
-          Бот отвечает клиентам
-        </Check>
-
-        {telegram.botEnabled && !initial.telegram.secret && (
+        {connected === null ? (
+          <p className="rounded-lg border border-slate-200 bg-slate-50 p-3 text-[13px] text-slate-600">
+            Проверяю, отвечает ли бот…
+          </p>
+        ) : connected ? (
+          <p className="rounded-lg border border-green-300 bg-green-50 p-3 text-[13px] font-semibold leading-[20px] text-green-900">
+            ✅ Бот подключён к сайту и отвечает клиентам.
+          </p>
+        ) : (
           <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[13px] leading-[20px] text-amber-900">
-            Галочка стоит, но бот ещё не связан с сайтом — одной галочки мало. Нажмите
-            «Подключить бота» ниже: тогда телеграм начнёт пересылать сюда сообщения клиентов.
+            ⚠️ Бот <b>не подключён</b> — клиенты пишут ему и не получают ответа. Нажмите
+            «Подключить бота» ниже.
           </p>
         )}
 

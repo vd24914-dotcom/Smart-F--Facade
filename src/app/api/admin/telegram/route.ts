@@ -47,7 +47,14 @@ export async function POST(request: Request) {
   const body = (await request.json().catch(() => ({}))) as Body;
   const stored = await getIntegrations();
 
-  // сохранение формы: пароль вебхука остаётся прежним, что бы ни пришло с клиента
+  /**
+   * Сохранение формы.
+   *
+   * Пишем только те поля, которыми владеет форма. Пароль вебхука и признак
+   * «бот подключён» форма не трогает: их ставит кнопка «Подключить бота»,
+   * и раньше сохранение молча возвращало их назад, если страницу открыли
+   * до подключения. Отсюда и было ощущение, что всё слетает.
+   */
   if (body.action === "save") {
     const s = body.settings ?? {};
     const telegram = await saveTelegram({
@@ -55,13 +62,18 @@ export async function POST(request: Request) {
       token: String(s.token ?? "").trim(),
       chatId: String(s.chatId ?? "").trim(),
       recipients: Array.isArray(s.recipients) ? (s.recipients as never) : [],
-      botEnabled: Boolean(s.botEnabled),
       welcome: String(s.welcome ?? ""),
       healthEnabled: s.healthEnabled !== false,
     });
     revalidateTag("content");
     revalidatePath("/", "layout");
-    return NextResponse.json({ ok: true, botEnabled: telegram.botEnabled });
+
+    // отдаём то, что реально легло в хранилище, — админка покажет это же,
+    // а не то, что человек набрал. Пароль вебхука наружу не отдаём.
+    return NextResponse.json({
+      ok: true,
+      telegram: { ...telegram, secret: undefined },
+    });
   }
 
   const token = (body.token ?? "").trim() || stored.telegram.token;
