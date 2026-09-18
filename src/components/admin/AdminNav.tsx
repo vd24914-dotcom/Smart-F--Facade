@@ -13,7 +13,6 @@ const links = [
   { href: "/admin/services", label: "Услуги" },
   { href: "/admin/projects", label: "Проекты" },
   { href: "/admin/partners", label: "Партнёры" },
-  { href: "/admin/beforeafter", label: "До / После" },
   { href: "/admin/contacts", label: "Контакты" },
   { href: "/admin/seo", label: "SEO", group: true },
 ];

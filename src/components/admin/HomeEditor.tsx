@@ -207,19 +207,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
           <T path="projects.all" label="Кнопка «Посмотреть все»" />
         </Block>
 
-        <Block
-          title="9. Заголовки блока «До / После»"
-          hint="Сами пары фото — в разделе «До / После». Пока пар нет, блок на сайте не показывается."
-        >
-          <T path="beforeAfter.title" label="Заголовок" />
-          <T path="beforeAfter.lead" label="Текст под заголовком" kind="area" rows={2} />
-          <div className="grid gap-4 sm:grid-cols-2">
-            <T path="beforeAfter.before" label="Подпись «До»" />
-            <T path="beforeAfter.after" label="Подпись «После»" />
-          </div>
-        </Block>
-
-        <Block title="10. Блок «Оставить заявку»" hint="Последний блок перед подвалом.">
+        <Block title="9. Блок «Оставить заявку»" hint="Последний блок перед подвалом.">
           <Img imgKey="cta" label="Фон блока" hint="Широкое фото" aspect={21 / 9} />
           <T path="cta.title" label="Заголовок (каждая строка — отдельно)" kind="list" />
           <T path="cta.text" label="Текст (каждая строка — отдельно)" kind="list" />
@@ -227,7 +215,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         </Block>
 
         <Block
-          title="11. Форма «Получить расчёт стоимости»"
+          title="10. Форма «Получить расчёт стоимости»"
           hint="Одна и та же форма во всплывающем окне, в блоке заявки и на странице «Контакты»."
         >
           <T path="calc.button" label="Надпись на кнопке" />

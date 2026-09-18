@@ -73,18 +73,6 @@ export type Project = {
 
 export type PartnersContent = { representatives: string[]; partners: string[] };
 
-
-/** Пара фотографий «до / после» одного объекта */
-export type BeforeAfterItem = {
-  id: string;
-  before: string;
-  after: string;
-  title: Record<Locale, string>;
-  text: Record<Locale, string>;
-};
-
-export type BeforeAfterContent = { items: BeforeAfterItem[] };
-
 export type ContactBlock = {
   id: string;
   title: Record<Locale, string>;
@@ -218,7 +206,6 @@ export const files = {
   projects: "projects.json",
   partners: "partners.json",
   contacts: "contacts.json",
-  beforeafter: "beforeafter.json",
   leads: "leads.json",
   stats: "stats.json",
   integrations: "integrations.json",
@@ -357,13 +344,6 @@ export async function readContentFresh(file: ContentFile): Promise<unknown> {
 }
 
 /* ─────────── заявки, статистика, интеграции ─────────── */
-
-export async function getBeforeAfter(): Promise<BeforeAfterContent> {
-  const data = await read<BeforeAfterContent>("beforeafter", { items: [] });
-  const items = Array.isArray(data?.items) ? data.items : [];
-  // показываем только заполненные пары
-  return { items: items.filter((item) => item.before?.trim() && item.after?.trim()) };
-}
 
 export async function getLeads(): Promise<LeadsContent> {
   const data = await read<LeadsContent>("leads", { items: [] });

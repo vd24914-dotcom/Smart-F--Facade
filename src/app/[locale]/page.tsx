@@ -8,10 +8,9 @@ import ProcessSteps from "@/components/ProcessSteps";
 import GroupExperience from "@/components/GroupExperience";
 import BentoGallery from "@/components/ui/bento-gallery";
 import LogoGrid from "@/components/LogoGrid";
-import BeforeAfter from "@/components/BeforeAfter";
 import CallToAction from "@/components/CallToAction";
 import { isLocale } from "@/i18n/config";
-import { getDict, getSite, getProjects, getPartners, getBeforeAfter } from "@/content/store";
+import { getDict, getSite, getProjects, getPartners } from "@/content/store";
 import { pageMetadata } from "@/lib/seo";
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -27,7 +26,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const site = await getSite();
   const projects = await getProjects();
   const { representatives, partners } = await getPartners();
-  const { items: beforeAfter } = await getBeforeAfter();
 
   return (
     <>
@@ -112,18 +110,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               href: `/${locale}/projects/${project.id}`,
               span: index % 3 === 0 ? "md:row-span-2" : "md:row-span-1",
             }))}
-          />
-        )}
-
-        {/* пара «до / после» появится после первого объекта в Ташкенте */}
-        {beforeAfter.length > 0 && (
-          <BeforeAfter
-            items={beforeAfter}
-            locale={locale}
-            title={dict.beforeAfter.title}
-            lead={dict.beforeAfter.lead}
-            beforeLabel={dict.beforeAfter.before}
-            afterLabel={dict.beforeAfter.after}
           />
         )}
 

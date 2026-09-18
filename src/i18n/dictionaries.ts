@@ -41,7 +41,6 @@ export type Dictionary = {
     all: string;
     items: string[];
   };
-  beforeAfter: { title: string; lead: string; before: string; after: string };
   stats: { value: string; label: string }[];
   /** Блок «Материалы» на главной */
   materials: {

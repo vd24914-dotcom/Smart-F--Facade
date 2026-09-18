@@ -166,12 +166,6 @@
         "emailTitle": "Почта",
         "socialTitle": "Мы в соцсетях"
       }
-    },
-    "beforeAfter": {
-      "title": "Как было и как стало",
-      "lead": "Двигайте шторку, чтобы увидеть фасад до работ и после сдачи объекта.",
-      "before": "До",
-      "after": "После"
     }
   },
   "uz": {
@@ -341,12 +335,6 @@
         "emailTitle": "Pochta",
         "socialTitle": "Ijtimoiy tarmoqlarda"
       }
-    },
-    "beforeAfter": {
-      "title": "Qanday edi va qanday bo‘ldi",
-      "lead": "Ishlardan oldin va topshirilgandan keyingi fasadni ko‘rish uchun ajratgichni suring.",
-      "before": "Oldin",
-      "after": "Keyin"
     }
   },
   "en": {
@@ -516,12 +504,6 @@
         "emailTitle": "Email",
         "socialTitle": "Follow us"
       }
-    },
-    "beforeAfter": {
-      "title": "Before and after",
-      "lead": "Drag the handle to see the facade before the works and after handover.",
-      "before": "Before",
-      "after": "After"
     }
   }
 }
