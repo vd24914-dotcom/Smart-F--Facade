@@ -196,9 +196,8 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             iconHint="Скан или фото сертификата подойдёт. SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки карточка идёт без кружка."
             fileGroup="docs"
             fileLabel="Файл документа"
-            fileHint="PDF, DOC, XLS, PNG или JPG — до 20 МБ. На сайте под карточкой появится ссылка «Смотреть документ»."
+            fileHint="PDF, PNG или JPG — до 20 МБ. Файл сам станет плиткой в галерее под карточками: картинка покажется сканом, PDF откроется в окне целиком."
           />
-          <T path="docs.open" label="Подпись ссылки на файл" />
 
           <div className="rounded-xl border border-slate-200 bg-white p-3">
             <p className="mb-1 text-[13px] font-bold text-slate-700">

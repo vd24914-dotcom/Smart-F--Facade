@@ -16,6 +16,13 @@ export type Certificate = {
   file: string;
 };
 
+const isImage = (src: string) => /\.(png|jpe?g|webp|gif|avif)(\?|$)/i.test(src.trim());
+const isPdf = (src: string) => /\.pdf(\?|$)/i.test(src.trim());
+
+/** Что показывать на плитке: скан, а если его нет — сам файл, когда это картинка. */
+const pictureOf = (item: Certificate) =>
+  item.image?.trim() ? item.image.trim() : isImage(item.file ?? "") ? item.file.trim() : "";
+
 /** Скан документа или, если его нет, спокойная заглушка с иконкой. */
 function Scan({ src, alt, sizes, contain = false }: { src: string; alt: string; sizes: string; contain?: boolean }) {
   const [failed, setFailed] = useState(false);
@@ -131,7 +138,12 @@ function Viewer({
               className="absolute inset-4 overflow-hidden rounded-xl bg-white shadow-[0_20px_50px_-30px_rgba(8,19,36,0.6)] sm:inset-6"
               style={{ transformOrigin: dir >= 0 ? "left center" : "right center" }}
             >
-              <Scan src={item.image} alt={item.title} sizes="(max-width: 920px) 100vw, 920px" contain />
+              {!pictureOf(item) && isPdf(item.file) ? (
+                // PDF без скана — показываем сам документ, браузер умеет его листать
+                <iframe src={`${item.file}#toolbar=0&navpanes=0`} title={item.title} className="size-full" />
+              ) : (
+                <Scan src={pictureOf(item)} alt={item.title} sizes="(max-width: 920px) 100vw, 920px" contain />
+              )}
             </motion.div>
           </AnimatePresence>
 
@@ -228,7 +240,7 @@ export default function CertificateGallery({
             className="group relative overflow-hidden rounded-2xl border border-navy/10 bg-white text-left shadow-[0_25px_60px_-45px_rgba(8,19,36,0.55)] transition duration-300 hover:-translate-y-1 hover:border-navy/30"
           >
             <div className="relative aspect-[3/4] w-full overflow-hidden bg-mist">
-              <Scan src={item.image} alt={item.title} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" />
+              <Scan src={pictureOf(item)} alt={item.title} sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 280px" />
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(8,19,36,0)_45%,rgba(8,19,36,0.85)_100%)]"

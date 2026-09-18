@@ -83,26 +83,37 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           }))}
         />
 
+        {/*
+          Документы: карточки объясняют, какие бумаги бывают. Файл, прикреплённый
+          к карточке, и записи из отдельного списка сертификатов вместе становятся
+          плитками под карточками — по клику открываются в окне.
+        */}
         <FeatureGrid
           id="docs"
           allowPhoto
           title={dict.docs?.title}
           description={dict.docs?.lead}
-          fileLabel={dict.docs?.open}
           items={(dict.docs?.items ?? []).map((item, index) => ({
             ...item,
             icon: site.icons.docs[index],
-            file: site.files?.docs?.[index] ?? "",
           }))}
           footer={
             <CertificateGallery
               title={dict.docs?.filesTitle ?? ""}
               downloadLabel={dict.docs?.download ?? ""}
-              items={(dict.docs?.files ?? []).map((item, index) => ({
-                ...item,
-                image: site.icons.certificates[index] ?? "",
-                file: site.files?.library?.[index] ?? "",
-              }))}
+              items={[
+                ...(dict.docs?.items ?? []).map((item, index) => ({
+                  title: item.title,
+                  text: item.text,
+                  image: "",
+                  file: site.files?.docs?.[index] ?? "",
+                })),
+                ...(dict.docs?.files ?? []).map((item, index) => ({
+                  ...item,
+                  image: site.icons.certificates[index] ?? "",
+                  file: site.files?.library?.[index] ?? "",
+                })),
+              ]}
             />
           }
         />
