@@ -57,9 +57,19 @@ export async function POST(request: Request) {
    */
   if (body.action === "save") {
     const s = body.settings ?? {};
+
+    /*
+     * Страховка от менеджера паролей. Браузер умеет подставить в поле токена
+     * сохранённый пароль от админки; сохранение тогда затирало рабочий токен,
+     * и бот отваливался. Явный мусор поверх живого токена не принимаем.
+     */
+    const incoming = String(s.token ?? "").trim();
+    const keepToken =
+      Boolean(incoming) && !isTelegramToken(incoming) && isTelegramToken(stored.telegram.token);
+
     const telegram = await saveTelegram({
       enabled: Boolean(s.enabled),
-      token: String(s.token ?? "").trim(),
+      token: keepToken ? stored.telegram.token : incoming,
       chatId: String(s.chatId ?? "").trim(),
       recipients: Array.isArray(s.recipients) ? (s.recipients as never) : [],
       welcome: String(s.welcome ?? ""),
@@ -74,6 +84,13 @@ export async function POST(request: Request) {
     return NextResponse.json({
       ok: true,
       telegram: { ...telegram, secret: undefined },
+      ...(keepToken
+        ? {
+            warning:
+              "В поле токена пришло не похожее на токен значение — скорее всего его подставил " +
+              "менеджер паролей браузера. Прежний рабочий токен сохранён, бот не тронут.",
+          }
+        : {}),
     });
   }
 

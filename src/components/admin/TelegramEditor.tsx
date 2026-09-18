@@ -43,10 +43,19 @@ function SecretField({
           {shown ? "скрыть" : "показать"}
         </button>
       </span>
+      {/*
+        Поле нарочно НЕ type="password". Менеджер паролей браузера считает такое поле
+        формой входа и подставляет туда сохранённый пароль от админки — токен молча
+        заменялся, а при сохранении затирался. Прячем символы стилем, а не типом поля.
+      */}
       <input
-        type={shown ? "text" : "password"}
+        type="text"
+        name="telegram-bot-token"
         autoComplete="off"
+        data-lpignore="true"
+        data-1p-ignore=""
         spellCheck={false}
+        style={{ WebkitTextSecurity: shown ? "none" : "disc" } as React.CSSProperties}
         className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-[14px] text-slate-900 outline-none transition focus:border-slate-900"
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -210,6 +219,7 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
     }
     // показываем то, что реально сохранилось, а не то, что было набрано
     if (json.telegram) setTelegram((prev) => ({ ...prev, ...json.telegram }));
+    if (json.warning) setNote(json.warning);
     setSaveState("saved");
     setTimeout(() => setSaveState("idle"), 2500);
     void readStatus();
@@ -323,7 +333,8 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
           <p className="rounded-lg border border-amber-300 bg-amber-50 p-3 text-[13px] leading-[20px] text-amber-900">
             В поле сейчас не токен, а что-то другое — {telegram.token.trim().length} символов без
             двоеточия. Токен выглядит как <b>1234567890:AAH5f…</b>: номер бота, двоеточие и длинный
-            ключ. Имя бота и пароль сюда не подходят — телеграм на них отвечает «Not Found».
+            ключ. Чаще всего это подставил менеджер паролей браузера: сотрите значение, вставьте
+            токен заново и откажитесь, когда браузер предложит его «сохранить как пароль».
           </p>
         )}
 
