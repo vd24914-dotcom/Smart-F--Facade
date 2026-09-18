@@ -79,13 +79,11 @@ const LayersIcon = ({ className }: { className?: string }) => (
  */
 function Picture({
   src,
-  index,
   alt,
   sizes,
   iconSize = "size-16",
 }: {
   src?: string;
-  index: number;
   alt: string;
   sizes: string;
   iconSize?: string;
@@ -109,12 +107,6 @@ function Picture({
 
   return (
     <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,79,123,0.55),transparent_60%),linear-gradient(180deg,#16243a_0%,#0b1523_100%)]">
-      <span
-        aria-hidden
-        className="absolute right-4 top-3 text-[64px] font-extrabold leading-none text-white/[0.06]"
-      >
-        {String(index + 1).padStart(2, "0")}
-      </span>
       <div className="absolute inset-x-0 top-[28%] flex justify-center">
         <div
           className={cn(
@@ -144,12 +136,10 @@ function Picture({
 /** Окно с полным описанием материала и кнопкой на расчёт. */
 function MaterialDialog({
   item,
-  index,
   ctaLabel,
   onClose,
 }: {
   item: CoverflowItem;
-  index: number;
   ctaLabel: string;
   onClose: () => void;
 }) {
@@ -184,7 +174,6 @@ function MaterialDialog({
         <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-3xl bg-ink">
           <Picture
             src={item.img}
-            index={index}
             alt={item.title}
             sizes="(max-width: 640px) 100vw, 640px"
             iconSize="size-20"
@@ -311,7 +300,7 @@ export default function CoverflowCarousel({
     <section
       id={id}
       className={cn(
-        "relative isolate overflow-hidden bg-ink py-16 text-white scroll-mt-24 select-none lg:py-20",
+        "relative isolate overflow-hidden bg-mist py-16 scroll-mt-24 select-none lg:py-20",
         className
       )}
       onMouseEnter={() => setHovered(true)}
@@ -320,30 +309,11 @@ export default function CoverflowCarousel({
       onTouchEnd={onTouchEnd}
       onKeyDown={onKeyDown}
     >
-      {/* фон: размытое фото текущего материала и мягкое свечение */}
-      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden" aria-hidden>
-        {list.map((item, index) => {
-          const clean = (item.img ?? "").trim();
-          if (!clean || isSvg(clean)) return null;
-          return (
-            <Image
-              key={clean + index}
-              src={clean}
-              alt=""
-              fill
-              sizes="100vw"
-              className="object-cover transition-opacity duration-1000"
-              style={{
-                opacity: index === current ? 1 : 0,
-                filter: "brightness(0.25) blur(32px)",
-                transform: "scale(1.15)",
-              }}
-            />
-          );
-        })}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(8,19,36,0.25)_0%,rgba(8,19,36,0.94)_100%)]" />
-        <div className="absolute -top-72 left-1/2 size-[520px] -translate-x-1/2 rounded-full bg-navy/40 blur-[200px]" />
-      </div>
+      {/* мягкое свечение сверху — как у остальных светлых блоков */}
+      <div
+        className="pointer-events-none absolute -top-72 left-1/2 -z-10 size-[520px] -translate-x-1/2 rounded-full bg-navy/20 blur-[300px]"
+        aria-hidden
+      />
 
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center px-5">
         {eyebrow && (
@@ -354,12 +324,13 @@ export default function CoverflowCarousel({
           </div>
         )}
         {title && (
-          <h2 className="text-center text-[26px] font-extrabold uppercase leading-[1.25] text-white lg:text-[36px]">
+          <h2 className="text-center text-[26px] font-extrabold uppercase leading-[1.25] text-navy lg:text-[36px]">
             {title}
           </h2>
         )}
+        <div className="rule-gold mt-5" />
         {description && (
-          <p className="mt-5 max-w-[640px] text-center text-[15px] font-light leading-[26px] text-white/75 lg:text-[17px]">
+          <p className="mt-5 max-w-[640px] text-center text-[15px] font-light leading-[26px] text-graphite lg:text-[17px]">
             {description}
           </p>
         )}
@@ -399,7 +370,6 @@ export default function CoverflowCarousel({
                 >
                   <Picture
                     src={item.img}
-                    index={index}
                     alt={item.title}
                     sizes="(max-width: 480px) 240px, (max-width: 1024px) 280px, 330px"
                   />
@@ -417,10 +387,6 @@ export default function CoverflowCarousel({
                       center ? "translate-y-0 opacity-100" : "pointer-events-none translate-y-4 opacity-0"
                     )}
                   >
-                    <div className="text-right text-[12px] font-semibold tracking-[0.1em] text-white/85 [text-shadow:0_2px_6px_rgba(0,0,0,0.8)]">
-                      {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
-                    </div>
-
                     <div className="mt-auto flex flex-col items-center gap-1">
                       <h3 className="line-clamp-3 text-[18px] font-extrabold uppercase leading-[1.15] tracking-[0.03em] text-white [text-shadow:0_3px_12px_rgba(0,0,0,0.95)] sm:text-[21px]">
                         {item.title}
@@ -455,7 +421,7 @@ export default function CoverflowCarousel({
                 type="button"
                 onClick={prev}
                 aria-label="Previous"
-                className="absolute left-0 top-1/2 z-40 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur transition hover:border-gold hover:text-gold sm:left-2"
+                className="absolute left-0 top-1/2 z-40 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-navy/15 bg-white text-navy shadow-[0_8px_24px_rgba(8,19,36,0.18)] transition hover:border-navy hover:bg-navy hover:text-white sm:left-2"
               >
                 <ChevronLeft />
               </button>
@@ -463,7 +429,7 @@ export default function CoverflowCarousel({
                 type="button"
                 onClick={next}
                 aria-label="Next"
-                className="absolute right-0 top-1/2 z-40 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-black/55 text-white shadow-[0_8px_24px_rgba(0,0,0,0.4)] backdrop-blur transition hover:border-gold hover:text-gold sm:right-2"
+                className="absolute right-0 top-1/2 z-40 flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-navy/15 bg-white text-navy shadow-[0_8px_24px_rgba(8,19,36,0.18)] transition hover:border-navy hover:bg-navy hover:text-white sm:right-2"
               >
                 <ChevronRight />
               </button>
@@ -484,7 +450,7 @@ export default function CoverflowCarousel({
                   "h-2 rounded-full transition-all duration-300",
                   index === current
                     ? "w-7 bg-gold shadow-[0_0_10px_rgba(197,164,126,0.7)]"
-                    : "w-2 bg-white/25 hover:bg-white/50"
+                    : "w-2 bg-navy/20 hover:bg-navy/40"
                 )}
               />
             ))}
@@ -493,7 +459,7 @@ export default function CoverflowCarousel({
       </div>
 
       {opened !== null && list[opened] && (
-        <MaterialDialog item={list[opened]} index={opened} ctaLabel={ctaLabel} onClose={close} />
+        <MaterialDialog item={list[opened]} ctaLabel={ctaLabel} onClose={close} />
       )}
     </section>
   );
