@@ -154,8 +154,12 @@ export type IntegrationsContent = {
     botEnabled: boolean;
     /** Что бот пишет клиенту первым сообщением; пусто — текст по умолчанию */
     welcome: string;
-    /** Отчёт «сайт работает» раз в 12 часов */
+    /** Присылать отчёт «сайт работает» */
     healthEnabled: boolean;
+    /** Как часто, в часах: 12, 24 или 48 */
+    healthHours: number;
+    /** Когда отчёт ушёл в последний раз — по нему считается следующий */
+    healthAt: number;
   };
 };
 
@@ -484,6 +488,14 @@ function normalizeRecipients(list: unknown): TelegramRecipient[] {
     .filter((row) => Boolean(row.id));
 }
 
+/** Допустимые интервалы отчёта. Чужое значение приводим к ближайшему разумному. */
+export const healthIntervals = [12, 24, 48] as const;
+
+export function healthInterval(value: unknown) {
+  const hours = Number(value);
+  return healthIntervals.includes(hours as 12 | 24 | 48) ? hours : 48;
+}
+
 const emptyTelegram = (): IntegrationsContent["telegram"] => ({
   enabled: false,
   token: "",
@@ -493,6 +505,8 @@ const emptyTelegram = (): IntegrationsContent["telegram"] => ({
   botEnabled: false,
   welcome: "",
   healthEnabled: false,
+  healthHours: 48,
+  healthAt: 0,
 });
 
 export async function getIntegrations(): Promise<IntegrationsContent> {
@@ -512,6 +526,8 @@ export async function getIntegrations(): Promise<IntegrationsContent> {
       botEnabled: Boolean(data?.telegram?.botEnabled),
       welcome: String(data?.telegram?.welcome ?? ""),
       healthEnabled: data?.telegram?.healthEnabled !== false,
+      healthHours: healthInterval(data?.telegram?.healthHours),
+      healthAt: Number(data?.telegram?.healthAt) || 0,
     },
   };
 }

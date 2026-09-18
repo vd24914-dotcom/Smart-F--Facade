@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
-import { getIntegrations, getLeads, getSeo, getStats, saveTelegram } from "@/content/store";
+import { getIntegrations, getLeads, getSeo, getStats, healthInterval, saveTelegram } from "@/content/store";
 import { storageIsWritable } from "@/content/storage";
 import { siteOrigin } from "@/data/seo";
 import { healthReport } from "@/lib/report";
@@ -64,6 +64,7 @@ export async function POST(request: Request) {
       recipients: Array.isArray(s.recipients) ? (s.recipients as never) : [],
       welcome: String(s.welcome ?? ""),
       healthEnabled: s.healthEnabled !== false,
+      healthHours: healthInterval(s.healthHours),
     });
     revalidateTag("content");
     revalidatePath("/", "layout");
@@ -169,6 +170,7 @@ export async function POST(request: Request) {
       storageOk: storageIsWritable(),
       leads: leads.items,
       stats,
+      hours: stored.telegram.healthHours,
     });
     const results = await sendTelegramAll({ ...stored.telegram, token }, report.text);
     return NextResponse.json({ ok: report.ok, report: report.text, results });

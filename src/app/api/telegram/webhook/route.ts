@@ -279,6 +279,7 @@ async function handle(update: Update, telegram: Telegram) {
         storageOk: storageIsWritable(),
         leads: leads.items,
         stats,
+        hours: telegram.healthHours,
       });
       await sendTelegram(token, chatId, report.text);
       return;

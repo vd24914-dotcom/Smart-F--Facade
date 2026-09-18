@@ -152,8 +152,9 @@ export type Health = { ok: boolean; text: string };
  */
 export async function healthReport(
   origin: string,
-  opts: { storageOk: boolean; leads: Lead[]; stats: StatsContent }
+  opts: { storageOk: boolean; leads: Lead[]; stats: StatsContent; hours?: number }
 ): Promise<Health> {
+  const window = Math.max(1, opts.hours ?? 12);
   const problems: string[] = [];
   const lines: string[] = [];
 
@@ -186,7 +187,7 @@ export async function healthReport(
     problems.push("не работает хранилище");
   }
 
-  const half = since(opts.leads, DAY / 2);
+  const fresh = since(opts.leads, window * 60 * 60 * 1000);
   const today = (opts.stats.days ?? {})[new Date().toISOString().slice(0, 10)] ?? {
     views: 0,
     visits: 0,
@@ -203,7 +204,7 @@ export async function healthReport(
       "",
       lines.join("\n"),
       "",
-      `За 12 часов: ${half} заявок. Сегодня: ${today.visits} посетителей, ${today.views} просмотров.`,
+      `За ${window} ч: ${fresh} заявок. Сегодня: ${today.visits} посетителей, ${today.views} просмотров.`,
       `Проверено: ${new Date().toLocaleString("ru-RU", { timeZone: "Asia/Tashkent" })} (Ташкент)`,
     ].join("\n"),
   };

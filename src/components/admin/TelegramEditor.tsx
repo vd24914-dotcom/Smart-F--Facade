@@ -69,6 +69,31 @@ function ResultList({ results }: { results: SendResult[] }) {
   );
 }
 
+const intervals = [
+  { value: 12, label: "каждые 12 часов" },
+  { value: 24, label: "раз в сутки" },
+  { value: 48, label: "раз в двое суток (48 часов)" },
+];
+
+function IntervalField({ value, onChange }: { value: number; onChange: (value: number) => void }) {
+  return (
+    <label className="block max-w-[320px]">
+      <span className="mb-1 block text-[13px] font-semibold text-slate-700">Как часто присылать</span>
+      <select
+        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] text-slate-900 outline-none transition focus:border-slate-900"
+        value={value}
+        onChange={(e) => onChange(Number(e.target.value))}
+      >
+        {intervals.map((item) => (
+          <option key={item.value} value={item.value}>
+            {item.label}
+          </option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
 function Check({
   checked,
   onChange,
@@ -176,6 +201,7 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
         recipients: telegram.recipients,
         welcome: telegram.welcome,
         healthEnabled: telegram.healthEnabled,
+        healthHours: telegram.healthHours,
       },
     });
     if (!ok) {
@@ -466,14 +492,23 @@ export default function TelegramEditor({ initial }: { initial: IntegrationsConte
 
       <Card title="Шаг 4. Отчёт о работе сайта">
         <p className="text-[13px] leading-[20px] text-slate-600">
-          Раз в 12 часов бот открывает сайт на трёх языках, проверяет хранилище и пишет сводку: всё ли
+          По расписанию бот открывает сайт на трёх языках, проверяет хранилище и пишет сводку: всё ли
           работает, сколько заявок и посетителей было. Если сайт лежит целиком, сообщение просто не
           придёт — само молчание и есть тревожный сигнал.
         </p>
 
         <Check checked={telegram.healthEnabled} onChange={(healthEnabled) => set({ healthEnabled })}>
-          Присылать отчёт раз в 12 часов
+          Присылать отчёт о работе сайта
         </Check>
+
+        <IntervalField
+          value={telegram.healthHours}
+          onChange={(healthHours) => set({ healthHours })}
+        />
+        <p className="-mt-2 text-[12px] leading-[18px] text-slate-500">
+          Отчёт уходит утром по Ташкенту. При интервале 48 часов — через день,
+          при 24 — каждое утро, при 12 — ещё и вечером.
+        </p>
 
         <div className="flex flex-wrap items-center gap-3">
           <Button variant="ghost" onClick={runHealth} disabled={busy === "health" || !telegram.token.trim()}>
