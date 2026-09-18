@@ -60,7 +60,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
         <ProcessSteps dict={dict} icons={site.icons.process} />
 
-        <GroupExperience dict={dict} />
+        <GroupExperience dict={dict} photos={site.group.photos} />
 
         <FeatureGrid
           tone="white"

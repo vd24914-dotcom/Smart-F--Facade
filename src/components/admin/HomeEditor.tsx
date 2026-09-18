@@ -144,6 +144,23 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             <p className="mb-3 text-[13px] font-bold text-slate-700">Цифры</p>
             <StatRows path="group.stats" />
           </div>
+          <div className="rounded-xl border border-slate-200 bg-white p-3">
+            <p className="mb-3 text-[13px] font-bold text-slate-700">Фотографии объектов</p>
+            <ImageRows
+              values={store.site.group?.photos ?? []}
+              onChange={(photos) =>
+                store.api.setSite((prev) => ({
+                  ...prev,
+                  group: { ...prev.group, photos: photos.slice(0, 16) },
+                }))
+              }
+              itemLabel="Фотография"
+              addLabel="Добавить фотографию"
+              aspect={1}
+              hint="Сетка 4 × 4, до 16 фотографий. Пока фото нет, на их месте заглушки. При появлении блока на экране плитки один раз перемешиваются."
+              imageHint="Квадратный кадр. После выбора файла можно вырезать нужный кусок"
+            />
+          </div>
         </Block>
 
         <Block
