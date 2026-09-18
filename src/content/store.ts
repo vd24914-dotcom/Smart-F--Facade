@@ -35,6 +35,8 @@ export type SiteContent = {
     materials: string[];
     process: string[];
     docs: string[];
+    /** сканы сертификатов и документов под карточками; индекс совпадает с docs.files */
+    certificates: string[];
   };
   /**
    * Прикреплённые файлы.
@@ -307,6 +309,7 @@ export async function getSite(): Promise<SiteContent> {
       materials: iconList(site?.icons?.materials),
       process: iconList(site?.icons?.process),
       docs: iconList(site?.icons?.docs),
+      certificates: iconList(site?.icons?.certificates),
     },
     // раздела может не быть в сохранённом файле — тогда просто пустой список
     files: {

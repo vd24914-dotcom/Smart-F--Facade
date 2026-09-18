@@ -3,7 +3,7 @@ import Hero from "@/components/Hero";
 import AboutSplit from "@/components/ui/about-split";
 import FeatureGrid from "@/components/ui/feature-grid";
 import CoverflowCarousel from "@/components/ui/coverflow-carousel";
-import DocList from "@/components/ui/doc-list";
+import CertificateGallery from "@/components/ui/certificate-gallery";
 import ProcessSteps from "@/components/ProcessSteps";
 import GroupExperience from "@/components/GroupExperience";
 import BentoGallery from "@/components/ui/bento-gallery";
@@ -95,11 +95,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
             file: site.files?.docs?.[index] ?? "",
           }))}
           footer={
-            <DocList
+            <CertificateGallery
               title={dict.docs?.filesTitle ?? ""}
               downloadLabel={dict.docs?.download ?? ""}
               items={(dict.docs?.files ?? []).map((item, index) => ({
                 ...item,
+                image: site.icons.certificates[index] ?? "",
                 file: site.files?.library?.[index] ?? "",
               }))}
             />

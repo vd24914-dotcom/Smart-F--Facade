@@ -202,24 +202,28 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
 
           <div className="rounded-xl border border-slate-200 bg-white p-3">
             <p className="mb-1 text-[13px] font-bold text-slate-700">
-              Файлы под карточками: сертификаты, паспорта, протоколы
+              Сертификаты под карточками: плитки со сканами
             </p>
             <p className="mb-3 text-[12px] leading-[18px] text-slate-500">
-              Карточки выше объясняют, какие документы бывают. Здесь лежат сами файлы —
-              посетитель открывает их прямо с сайта.
+              Карточки выше объясняют, какие документы бывают. Здесь — сами сертификаты:
+              плитка со сканом, по клику открывается крупно в окне, несколько бумаг листаются
+              как страницы. Без скана и без файла плитка не показывается.
             </p>
             <div className="grid gap-4 sm:grid-cols-2">
-              <T path="docs.filesTitle" label="Заголовок списка" />
-              <T path="docs.download" label="Подпись кнопки" />
+              <T path="docs.filesTitle" label="Заголовок над плитками" />
+              <T path="docs.download" label="Подпись кнопки скачивания в окне" />
             </div>
             <div className="mt-3">
               <TitleTextRows
                 path="docs.files"
-                itemLabel="Файл"
-                addLabel="Добавить файл"
+                itemLabel="Сертификат"
+                addLabel="Добавить сертификат"
                 rows={2}
+                iconGroup="certificates"
+                iconLabel="Скан или фото документа"
+                iconHint="JPG или PNG, вертикальный кадр — как лист А4. Показывается на плитке и крупно в окне."
                 fileGroup="library"
-                fileLabel="Сам файл"
+                fileLabel="Файл для скачивания (необязательно)"
                 fileHint="PDF, DOC, DOCX, XLS, XLSX, PNG или JPG — до 20 МБ. Значок на сайте подставится по формату."
               />
             </div>

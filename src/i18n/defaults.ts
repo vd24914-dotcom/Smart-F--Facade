@@ -164,8 +164,8 @@ export const defaultTexts: DictionaryDefaults = {
       ],
       note: "Полный пакет документов по конкретному материалу отправим по запросу.",
       open: "Смотреть документ",
-      filesTitle: "Скачать документы",
-      download: "Открыть",
+      filesTitle: "Сертификаты и документы",
+      download: "Скачать",
       files: [],
     },
     group: {
@@ -306,8 +306,8 @@ export const defaultTexts: DictionaryDefaults = {
       ],
       note: "Aniq material bo‘yicha to‘liq hujjatlar to‘plamini so‘rov bo‘yicha yuboramiz.",
       open: "Hujjatni ko‘rish",
-      filesTitle: "Hujjatlarni yuklab olish",
-      download: "Ochish",
+      filesTitle: "Sertifikatlar va hujjatlar",
+      download: "Yuklab olish",
       files: [],
     },
     group: {
@@ -448,8 +448,8 @@ export const defaultTexts: DictionaryDefaults = {
       ],
       note: "We will send the full document package for a specific material on request.",
       open: "View document",
-      filesTitle: "Download documents",
-      download: "Open",
+      filesTitle: "Certificates and documents",
+      download: "Download",
       files: [],
     },
     group: {
