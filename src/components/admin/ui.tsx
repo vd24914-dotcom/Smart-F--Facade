@@ -572,7 +572,11 @@ export function Preview({ path }: { path: string }) {
 
 /* ─────────────── переключатель ─────────────── */
 
-/** Ползунок «вкл / выкл» с подписью — для показа или скрытия целых блоков. */
+/**
+ * Ползунок «вкл / выкл» с подписью — для показа или скрытия целых блоков.
+ * Внутри обычный чекбокс: клик по подписи и по самому ползунку срабатывает
+ * ровно один раз, а состояние рисуется через peer-классы.
+ */
 export function Switch({
   label,
   checked,
@@ -586,21 +590,17 @@ export function Switch({
 }) {
   return (
     <label className="flex cursor-pointer items-start gap-3">
-      <button
-        type="button"
+      <input
+        type="checkbox"
         role="switch"
-        aria-checked={checked}
-        onClick={() => onChange(!checked)}
-        className={`relative mt-0.5 h-6 w-11 shrink-0 rounded-full transition-colors ${
-          checked ? "bg-emerald-500" : "bg-slate-300"
-        }`}
-      >
-        <span
-          className={`absolute top-0.5 size-5 rounded-full bg-white shadow transition-transform ${
-            checked ? "translate-x-[22px]" : "translate-x-0.5"
-          }`}
-        />
-      </button>
+        className="peer sr-only"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+      />
+      <span
+        aria-hidden
+        className="relative mt-0.5 h-6 w-11 shrink-0 rounded-full bg-slate-300 transition-colors peer-checked:bg-emerald-500 peer-focus-visible:ring-2 peer-focus-visible:ring-slate-900 peer-focus-visible:ring-offset-2 after:absolute after:left-0.5 after:top-0.5 after:size-5 after:rounded-full after:bg-white after:shadow after:transition-transform peer-checked:after:translate-x-5"
+      />
       <span className="block">
         <span className="block text-[13px] font-semibold text-slate-700">{label}</span>
         {hint && <span className="mt-0.5 block text-[12px] text-slate-500">{hint}</span>}
