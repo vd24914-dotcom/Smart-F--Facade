@@ -14,7 +14,7 @@ import {
   useContentState,
   useSaveAll,
 } from "./page-kit";
-import { NumberField, SaveBar } from "./ui";
+import { NumberField, SaveBar, Switch } from "./ui";
 
 /** Главная страница: каждый блок правится целиком — текст и его картинки рядом. */
 export default function HomeEditor({ texts, site }: { texts: TextsContent; site: SiteContent }) {
@@ -146,6 +146,19 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
           </div>
           <div className="rounded-xl border border-slate-200 bg-white p-3">
             <p className="mb-3 text-[13px] font-bold text-slate-700">Фотографии объектов</p>
+            <div className="mb-3 rounded-xl border border-slate-200 bg-slate-50/60 p-3">
+              <Switch
+                label="Показывать фотографии в блоке"
+                checked={store.site.group?.showPhotos ?? false}
+                onChange={(showPhotos) =>
+                  store.api.setSite((prev) => ({
+                    ...prev,
+                    group: { ...prev.group, showPhotos },
+                  }))
+                }
+                hint="Включено — справа сетка фотографий, цифры под текстом. Выключено — прежний вид: цифры справа, фотографии не показываются."
+              />
+            </div>
             <ImageRows
               values={store.site.group?.photos ?? []}
               onChange={(photos) =>
@@ -157,7 +170,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
               itemLabel="Фотография"
               addLabel="Добавить фотографию"
               aspect={1}
-              hint="Сетка 4 × 4, до 16 фотографий. Пока фото нет, на их месте заглушки. При появлении блока на экране плитки один раз перемешиваются."
+              hint="От 1 до 16 фотографий, сетка сама подбирает раскладку без пустых мест: при нечётном числе одна-две плитки становятся крупнее. Пока фото нет, показываются четыре заглушки. При появлении блока на экране плитки один раз перемешиваются."
               imageHint="Квадратный кадр. После выбора файла можно вырезать нужный кусок"
             />
           </div>

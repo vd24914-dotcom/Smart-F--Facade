@@ -4,26 +4,56 @@ import ShuffleGrid from "@/components/ui/shuffle-grid";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 /**
- * Опыт группы компаний: слева текст и цифры, справа сетка фотографий объектов,
- * которая один раз перемешивается при появлении на экране. Цифры относятся
- * к работе в Кыргызстане — поэтому они живут здесь, с явной подписью.
+ * Опыт группы компаний. Цифры относятся к работе в Кыргызстане — поэтому они
+ * живут здесь, с явной подписью.
+ *
+ * Два вида, переключаются в админке:
+ * — с фотографиями: слева текст и цифры, справа сетка фото объектов, которая
+ *   один раз перемешивается при появлении на экране;
+ * — без фотографий: слева текст, справа цифры.
  */
 export default function GroupExperience({
   dict,
   photos = [],
+  showPhotos = false,
 }: {
   dict: Dictionary;
-  /** фотографии объектов из админки; без них сетка из заглушек */
+  /** фотографии объектов из админки */
   photos?: string[];
+  /** показывать сетку фотографий; выключено — старый вид с цифрами справа */
+  showPhotos?: boolean;
 }) {
   const group = dict.group;
   const stats = (group?.stats ?? []).filter((stat) => stat.value?.trim());
   if (!group?.title?.trim() && stats.length === 0) return null;
 
+  const statsList = stats.length > 0 && (
+    <ul className={showPhotos ? "mt-8 grid gap-4 sm:grid-cols-2 lg:mt-10" : "grid gap-4 sm:grid-cols-2 lg:gap-5"}>
+      {stats.map((stat, index) => (
+        <li
+          key={stat.label || index}
+          className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-6 text-center backdrop-blur lg:py-7"
+        >
+          <p className="whitespace-nowrap text-[30px] font-extrabold leading-none text-white sm:text-[34px] lg:text-[38px]">
+            {/* набегает один раз, когда блок доезжает до экрана */}
+            <CountUp value={stat.value} delay={index * 150} repeat={0} />
+          </p>
+          <p className="mt-3 text-[13px] font-light leading-[19px] text-mist">{stat.label}</p>
+        </li>
+      ))}
+    </ul>
+  );
+
   return (
     <section className="bg-mist px-3 py-12 sm:px-5 lg:py-16">
       <div className="mx-auto max-w-[1200px] overflow-hidden rounded-[28px] bg-ink px-6 py-12 sm:px-10 lg:rounded-[40px] lg:px-14 lg:py-16">
-        <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-center lg:gap-16">
+        <div
+          className={
+            showPhotos
+              ? "grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-center lg:gap-16"
+              : "grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)] lg:items-center lg:gap-16"
+          }
+        >
           <div>
             <Reveal>
               <div className="rule-gold" />
@@ -48,25 +78,14 @@ export default function GroupExperience({
               </Reveal>
             )}
 
-            {stats.length > 0 && (
-              <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:mt-10">
-                {stats.map((stat, index) => (
-                  <li
-                    key={stat.label || index}
-                    className="rounded-2xl border border-white/10 bg-white/[0.06] px-6 py-6 text-center backdrop-blur"
-                  >
-                    <p className="whitespace-nowrap text-[30px] font-extrabold leading-none text-white sm:text-[34px] lg:text-[38px]">
-                      {/* набегает один раз, когда блок доезжает до экрана */}
-                      <CountUp value={stat.value} delay={index * 150} repeat={0} />
-                    </p>
-                    <p className="mt-3 text-[13px] font-light leading-[19px] text-mist">{stat.label}</p>
-                  </li>
-                ))}
-              </ul>
-            )}
+            {showPhotos && statsList}
           </div>
 
-          <ShuffleGrid photos={photos} className="mx-auto max-w-[460px] lg:max-w-none" />
+          {showPhotos ? (
+            <ShuffleGrid photos={photos} className="mx-auto max-w-[460px] lg:max-w-none" />
+          ) : (
+            statsList
+          )}
         </div>
       </div>
     </section>

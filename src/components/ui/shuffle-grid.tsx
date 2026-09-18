@@ -5,9 +5,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-/** Сколько плиток в сетке: 4 × 4 */
-const CELLS = 16;
-
 type Tile = { id: number; src: string };
 
 /** Перемешивание Фишера — Йетса, возвращает новый массив. */
@@ -18,6 +15,29 @@ function shuffle<T>(list: T[]) {
     [next[i], next[j]] = [next[j], next[i]];
   }
   return next;
+}
+
+/**
+ * Раскладка под любое число фотографий — без пустых ячеек.
+ *
+ * Считаем колонки и ряды, а «лишние» ячейки закрываем плитками покрупнее:
+ * одна ячейка — высокая плитка (2 ряда), две — высокая и широкая,
+ * три — большая квадратная (2 × 2). Так и 5, и 7, и 13 фото встают ровно.
+ */
+function layout(count: number) {
+  const cols = count <= 1 ? 1 : count <= 4 ? 2 : count <= 9 ? 3 : 4;
+  const rows = Math.ceil(count / cols);
+  const extra = cols * rows - count;
+
+  /** роль плитки по её месту в порядке: сколько колонок и рядов она занимает */
+  const span = (index: number): [number, number] => {
+    if (extra === 3 && index === 0) return [2, 2];
+    if (extra >= 1 && index === 0) return rows > 1 ? [1, 2] : [2, 1];
+    if (extra >= 2 && index === 1) return [2, 1];
+    return [1, 1];
+  };
+
+  return { cols, rows, span };
 }
 
 /** Условный «фасад»: слои панелей — пока фото не загрузили. */
@@ -31,19 +51,18 @@ const LayersIcon = ({ className }: { className?: string }) => (
 
 /** Плитка без фото: спокойная заглушка, чтобы сетка не выглядела дырявой. */
 function Placeholder({ id }: { id: number }) {
-  // чуть разная плотность, чтобы шестнадцать одинаковых плиток не сливались в одно пятно
   const shade = ["bg-white/[0.05]", "bg-white/[0.08]", "bg-white/[0.11]"][id % 3];
   return (
     <div className={cn("flex size-full items-center justify-center border border-white/10 text-gold/60", shade)}>
-      <LayersIcon className="size-5 sm:size-6" />
+      <LayersIcon className="size-6 sm:size-7" />
     </div>
   );
 }
 
 /**
- * Сетка 4 × 4 из фотографий. Порядок один раз перемешивается, когда сетка
- * доезжает до экрана, — плитки плавно разъезжаются по новым местам.
- * Если фотографий меньше шестнадцати, недостающие места занимают заглушки.
+ * Сетка фотографий. Порядок один раз перемешивается, когда сетка доезжает
+ * до экрана, — плитки плавно разъезжаются по новым местам. Число фотографий
+ * любое; без фотографий показываем четыре заглушки.
  */
 export default function ShuffleGrid({
   photos,
@@ -55,9 +74,12 @@ export default function ShuffleGrid({
   const ref = useRef<HTMLDivElement>(null);
   const timer = useRef(0);
 
+  const list = photos.map((src) => src.trim()).filter(Boolean);
+  const count = list.length || 4;
+
   // порядок на сервере и при первой отрисовке одинаковый — иначе React ругается на разметку
   const [tiles, setTiles] = useState<Tile[]>(() =>
-    Array.from({ length: CELLS }, (_, i) => ({ id: i, src: (photos[i] ?? "").trim() }))
+    Array.from({ length: count }, (_, i) => ({ id: i, src: list[i] ?? "" }))
   );
 
   useEffect(() => {
@@ -83,28 +105,43 @@ export default function ShuffleGrid({
     };
   }, []);
 
+  const { cols, rows, span } = layout(tiles.length);
+
   return (
-    <div ref={ref} className={cn("grid aspect-square w-full grid-cols-4 grid-rows-4 gap-1.5", className)}>
-      {tiles.map((tile) => (
-        <motion.div
-          key={tile.id}
-          layout
-          transition={{ duration: 1.5, type: "spring" }}
-          className="relative size-full overflow-hidden rounded-md bg-white/[0.06]"
-        >
-          {tile.src ? (
-            <Image
-              src={tile.src}
-              alt=""
-              fill
-              sizes="(max-width: 640px) 25vw, 120px"
-              className="object-cover"
-            />
-          ) : (
-            <Placeholder id={tile.id} />
-          )}
-        </motion.div>
-      ))}
+    <div
+      ref={ref}
+      className={cn("grid w-full gap-1.5", className)}
+      style={{
+        gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
+        gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
+        gridAutoFlow: "dense",
+        aspectRatio: `${cols} / ${rows}`,
+      }}
+    >
+      {tiles.map((tile, index) => {
+        const [c, r] = span(index);
+        return (
+          <motion.div
+            key={tile.id}
+            layout
+            transition={{ duration: 1.5, type: "spring" }}
+            className="relative overflow-hidden rounded-md bg-white/[0.06]"
+            style={{ gridColumn: `span ${c}`, gridRow: `span ${r}` }}
+          >
+            {tile.src ? (
+              <Image
+                src={tile.src}
+                alt=""
+                fill
+                sizes="(max-width: 640px) 50vw, 240px"
+                className="object-cover"
+              />
+            ) : (
+              <Placeholder id={tile.id} />
+            )}
+          </motion.div>
+        );
+      })}
     </div>
   );
 }

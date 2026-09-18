@@ -61,7 +61,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
         <ProcessSteps dict={dict} icons={site.icons.process} />
 
-        <GroupExperience dict={dict} photos={site.group.photos} />
+        <GroupExperience dict={dict} photos={site.group.photos} showPhotos={site.group.showPhotos} />
 
         {/* Партнёры: блок включается переключателем в админке, раздел «Партнёры» */}
         {showPartners && (

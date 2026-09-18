@@ -47,8 +47,11 @@ export type SiteContent = {
    * Пустой список — берём одиночное images.hero, как было раньше.
    */
   hero: { slides: string[]; seconds: number };
-  /** Блок «Опыт группы компаний»: фотографии объектов для сетки 4 × 4 (до 16 штук) */
-  group: { photos: string[] };
+  /**
+   * Блок «Опыт группы компаний»: сетка фотографий объектов (до 16 штук).
+   * showPhotos выключен — старый вид, цифры справа вместо фотографий.
+   */
+  group: { photos: string[]; showPhotos: boolean };
 };
 
 export type ProjectText = {
@@ -295,6 +298,7 @@ export async function getSite(): Promise<SiteContent> {
       photos: (Array.isArray(site?.group?.photos) ? site.group.photos : [])
         .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
         .slice(0, 16),
+      showPhotos: site?.group?.showPhotos === true,
     },
     icons: {
       specs: iconList(site?.icons?.specs),
