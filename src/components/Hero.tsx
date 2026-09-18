@@ -1,5 +1,5 @@
-import Image from "next/image";
 import { LayoutGrid, Calculator, Send } from "lucide-react";
+import HeroSlides from "@/components/ui/hero-slides";
 import PillButton from "@/components/ui/pill-button";
 import ContactButton from "@/components/ContactButton";
 import ScrollFade from "@/components/ui/scroll-fade";
@@ -33,12 +33,9 @@ export default function Hero({
 
       {/* фото на весь экран, уходит в светлый градиент */}
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <Image
-          src={site.images.hero}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
+        <HeroSlides
+          slides={site.hero.slides}
+          seconds={site.hero.seconds}
           className="object-cover object-[72%_50%]"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-white/95 via-white/78 to-white/58 dark:from-[#0b1523]/95 dark:via-[#0b1523]/85 dark:to-[#0b1523]/70 lg:hidden" />

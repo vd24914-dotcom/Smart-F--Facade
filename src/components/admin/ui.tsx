@@ -30,6 +30,37 @@ export function Field({
   );
 }
 
+export function NumberField({
+  label,
+  value,
+  onChange,
+  hint,
+  min,
+  max,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  hint?: string;
+  min?: number;
+  max?: number;
+}) {
+  return (
+    <label className="block max-w-[220px]">
+      <span className="mb-1 block text-[13px] font-semibold text-slate-700">{label}</span>
+      <input
+        type="number"
+        min={min}
+        max={max}
+        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] text-slate-900 outline-none transition focus:border-slate-900"
+        value={Number.isFinite(value) ? value : ""}
+        onChange={(e) => onChange(Number(e.target.value))}
+      />
+      {hint && <span className="mt-1 block text-[12px] text-slate-500">{hint}</span>}
+    </label>
+  );
+}
+
 export function Area({
   label,
   value,

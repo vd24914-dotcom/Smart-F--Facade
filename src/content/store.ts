@@ -38,6 +38,11 @@ export type SiteContent = {
   };
   /** Прикреплённые файлы: docs[i] — документ к карточке «Документы и сертификаты» */
   files: { docs: string[] };
+  /**
+   * Первый экран: фотографии сменяют друг друга по кругу.
+   * Пустой список — берём одиночное images.hero, как было раньше.
+   */
+  hero: { slides: string[]; seconds: number };
 };
 
 export type ProjectText = {
@@ -265,11 +270,28 @@ function iconList(value: unknown) {
   return Array.isArray(value) ? (value as string[]) : [];
 }
 
+/** Пауза между кадрами: меньше трёх секунд читать не успеешь, больше минуты — уже не слайдер. */
+function heroSeconds(value: unknown) {
+  const seconds = Math.round(Number(value));
+  if (!Number.isFinite(seconds) || seconds <= 0) return 7;
+  return Math.min(60, Math.max(3, seconds));
+}
+
 export async function getSite(): Promise<SiteContent> {
   const site = await read<SiteContent>("site", {} as SiteContent);
+
+  // до появления слайдера фон первого экрана лежал одной строкой — подхватываем её
+  const slides = (Array.isArray(site?.hero?.slides) ? site.hero.slides : [])
+    .filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+  const single = (site?.images?.hero ?? "").trim();
+
   return {
     ...site,
     socials: normalizeSocials(site),
+    hero: {
+      slides: slides.length ? slides : single ? [single] : [],
+      seconds: heroSeconds(site?.hero?.seconds),
+    },
     icons: {
       specs: iconList(site?.icons?.specs),
       services: iconList(site?.icons?.services),

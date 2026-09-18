@@ -5,6 +5,7 @@ import {
   Block,
   ContentProvider,
   IconTextRows,
+  ImageRows,
   Img,
   PageShell,
   StatRows,
@@ -13,7 +14,7 @@ import {
   useContentState,
   useSaveAll,
 } from "./page-kit";
-import { SaveBar } from "./ui";
+import { NumberField, SaveBar } from "./ui";
 
 /** Главная страница: каждый блок правится целиком — текст и его картинки рядом. */
 export default function HomeEditor({ texts, site }: { texts: TextsContent; site: SiteContent }) {
@@ -34,13 +35,42 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         preview=""
         bar={<SaveBar state={state} message={message} onSave={save} />}
       >
-        <Block title="1. Первый экран" hint="Большое фото, заголовок и кнопки под ним.">
-          <Img
-            imgKey="hero"
-            label="Фон первого экрана"
-            hint="Широкое фото от 1920 px. После выбора файла можно вырезать нужный кусок кадра"
-            aspect={16 / 9}
-          />
+        <Block title="1. Первый экран" hint="Фотографии фона, заголовок и кнопки под ним.">
+          <div className="rounded-xl border border-slate-200 bg-white p-3">
+            <p className="mb-3 text-[13px] font-bold text-slate-700">Фон первого экрана</p>
+            <ImageRows
+              values={store.site.hero?.slides ?? []}
+              onChange={(slides) =>
+                store.api.setSite((prev) => ({
+                  ...prev,
+                  hero: { ...prev.hero, slides },
+                }))
+              }
+              itemLabel="Фотография"
+              addLabel="Добавить фотографию"
+              aspect={16 / 9}
+              hint="Одна фотография — просто фон. Две и больше — сменяют друг друга по кругу."
+              imageHint="Широкое фото от 1920 px. После выбора файла можно вырезать нужный кусок кадра"
+            />
+            {(store.site.hero?.slides ?? []).length > 1 && (
+              <div className="mt-3">
+                <NumberField
+                  label="Менять каждые, секунд"
+                  min={3}
+                  max={60}
+                  value={store.site.hero?.seconds ?? 7}
+                  onChange={(seconds) =>
+                    store.api.setSite((prev) => ({
+                      ...prev,
+                      hero: { ...prev.hero, seconds },
+                    }))
+                  }
+                  hint="От 3 до 60. Меньше трёх — кадр не успевают разглядеть."
+                />
+              </div>
+            )}
+          </div>
+
           <T path="hero.title" label="Заголовок (каждая строка — отдельно)" kind="list" />
           <T path="hero.lead" label="Текст под заголовком" kind="area" rows={3} />
           <div className="grid gap-4 sm:grid-cols-2">

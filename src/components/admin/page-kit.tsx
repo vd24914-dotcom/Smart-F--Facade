@@ -161,6 +161,76 @@ export function Img({
   );
 }
 
+/** Список картинок: добавить, заменить, переставить, удалить. */
+export function ImageRows({
+  values,
+  onChange,
+  itemLabel,
+  addLabel,
+  hint,
+  aspect,
+  imageHint,
+}: {
+  values: string[];
+  onChange: (values: string[]) => void;
+  itemLabel: string;
+  addLabel: string;
+  hint?: string;
+  aspect?: number;
+  imageHint?: string;
+}) {
+  const move = (index: number, delta: number) => {
+    const j = index + delta;
+    if (j < 0 || j >= values.length) return;
+    const next = values.slice();
+    [next[index], next[j]] = [next[j], next[index]];
+    onChange(next);
+  };
+
+  return (
+    <div className="space-y-3">
+      {hint && <p className="text-[13px] leading-[19px] text-slate-500">{hint}</p>}
+
+      {values.map((value, index) => (
+        <div key={index} className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-[13px] font-bold text-slate-700">
+              {itemLabel} {index + 1}
+            </span>
+            <div className="ml-auto flex items-center gap-2">
+              <IconButton title="Выше" onClick={() => move(index, -1)}>
+                ↑
+              </IconButton>
+              <IconButton title="Ниже" onClick={() => move(index, 1)}>
+                ↓
+              </IconButton>
+              <IconButton
+                title="Удалить"
+                danger
+                onClick={() => onChange(values.filter((_, i) => i !== index))}
+              >
+                ✕
+              </IconButton>
+            </div>
+          </div>
+
+          <ImageField
+            label=""
+            hint={imageHint}
+            aspect={aspect}
+            value={value}
+            onChange={(next) => onChange(values.map((item, i) => (i === index ? next : item)))}
+          />
+        </div>
+      ))}
+
+      <Button variant="ghost" onClick={() => onChange([...values, ""])}>
+        + {addLabel}
+      </Button>
+    </div>
+  );
+}
+
 /* ─────────────── карточка блока ─────────────── */
 
 export function Block({
