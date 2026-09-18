@@ -104,7 +104,7 @@ function Picture({
   }
 
   return (
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,79,123,0.14),transparent_60%),linear-gradient(180deg,#ffffff_0%,#f0f5fa_100%)]">
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(41,79,123,0.14),transparent_60%),linear-gradient(180deg,#ffffff_0%,#f0f5fa_100%)] dark:bg-[radial-gradient(circle_at_30%_20%,rgba(138,180,232,0.18),transparent_60%),linear-gradient(180deg,#16243a_0%,#0b1523_100%)]">
       <div className="absolute inset-x-0 top-[26%] flex justify-center">
         <div
           className={cn(
@@ -206,7 +206,7 @@ function MaterialDialog({
               onClose();
               openContactModal();
             }}
-            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-gold to-[#a48256] px-6 py-3 text-[12px] font-extrabold uppercase tracking-[0.14em] text-ink shadow-[0_8px_24px_rgba(197,164,126,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(197,164,126,0.45)]"
+            className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-to-br from-gold to-[#a48256] px-6 py-3 text-[12px] font-extrabold uppercase tracking-[0.14em] text-[#0f1a2b] shadow-[0_8px_24px_rgba(197,164,126,0.35)] transition hover:-translate-y-0.5 hover:shadow-[0_12px_28px_rgba(197,164,126,0.45)]"
           >
             {ctaLabel}
             <ArrowRight />
@@ -250,7 +250,7 @@ function Card({
       aria-hidden={!center}
       className={cn(
         "absolute cursor-pointer overflow-hidden rounded-[18px] border transition-all duration-[800ms] ease-[cubic-bezier(0.25,1,0.5,1)]",
-        photo ? "border-white/10 bg-[#111e30]" : "border-navy/10 bg-white",
+        photo ? "border-white/10 bg-[#111e30]" : "border-navy/10 bg-white dark:border-white/10",
         center
           ? "shadow-[0_25px_60px_-20px_rgba(8,19,36,0.55),0_0_35px_rgba(197,164,126,0.2)]"
           : "shadow-[0_15px_35px_-15px_rgba(8,19,36,0.4)]"
@@ -300,7 +300,7 @@ function Card({
               e.stopPropagation();
               onOpen();
             }}
-            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-gold to-[#a48256] px-[18px] py-[7px] text-[11px] font-extrabold uppercase tracking-[0.14em] text-ink shadow-[0_6px_16px_rgba(197,164,126,0.35)] transition hover:-translate-y-0.5"
+            className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gradient-to-br from-gold to-[#a48256] px-[18px] py-[7px] text-[11px] font-extrabold uppercase tracking-[0.14em] text-[#0f1a2b] shadow-[0_6px_16px_rgba(197,164,126,0.35)] transition hover:-translate-y-0.5"
           >
             {moreLabel}
             <ArrowRight />
