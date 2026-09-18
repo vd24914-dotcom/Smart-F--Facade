@@ -110,7 +110,8 @@ export type Dictionary = {
     phoneHint: string;
   };
   representatives: { title: string };
-  partners: { title: string };
+  /** Блок «Партнёры» на главной: показывается по переключателю в админке */
+  partners: { title: string; lead?: string };
   cta: { title: string[]; text: string[]; button: string };
   footer: {
     contactsTitle: string;

@@ -61,7 +61,8 @@
       "title": "мы являемся официальными представителями"
     },
     "partners": {
-      "title": "наши партнеры"
+      "title": "наши партнеры",
+      "lead": "Компании, с которыми мы работаем на объектах в Узбекистане и Кыргызстане."
     },
     "cta": {
       "title": [
@@ -230,7 +231,8 @@
       "title": "biz rasmiy vakillarmiz"
     },
     "partners": {
-      "title": "hamkorlarimiz"
+      "title": "hamkorlarimiz",
+      "lead": "O‘zbekiston va Qirg‘izistondagi obyektlarda birga ishlaydigan kompaniyalar."
     },
     "cta": {
       "title": [
@@ -399,7 +401,8 @@
       "title": "we are official representatives of"
     },
     "partners": {
-      "title": "our partners"
+      "title": "our partners",
+      "lead": "Companies we work with on projects in Uzbekistan and Kyrgyzstan."
     },
     "cta": {
       "title": [

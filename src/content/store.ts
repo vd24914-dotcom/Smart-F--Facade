@@ -73,7 +73,12 @@ export type Project = {
   texts: Record<Locale, ProjectText>;
 };
 
-export type PartnersContent = { representatives: string[]; partners: string[] };
+export type PartnersContent = {
+  representatives: string[];
+  partners: string[];
+  /** показывать блок «Партнёры» на главной; по умолчанию скрыт, включается в админке */
+  showOnHome: boolean;
+};
 
 export type ContactBlock = {
   id: string;
@@ -330,7 +335,12 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getPartners(): Promise<PartnersContent> {
-  return read<PartnersContent>("partners", { representatives: [], partners: [] });
+  const data = await read<Partial<PartnersContent>>("partners", {});
+  return {
+    representatives: Array.isArray(data?.representatives) ? data.representatives : [],
+    partners: Array.isArray(data?.partners) ? data.partners : [],
+    showOnHome: data?.showOnHome === true,
+  };
 }
 
 export async function getContacts(): Promise<ContactsContent> {

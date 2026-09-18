@@ -8,6 +8,7 @@ import ProcessSteps from "@/components/ProcessSteps";
 import GroupExperience from "@/components/GroupExperience";
 import BentoGallery from "@/components/ui/bento-gallery";
 import LogoGrid from "@/components/LogoGrid";
+import CinematicLogoCloud from "@/components/ui/cinematic-logo-cloud";
 import CallToAction from "@/components/CallToAction";
 import { isLocale } from "@/i18n/config";
 import { getDict, getSite, getProjects, getPartners } from "@/content/store";
@@ -25,7 +26,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const dict = await getDict(locale);
   const site = await getSite();
   const projects = await getProjects();
-  const { representatives, partners } = await getPartners();
+  const { representatives, partners, showOnHome: showPartners } = await getPartners();
 
   return (
     <>
@@ -61,6 +62,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <ProcessSteps dict={dict} icons={site.icons.process} />
 
         <GroupExperience dict={dict} photos={site.group.photos} />
+
+        {/* Партнёры: блок включается переключателем в админке, раздел «Партнёры» */}
+        {showPartners && (
+          <CinematicLogoCloud
+            id="partners"
+            title={dict.partners.title}
+            description={dict.partners.lead}
+            logos={partners}
+          />
+        )}
 
         <FeatureGrid
           tone="white"
@@ -114,7 +125,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         )}
 
         <LogoGrid title={dict.representatives.title} logos={representatives} />
-        <LogoGrid title={dict.partners.title} logos={partners} />
 
         <CallToAction dict={dict} image={site.images.cta} site={site} />
       </div>

@@ -3,9 +3,9 @@
 import { useState } from "react";
 import type { PartnersContent, SiteContent, TextsContent } from "@/content/store";
 import { Block, ContentProvider, PageShell, T, useContentState, useSaveAll } from "./page-kit";
-import { Button, IconButton, ImageField, SaveBar } from "./ui";
+import { Button, IconButton, ImageField, SaveBar, Switch } from "./ui";
 
-type ListKey = keyof PartnersContent;
+type ListKey = "representatives" | "partners";
 
 const lists: { key: ListKey; title: string; titlePath: string; hint: string }[] = [
   {
@@ -65,7 +65,20 @@ export default function PartnersEditor({
 
         {lists.map((list) => (
           <Block key={list.key} title={`${list.title} — ${data[list.key].length} шт.`} hint={list.hint}>
+            {list.key === "partners" && (
+              <div className="rounded-xl border border-slate-200 bg-slate-50/60 p-3">
+                <Switch
+                  label="Показывать блок «Партнёры» на главной"
+                  checked={data.showOnHome}
+                  onChange={(showOnHome) => setData((prev) => ({ ...prev, showOnHome }))}
+                  hint="Блок идёт сразу под «Опытом группы компаний». Пока выключено — на главной его нет, на странице «Партнёры» логотипы показываются всегда."
+                />
+              </div>
+            )}
             <T path={list.titlePath} label="Заголовок блока на сайте" />
+            {list.key === "partners" && (
+              <T path="partners.lead" label="Текст под заголовком на главной" kind="area" rows={2} />
+            )}
 
             <div className="grid gap-3 sm:grid-cols-2">
               {data[list.key].map((logo, index) => (
