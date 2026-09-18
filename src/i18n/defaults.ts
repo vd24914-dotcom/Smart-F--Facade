@@ -113,6 +113,7 @@ export const defaultTexts: DictionaryDefaults = {
     materials: {
       title: "Материалы",
       lead: "Поставляем навесные фасадные системы и облицовку напрямую от заводов-производителей и подбираем их под конкретный объект и бюджет.",
+      more: "Подробнее",
       items: [
         {
           title: "Навесные фасадные системы «Альт-Фасад»",
@@ -254,6 +255,7 @@ export const defaultTexts: DictionaryDefaults = {
     materials: {
       title: "Materiallar",
       lead: "Osma fasad tizimlari va qoplamani bevosita ishlab chiqaruvchi zavodlardan yetkazamiz hamda obyekt va byudjetga moslab tanlaymiz.",
+      more: "Batafsil",
       items: [
         {
           title: "«Alt-Fasad» osma fasad tizimlari",
@@ -395,6 +397,7 @@ export const defaultTexts: DictionaryDefaults = {
     materials: {
       title: "Materials",
       lead: "We supply curtain-wall systems and cladding directly from the manufacturing plants and match them to the building and the budget.",
+      more: "Learn more",
       items: [
         {
           title: "Alt-Fasad curtain-wall systems",

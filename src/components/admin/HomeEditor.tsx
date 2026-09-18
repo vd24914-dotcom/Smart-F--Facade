@@ -108,14 +108,15 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
         >
           <T path="materials.title" label="Заголовок" />
           <T path="materials.lead" label="Текст под заголовком" kind="area" rows={2} />
+          <T path="materials.more" label="Кнопка на карточке" hint="Открывает окно с полным описанием материала." />
           <TitleTextRows
             path="materials.items"
             itemLabel="Материал"
             addLabel="Добавить материал"
-            hint="АКП, клинкерная плитка, керамогранит, HPL, подсистемы, крепёж и всё, что добавите."
+            hint="Карусель: центральная карточка крупно, соседи уходят вглубь. На карточке помещается заголовок и 3–4 строки текста, полностью описание видно в окне по кнопке."
             iconGroup="materials"
-            iconLabel="Иконка или фото материала"
-            iconHint="SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
+            iconLabel="Фото материала"
+            iconHint="JPG или PNG — фото на всю карточку. SVG — иконка на заглушке. Без картинки останется заглушка с номером."
           />
         </Block>
 

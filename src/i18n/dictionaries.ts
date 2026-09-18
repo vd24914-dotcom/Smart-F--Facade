@@ -47,6 +47,8 @@ export type Dictionary = {
   materials: {
     title: string;
     lead: string;
+    /** кнопка на карточке карусели — открывает окно с описанием */
+    more: string;
     items: { title: string; text: string }[];
   };
   /** Блок «Как мы работаем» */

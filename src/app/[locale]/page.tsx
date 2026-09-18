@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Hero from "@/components/Hero";
 import AboutSplit from "@/components/ui/about-split";
 import FeatureGrid from "@/components/ui/feature-grid";
+import CoverflowCarousel from "@/components/ui/coverflow-carousel";
 import DocList from "@/components/ui/doc-list";
 import ProcessSteps from "@/components/ProcessSteps";
 import GroupExperience from "@/components/GroupExperience";
@@ -46,15 +47,16 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           action={{ label: dict.about.more, href: `/${locale}/about` }}
         />
 
-        {/* Материалы — главный блок для рынка Узбекистана */}
-        <FeatureGrid
+        {/* Материалы — главный блок для рынка Узбекистана: карусель, по клику окно с описанием */}
+        <CoverflowCarousel
           id="materials"
-          allowPhoto
           title={dict.materials?.title}
           description={dict.materials?.lead}
+          moreLabel={dict.materials?.more || "Подробнее"}
+          ctaLabel={dict.calc.button}
           items={(dict.materials?.items ?? []).map((item, index) => ({
             ...item,
-            icon: site.icons.materials[index],
+            img: site.icons.materials[index],
           }))}
         />
 
