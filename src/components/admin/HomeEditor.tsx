@@ -116,7 +116,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             hint="Карусель: центральная карточка крупно, соседи уходят вглубь. На карточке помещается заголовок и 3–4 строки текста, полностью описание видно в окне по кнопке."
             iconGroup="materials"
             iconLabel="Фото материала"
-            iconHint="JPG или PNG — фото на всю карточку. SVG — иконка на заглушке. Без картинки останется заглушка с номером."
+            iconHint="JPG или PNG — фото на всю карточку. SVG — иконка на заглушке. Без картинки останется заглушка с иконкой."
           />
         </Block>
 
@@ -129,7 +129,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             addLabel="Добавить шаг"
             iconGroup="process"
             iconLabel="Иконка шага"
-            iconHint="SVG или PNG на прозрачном фоне. Без иконки останется номер шага."
+            iconHint="SVG или PNG на прозрачном фоне. Без иконки карточка идёт без кружка, номер останется водяным знаком в углу."
           />
         </Block>
 
@@ -163,7 +163,7 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             addLabel="Добавить документ"
             iconGroup="docs"
             iconLabel="Иконка или фото документа"
-            iconHint="Скан или фото сертификата подойдёт. SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки останется номер."
+            iconHint="Скан или фото сертификата подойдёт. SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки карточка идёт без кружка."
             fileGroup="docs"
             fileLabel="Файл документа"
             fileHint="PDF, DOC, XLS, PNG или JPG — до 20 МБ. На сайте под карточкой появится ссылка «Смотреть документ»."

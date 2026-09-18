@@ -8,7 +8,7 @@ export default function ProcessSteps({
   icons = [],
 }: {
   dict: Dictionary;
-  /** иконка к шагу из админки; без неё в кружке остаётся номер */
+  /** иконка к шагу из админки; без неё карточка идёт без кружка */
   icons?: string[];
 }) {
   const steps = (dict.process?.steps ?? []).filter((step) => step.title?.trim());
@@ -46,8 +46,9 @@ export default function ProcessSteps({
                 {String(index + 1).padStart(2, "0")}
               </span>
 
-              {icons[index] ? (
-                <div className="flex size-10 items-center justify-center rounded-full bg-navy/5">
+              {/* без иконки кружка нет — номер и так виден водяным знаком в углу */}
+              {icons[index] && (
+                <div className="mb-5 flex size-10 items-center justify-center rounded-full bg-navy/5">
                   <Image
                     src={icons[index]}
                     alt=""
@@ -56,13 +57,9 @@ export default function ProcessSteps({
                     className="size-6 object-contain"
                   />
                 </div>
-              ) : (
-                <div className="flex size-10 items-center justify-center rounded-full bg-navy text-[14px] font-bold text-white">
-                  {index + 1}
-                </div>
               )}
 
-              <h3 className="relative mt-5 text-[17px] font-bold uppercase leading-[24px] text-navy">
+              <h3 className="relative pr-10 text-[17px] font-bold uppercase leading-[24px] text-navy">
                 {step.title}
               </h3>
               <p className="relative mt-2 text-[15px] font-light leading-[25px] text-graphite">

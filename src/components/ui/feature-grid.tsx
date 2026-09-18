@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 export type Feature = {
   title: string;
   text: string;
-  /** путь к иконке из public/; без неё карточка покажет номер */
+  /** путь к иконке из public/; без неё карточка идёт без кружка */
   icon?: string;
   /** прикреплённый документ: под карточкой появится ссылка */
   file?: string;
@@ -156,7 +156,7 @@ export default function FeatureGrid({
 
                 if (kind === "cover" || kind === "contain") {
                   return (
-                    <div className="relative aspect-[16/10] w-full overflow-hidden rounded-xl bg-mist">
+                    <div className="relative mb-6 aspect-[16/10] w-full overflow-hidden rounded-xl bg-mist">
                       <Image
                         src={item.icon as string}
                         alt=""
@@ -170,26 +170,23 @@ export default function FeatureGrid({
                   );
                 }
 
+                // без картинки кружка нет: номер в нём смотрелся чужеродно
+                if (kind === "none") return null;
+
                 return (
-                  <div className="relative flex aspect-square size-14 rounded-full border border-navy/15 before:absolute before:-inset-2 before:rounded-full before:border before:border-navy/10">
-                    {kind === "icon" ? (
-                      <Image
-                        src={item.icon as string}
-                        alt=""
-                        width={56}
-                        height={56}
-                        className="m-auto h-7 w-7 object-contain"
-                      />
-                    ) : (
-                      <span className="m-auto text-[15px] font-bold text-navy">
-                        {String(index + 1).padStart(2, "0")}
-                      </span>
-                    )}
+                  <div className="relative mb-6 flex aspect-square size-14 rounded-full border border-navy/15 before:absolute before:-inset-2 before:rounded-full before:border before:border-navy/10">
+                    <Image
+                      src={item.icon as string}
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="m-auto h-7 w-7 object-contain"
+                    />
                   </div>
                 );
               })()}
 
-              <div className="mt-6 space-y-2">
+              <div className="space-y-2">
                 <h3 className="text-[17px] font-bold uppercase leading-[24px] text-navy">
                   {item.title}
                 </h3>
