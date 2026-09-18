@@ -168,6 +168,32 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             fileHint="PDF, DOC, XLS, PNG или JPG — до 20 МБ. На сайте под карточкой появится ссылка «Смотреть документ»."
           />
           <T path="docs.open" label="Подпись ссылки на файл" />
+
+          <div className="rounded-xl border border-slate-200 bg-white p-3">
+            <p className="mb-1 text-[13px] font-bold text-slate-700">
+              Файлы под карточками: сертификаты, паспорта, протоколы
+            </p>
+            <p className="mb-3 text-[12px] leading-[18px] text-slate-500">
+              Карточки выше объясняют, какие документы бывают. Здесь лежат сами файлы —
+              посетитель открывает их прямо с сайта.
+            </p>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <T path="docs.filesTitle" label="Заголовок списка" />
+              <T path="docs.download" label="Подпись кнопки" />
+            </div>
+            <div className="mt-3">
+              <TitleTextRows
+                path="docs.files"
+                itemLabel="Файл"
+                addLabel="Добавить файл"
+                rows={2}
+                fileGroup="library"
+                fileLabel="Сам файл"
+                fileHint="PDF, DOC, DOCX, XLS, XLSX, PNG или JPG — до 20 МБ. Значок на сайте подставится по формату."
+              />
+            </div>
+          </div>
+
           <T path="docs.note" label="Примечание под блоком" kind="area" rows={2} />
         </Block>
 

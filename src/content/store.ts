@@ -36,8 +36,12 @@ export type SiteContent = {
     process: string[];
     docs: string[];
   };
-  /** Прикреплённые файлы: docs[i] — документ к карточке «Документы и сертификаты» */
-  files: { docs: string[] };
+  /**
+   * Прикреплённые файлы.
+   * docs[i] — документ к карточке блока «Документы и сертификаты»;
+   * library[i] — файл из списка под карточками.
+   */
+  files: { docs: string[]; library: string[] };
   /**
    * Первый экран: фотографии сменяют друг друга по кругу.
    * Пустой список — берём одиночное images.hero, как было раньше.
@@ -301,7 +305,10 @@ export async function getSite(): Promise<SiteContent> {
       docs: iconList(site?.icons?.docs),
     },
     // раздела может не быть в сохранённом файле — тогда просто пустой список
-    files: { docs: Array.isArray(site?.files?.docs) ? site.files.docs : [] },
+    files: {
+      docs: Array.isArray(site?.files?.docs) ? site.files.docs : [],
+      library: Array.isArray(site?.files?.library) ? site.files.library : [],
+    },
   };
 }
 

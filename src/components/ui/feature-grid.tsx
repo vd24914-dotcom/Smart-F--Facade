@@ -29,6 +29,8 @@ type Props = {
    * Для материалов и документов фото уместно — там это включено.
    */
   allowPhoto?: boolean;
+  /** блок под карточками внутри того же фона — например список файлов */
+  footer?: React.ReactNode;
   className?: string;
 };
 
@@ -79,6 +81,7 @@ export default function FeatureGrid({
   highlight,
   tone = "mist",
   allowPhoto = false,
+  footer,
   className,
 }: Props) {
   if (items.length === 0) return null;
@@ -212,6 +215,8 @@ export default function FeatureGrid({
             </article>
           ))}
         </RevealGroup>
+
+        {footer}
       </div>
     </section>
   );

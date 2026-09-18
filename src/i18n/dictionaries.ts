@@ -63,6 +63,12 @@ export type Dictionary = {
     note: string;
     /** подпись ссылки на прикреплённый файл */
     open: string;
+    /** заголовок списка файлов под карточками */
+    filesTitle: string;
+    /** подпись кнопки скачивания */
+    download: string;
+    /** сами файлы: название и короткое пояснение; сам файл лежит в site.files.library */
+    files: { title: string; text: string }[];
   };
   /** Блок «Опыт группы компаний» */
   group: {
