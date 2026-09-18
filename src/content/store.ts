@@ -35,8 +35,15 @@ export type SiteContent = {
     materials: string[];
     process: string[];
     docs: string[];
-    /** сканы сертификатов и документов под карточками; индекс совпадает с docs.files */
+    /**
+     * Сканы документов, до двух листов на запись. Индекс совпадает с записью:
+     * docsScan1/docsScan2 — для карточек docs.items, certificates/certificates2 — для docs.files.
+     * PDF целиком лежит в files.docs / files.library и отдаётся кнопкой «Скачать».
+     */
+    docsScan1: string[];
+    docsScan2: string[];
     certificates: string[];
+    certificates2: string[];
   };
   /**
    * Прикреплённые файлы.
@@ -309,7 +316,10 @@ export async function getSite(): Promise<SiteContent> {
       materials: iconList(site?.icons?.materials),
       process: iconList(site?.icons?.process),
       docs: iconList(site?.icons?.docs),
+      docsScan1: iconList(site?.icons?.docsScan1),
+      docsScan2: iconList(site?.icons?.docsScan2),
       certificates: iconList(site?.icons?.certificates),
+      certificates2: iconList(site?.icons?.certificates2),
     },
     // раздела может не быть в сохранённом файле — тогда просто пустой список
     files: {

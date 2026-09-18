@@ -105,12 +105,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                 ...(dict.docs?.items ?? []).map((item, index) => ({
                   title: item.title,
                   text: item.text,
-                  image: "",
+                  images: [site.icons.docsScan1[index] ?? "", site.icons.docsScan2[index] ?? ""],
                   file: site.files?.docs?.[index] ?? "",
                 })),
                 ...(dict.docs?.files ?? []).map((item, index) => ({
                   ...item,
-                  image: site.icons.certificates[index] ?? "",
+                  images: [site.icons.certificates[index] ?? "", site.icons.certificates2[index] ?? ""],
                   file: site.files?.library?.[index] ?? "",
                 })),
               ]}

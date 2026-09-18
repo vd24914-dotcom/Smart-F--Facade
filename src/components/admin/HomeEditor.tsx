@@ -192,11 +192,15 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
             itemLabel="Документ"
             addLabel="Добавить документ"
             iconGroup="docs"
-            iconLabel="Иконка или фото документа"
-            iconHint="Скан или фото сертификата подойдёт. SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки карточка идёт без кружка."
+            iconLabel="Иконка на карточке"
+            iconHint="SVG — иконка в кружке. JPG или PNG — фотография во всю ширину карточки. Без картинки карточка идёт без кружка."
+            extraIcons={[
+              { group: "docsScan1", label: "Скан, лист 1", hint: "JPG или PNG. Показывается на плитке под карточками и крупно в окне." },
+              { group: "docsScan2", label: "Скан, лист 2", hint: "Необязательно: второй лист листается в окне после первого." },
+            ]}
             fileGroup="docs"
-            fileLabel="Файл документа"
-            fileHint="PDF, PNG или JPG — до 20 МБ. Файл сам станет плиткой в галерее под карточками: картинка покажется сканом, PDF откроется в окне целиком."
+            fileLabel="Файл документа целиком"
+            fileHint="PDF до 20 МБ. Если листов много — загрузите один-два скана выше, а сюда весь документ: в окне будет кнопка «Скачать». Без сканов PDF откроется в окне сам."
           />
 
           <div className="rounded-xl border border-slate-200 bg-white p-3">
@@ -219,10 +223,13 @@ export default function HomeEditor({ texts, site }: { texts: TextsContent; site:
                 addLabel="Добавить сертификат"
                 rows={2}
                 iconGroup="certificates"
-                iconLabel="Скан или фото документа"
+                iconLabel="Скан, лист 1"
                 iconHint="JPG или PNG, вертикальный кадр — как лист А4. Показывается на плитке и крупно в окне."
+                extraIcons={[
+                  { group: "certificates2", label: "Скан, лист 2", hint: "Необязательно: второй лист листается в окне после первого." },
+                ]}
                 fileGroup="library"
-                fileLabel="Файл для скачивания (необязательно)"
+                fileLabel="Файл целиком для скачивания (необязательно)"
                 fileHint="PDF, DOC, DOCX, XLS, XLSX, PNG или JPG — до 20 МБ. Значок на сайте подставится по формату."
               />
             </div>

@@ -581,6 +581,7 @@ export function TitleTextRows({
   iconGroup,
   iconLabel = "Иконка или фото",
   iconHint = "SVG или PNG на прозрачном фоне. Показывается маленькой иконкой в кружке. Без картинки карточка идёт без кружка.",
+  extraIcons = [],
 }: {
   /** путь до массива, например "materials.items" */
   path: string;
@@ -596,19 +597,27 @@ export function TitleTextRows({
   iconGroup?: keyof SiteContent["icons"];
   iconLabel?: string;
   iconHint?: string;
+  /** дополнительные картинки к каждой карточке — например сканы листов документа */
+  extraIcons?: { group: keyof SiteContent["icons"]; label: string; hint?: string }[];
 }) {
   const { tx, setTx, setTxEveryLocale, site, setFiles, setIcons } = useContent();
   const items = ((tx(path) as { title: string; text: string }[]) ?? []).slice();
   const attached = fileGroup ? site.files?.[fileGroup] ?? [] : [];
-  const pictures = iconGroup ? site.icons?.[iconGroup] ?? [] : [];
+
+  /** все группы картинок этой карточки: основная и дополнительные */
+  const groups: (keyof SiteContent["icons"])[] = [
+    ...(iconGroup ? [iconGroup] : []),
+    ...extraIcons.map((extra) => extra.group),
+  ];
+  const picturesOf = (group: keyof SiteContent["icons"]) => site.icons?.[group] ?? [];
 
   /** файлы хранятся отдельным списком — держим его той же длины, что и карточки */
   const padFiles = (length: number) =>
     Array.from({ length }, (_, i) => attached[i] ?? "");
 
   /** то же самое для картинок: их порядок обязан совпадать с порядком карточек */
-  const padIcons = (length: number) =>
-    Array.from({ length }, (_, i) => pictures[i] ?? "");
+  const padIcons = (group: keyof SiteContent["icons"], length: number) =>
+    Array.from({ length }, (_, i) => picturesOf(group)[i] ?? "");
 
   const setFile = (index: number, value: string) => {
     if (!fileGroup) return;
@@ -618,11 +627,10 @@ export function TitleTextRows({
     );
   };
 
-  const setIcon = (index: number, value: string) => {
-    if (!iconGroup) return;
+  const setIcon = (group: keyof SiteContent["icons"], index: number, value: string) => {
     setIcons(
-      iconGroup,
-      padIcons(Math.max(items.length, index + 1)).map((item, i) => (i === index ? value : item))
+      group,
+      padIcons(group, Math.max(items.length, index + 1)).map((item, i) => (i === index ? value : item))
     );
   };
 
@@ -648,23 +656,27 @@ export function TitleTextRows({
       [next[index], next[j]] = [next[j], next[index]];
       setFiles(fileGroup, next);
     }
-    if (iconGroup) {
-      const next = padIcons(items.length);
+    for (const group of groups) {
+      const next = padIcons(group, items.length);
       [next[index], next[j]] = [next[j], next[index]];
-      setIcons(iconGroup, next);
+      setIcons(group, next);
     }
   };
 
   const removeRow = (index: number) => {
     mutateEvery((list) => list.filter((_, i) => i !== index));
     if (fileGroup) setFiles(fileGroup, padFiles(items.length).filter((_, i) => i !== index));
-    if (iconGroup) setIcons(iconGroup, padIcons(items.length).filter((_, i) => i !== index));
+    for (const group of groups) {
+      setIcons(group, padIcons(group, items.length).filter((_, i) => i !== index));
+    }
   };
 
   const addRow = () => {
     mutateEvery((list) => [...list, { title: "", text: "" }]);
     if (fileGroup) setFiles(fileGroup, [...padFiles(items.length), ""]);
-    if (iconGroup) setIcons(iconGroup, [...padIcons(items.length), ""]);
+    for (const group of groups) {
+      setIcons(group, [...padIcons(group, items.length), ""]);
+    }
   };
 
   return (
@@ -695,9 +707,22 @@ export function TitleTextRows({
               <ImageField
                 label={iconLabel}
                 hint={iconHint}
-                value={pictures[index] ?? ""}
-                onChange={(value) => setIcon(index, value)}
+                value={picturesOf(iconGroup)[index] ?? ""}
+                onChange={(value) => setIcon(iconGroup, index, value)}
               />
+            )}
+            {extraIcons.length > 0 && (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {extraIcons.map((extra) => (
+                  <ImageField
+                    key={extra.group}
+                    label={extra.label}
+                    hint={extra.hint}
+                    value={picturesOf(extra.group)[index] ?? ""}
+                    onChange={(value) => setIcon(extra.group, index, value)}
+                  />
+                ))}
+              </div>
             )}
             <Field
               label="Заголовок"
