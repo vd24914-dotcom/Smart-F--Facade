@@ -2,20 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-
-type Tile = { id: number; src: string };
-
-/** Перемешивание Фишера — Йетса, возвращает новый массив. */
-function shuffle<T>(list: T[]) {
-  const next = list.slice();
-  for (let i = next.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [next[i], next[j]] = [next[j], next[i]];
-  }
-  return next;
-}
 
 /**
  * Раскладка под любое число фотографий — без пустых ячеек.
@@ -29,7 +16,7 @@ function layout(count: number) {
   const rows = Math.ceil(count / cols);
   const extra = cols * rows - count;
 
-  /** роль плитки по её месту в порядке: сколько колонок и рядов она занимает */
+  /** роль плитки по её месту: сколько колонок и рядов она занимает */
   const span = (index: number): [number, number] => {
     if (extra === 3 && index === 0) return [2, 2];
     if (extra >= 1 && index === 0) return rows > 1 ? [1, 2] : [2, 1];
@@ -50,8 +37,8 @@ const LayersIcon = ({ className }: { className?: string }) => (
 );
 
 /** Плитка без фото: спокойная заглушка, чтобы сетка не выглядела дырявой. */
-function Placeholder({ id }: { id: number }) {
-  const shade = ["bg-white/[0.05]", "bg-white/[0.08]", "bg-white/[0.11]"][id % 3];
+function Placeholder({ index }: { index: number }) {
+  const shade = ["bg-white/[0.05]", "bg-white/[0.08]", "bg-white/[0.11]"][index % 3];
   return (
     <div className={cn("flex size-full items-center justify-center border border-white/10 text-gold/60", shade)}>
       <LayersIcon className="size-6 sm:size-7" />
@@ -60,86 +47,65 @@ function Placeholder({ id }: { id: number }) {
 }
 
 /**
- * Сетка фотографий. Порядок один раз перемешивается, когда сетка доезжает
- * до экрана, — плитки плавно разъезжаются по новым местам. Число фотографий
- * любое; без фотографий показываем четыре заглушки.
+ * Сетка фотографий объектов. Плитки просто появляются одна за другой,
+ * когда сетка доезжает до экрана, — так же, как карточки в других блоках.
+ * Число фотографий любое; без фотографий показываем четыре заглушки.
  */
-export default function ShuffleGrid({
-  photos,
-  className,
-}: {
-  photos: string[];
-  className?: string;
-}) {
+export default function PhotoGrid({ photos, className }: { photos: string[]; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
-  const timer = useRef(0);
+  const [visible, setVisible] = useState(false);
 
   const list = photos.map((src) => src.trim()).filter(Boolean);
-  const count = list.length || 4;
-
-  // порядок на сервере и при первой отрисовке одинаковый — иначе React ругается на разметку
-  const [tiles, setTiles] = useState<Tile[]>(() =>
-    Array.from({ length: count }, (_, i) => ({ id: i, src: list[i] ?? "" }))
-  );
+  const tiles = list.length ? list : ["", "", "", ""];
+  const { cols, rows, span } = layout(tiles.length);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
+    }
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (!entry.isIntersecting) return;
-        observer.disconnect();
-        // два перемешивания подряд: первое сразу, второе через паузу — так движение читается лучше
-        setTiles((prev) => shuffle(prev));
-        timer.current = window.setTimeout(() => setTiles((prev) => shuffle(prev)), 1800);
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
       },
-      { threshold: 0.35 }
+      { threshold: 0.1, rootMargin: "0px 0px -80px 0px" }
     );
     observer.observe(el);
-
-    return () => {
-      observer.disconnect();
-      window.clearTimeout(timer.current);
-    };
+    return () => observer.disconnect();
   }, []);
-
-  const { cols, rows, span } = layout(tiles.length);
 
   return (
     <div
       ref={ref}
-      className={cn("grid w-full gap-1.5", className)}
+      // те же классы, что у RevealGroup: дети всплывают по очереди
+      className={cn("sf-reveal-group grid w-full gap-1.5", visible && "is-visible", className)}
       style={{
         gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`,
         gridTemplateRows: `repeat(${rows}, minmax(0, 1fr))`,
         gridAutoFlow: "dense",
         aspectRatio: `${cols} / ${rows}`,
+        ["--reveal-step" as string]: "70ms",
       }}
     >
-      {tiles.map((tile, index) => {
+      {tiles.map((src, index) => {
         const [c, r] = span(index);
         return (
-          <motion.div
-            key={tile.id}
-            layout
-            transition={{ duration: 1.5, type: "spring" }}
+          <div
+            key={src + index}
             className="relative overflow-hidden rounded-md bg-white/[0.06]"
             style={{ gridColumn: `span ${c}`, gridRow: `span ${r}` }}
           >
-            {tile.src ? (
-              <Image
-                src={tile.src}
-                alt=""
-                fill
-                sizes="(max-width: 640px) 50vw, 240px"
-                className="object-cover"
-              />
+            {src ? (
+              <Image src={src} alt="" fill sizes="(max-width: 640px) 50vw, 240px" className="object-cover" />
             ) : (
-              <Placeholder id={tile.id} />
+              <Placeholder index={index} />
             )}
-          </motion.div>
+          </div>
         );
       })}
     </div>

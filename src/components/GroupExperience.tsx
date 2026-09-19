@@ -1,6 +1,6 @@
 import Reveal from "@/components/ui/reveal";
 import CountUp from "@/components/ui/count-up";
-import ShuffleGrid from "@/components/ui/shuffle-grid";
+import PhotoGrid from "@/components/ui/photo-grid";
 import type { Dictionary } from "@/i18n/dictionaries";
 
 /**
@@ -9,7 +9,7 @@ import type { Dictionary } from "@/i18n/dictionaries";
  *
  * Два вида, переключаются в админке:
  * — с фотографиями: слева текст и цифры, справа сетка фото объектов, которая
- *   один раз перемешивается при появлении на экране;
+ *   плитки появляются одна за другой при прокрутке до блока;
  * — без фотографий: слева текст, справа цифры.
  */
 export default function GroupExperience({
@@ -82,7 +82,7 @@ export default function GroupExperience({
           </div>
 
           {showPhotos ? (
-            <ShuffleGrid photos={photos} className="mx-auto max-w-[460px] lg:max-w-none" />
+            <PhotoGrid photos={photos} className="mx-auto max-w-[460px] lg:max-w-none" />
           ) : (
             statsList
           )}
