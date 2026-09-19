@@ -190,9 +190,9 @@ export default function FooterSection({
                   target="_blank"
                   rel="noreferrer"
                   title={item.label}
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-200 px-4 py-2.5 text-[13px] font-semibold text-navy transition hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white"
+                  className="inline-flex items-center gap-2.5 rounded-full border border-slate-200 py-2 pl-3 pr-4 text-[14px] font-semibold text-navy transition hover:-translate-y-0.5 hover:border-navy hover:bg-navy hover:text-white"
                 >
-                  <SocialMark social={item} className="size-4" />
+                  <SocialMark social={item} className="size-6" />
                   {item.label}
                 </a>
               ))}
