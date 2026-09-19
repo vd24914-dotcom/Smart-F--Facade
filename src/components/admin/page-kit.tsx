@@ -582,6 +582,7 @@ export function TitleTextRows({
   iconLabel = "Иконка или фото",
   iconHint = "SVG или PNG на прозрачном фоне. Показывается маленькой иконкой в кружке. Без картинки карточка идёт без кружка.",
   extraIcons = [],
+  iconAspect,
 }: {
   /** путь до массива, например "materials.items" */
   path: string;
@@ -599,6 +600,8 @@ export function TitleTextRows({
   iconHint?: string;
   /** дополнительные картинки к каждой карточке — например сканы листов документа */
   extraIcons?: { group: keyof SiteContent["icons"]; label: string; hint?: string }[];
+  /** пропорции основной картинки: если заданы — перед загрузкой открывается кадрирование */
+  iconAspect?: number;
 }) {
   const { tx, setTx, setTxEveryLocale, site, setFiles, setIcons } = useContent();
   const items = ((tx(path) as { title: string; text: string }[]) ?? []).slice();
@@ -707,6 +710,7 @@ export function TitleTextRows({
               <ImageField
                 label={iconLabel}
                 hint={iconHint}
+                aspect={iconAspect}
                 value={picturesOf(iconGroup)[index] ?? ""}
                 onChange={(value) => setIcon(iconGroup, index, value)}
               />

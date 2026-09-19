@@ -170,6 +170,7 @@ export const defaultTexts: DictionaryDefaults = {
     },
     group: {
       title: "Опыт группы компаний",
+      objects: [],
       lead: "Smart Facade выходит на рынок Узбекистана с опытом, накопленным в Кыргызстане.",
       text: "Более 10 лет работы на строительном рынке Кыргызстана и свыше 200 000 м² выполненных фасадов. Этот опыт, отлаженные поставки и прямые контракты с заводами мы переносим на объекты в Узбекистане.",
       stats: [
@@ -312,6 +313,7 @@ export const defaultTexts: DictionaryDefaults = {
     },
     group: {
       title: "Kompaniyalar guruhi tajribasi",
+      objects: [],
       lead: "Smart Facade O‘zbekiston bozoriga Qirg‘izistonda to‘plangan tajriba bilan chiqmoqda.",
       text: "Qirg‘iziston qurilish bozorida 10 yildan ortiq faoliyat va 200 000 m² dan ortiq bajarilgan fasadlar. Shu tajriba, yo‘lga qo‘yilgan yetkazib berish va zavodlar bilan to‘g‘ridan-to‘g‘ri shartnomalarni O‘zbekistondagi obyektlarga olib kelamiz.",
       stats: [
@@ -454,6 +456,7 @@ export const defaultTexts: DictionaryDefaults = {
     },
     group: {
       title: "Experience of the group",
+      objects: [],
       lead: "Smart Facade enters the Uzbek market with experience gained in Kyrgyzstan.",
       text: "More than 10 years on the construction market of Kyrgyzstan and over 200,000 m² of completed facades. We bring that experience, established supply chains and direct contracts with the plants to projects in Uzbekistan.",
       stats: [

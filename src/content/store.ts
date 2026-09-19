@@ -35,6 +35,8 @@ export type SiteContent = {
     materials: string[];
     process: string[];
     docs: string[];
+    /** фотографии объектов в блоке «Опыт группы компаний»; индекс совпадает с group.objects */
+    groupPhotos: string[];
     /**
      * Сканы документов, до двух листов на запись. Индекс совпадает с записью:
      * docsScan1/docsScan2 — для карточек docs.items, certificates/certificates2 — для docs.files.
@@ -295,6 +297,9 @@ export async function getSite(): Promise<SiteContent> {
     .filter((item): item is string => typeof item === "string" && item.trim().length > 0);
   const single = (site?.images?.hero ?? "").trim();
 
+  // фото объектов раньше лежали в group.photos — подхватываем старый список
+  const groupPhotos = iconList(site?.icons?.groupPhotos ?? site?.group?.photos).slice(0, 16);
+
   return {
     ...site,
     socials: normalizeSocials(site),
@@ -304,9 +309,7 @@ export async function getSite(): Promise<SiteContent> {
     },
     // блока могло не быть в сохранённом файле — тогда сетка идёт из заглушек
     group: {
-      photos: (Array.isArray(site?.group?.photos) ? site.group.photos : [])
-        .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
-        .slice(0, 16),
+      photos: groupPhotos,
       showPhotos: site?.group?.showPhotos === true,
     },
     icons: {
@@ -316,6 +319,7 @@ export async function getSite(): Promise<SiteContent> {
       materials: iconList(site?.icons?.materials),
       process: iconList(site?.icons?.process),
       docs: iconList(site?.icons?.docs),
+      groupPhotos,
       docsScan1: iconList(site?.icons?.docsScan1),
       docsScan2: iconList(site?.icons?.docsScan2),
       certificates: iconList(site?.icons?.certificates),

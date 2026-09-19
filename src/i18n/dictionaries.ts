@@ -77,6 +77,8 @@ export type Dictionary = {
     lead: string;
     text: string;
     stats: { value: string; label: string }[];
+    /** объекты в сетке фотографий: название здания и описание; фото — site.icons.groupPhotos */
+    objects: { title: string; text: string }[];
   };
   /** Форма «Получить расчёт стоимости» */
   calc: {

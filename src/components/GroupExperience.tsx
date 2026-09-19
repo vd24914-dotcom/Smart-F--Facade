@@ -25,6 +25,8 @@ export default function GroupExperience({
 }) {
   const group = dict.group;
   const stats = (group?.stats ?? []).filter((stat) => stat.value?.trim());
+  // название и описание объекта идут по тому же индексу, что и его фото
+  const objects = group?.objects ?? [];
   if (!group?.title?.trim() && stats.length === 0) return null;
 
   const statsList = stats.length > 0 && (
@@ -82,7 +84,14 @@ export default function GroupExperience({
           </div>
 
           {showPhotos ? (
-            <PhotoGrid photos={photos} className="mx-auto max-w-[460px] lg:max-w-none" />
+            <PhotoGrid
+              items={Array.from({ length: Math.max(photos.length, objects.length) }, (_, i) => ({
+                src: photos[i] ?? "",
+                title: objects[i]?.title ?? "",
+                text: objects[i]?.text ?? "",
+              }))}
+              className="mx-auto max-w-[460px] lg:max-w-none"
+            />
           ) : (
             statsList
           )}
