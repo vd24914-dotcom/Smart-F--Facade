@@ -137,7 +137,7 @@ export default function LeadsEditor({
             type="button"
             onClick={() => setFilter(key)}
             className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition ${
-              filter === key ? "bg-slate-900 text-white" : "bg-white text-slate-600 hover:bg-slate-100"
+              filter === key ? "bg-navy text-white" : "bg-white text-slate-600 hover:bg-slate-100"
             }`}
           >
             {label}
@@ -242,7 +242,7 @@ export default function LeadsEditor({
         </p>
         <Link
           href="/admin/telegram"
-          className="inline-block rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700"
+          className="inline-block rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-[#1f3d60]"
         >
           Настроить телеграм →
         </Link>

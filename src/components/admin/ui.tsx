@@ -22,7 +22,7 @@ export function Field({
     <label className="block">
       <span className="mb-1 block text-[13px] font-semibold text-slate-700">{label}</span>
       <input
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] text-slate-900 outline-none transition focus:border-slate-900"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[14px] text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -53,7 +53,7 @@ export function NumberField({
         type="number"
         min={min}
         max={max}
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] text-slate-900 outline-none transition focus:border-slate-900"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[14px] text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20"
         value={Number.isFinite(value) ? value : ""}
         onChange={(e) => onChange(Number(e.target.value))}
       />
@@ -78,7 +78,7 @@ export function Area({
       <span className="mb-1 block text-[13px] font-semibold text-slate-700">{label}</span>
       <textarea
         rows={rows}
-        className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] leading-[22px] text-slate-900 outline-none transition focus:border-slate-900"
+        className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[14px] leading-[22px] text-slate-900 outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20"
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -114,7 +114,7 @@ export function StringList({
         {values.map((value, index) => (
           <div key={index} className="flex items-center gap-2">
             <input
-              className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[14px] outline-none transition focus:border-slate-900"
+              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[14px] outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20"
               value={value}
               placeholder={placeholder}
               onChange={(e) => set(index, e.target.value)}
@@ -200,7 +200,7 @@ export function ImageField({
 
         <div className="min-w-0 flex-1">
           <input
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-[13px] outline-none transition focus:border-slate-900"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-[13px] outline-none transition focus:border-navy focus:ring-2 focus:ring-navy/20"
             value={value}
             onChange={(e) => {
               setMissing(false);
@@ -209,7 +209,7 @@ export function ImageField({
             placeholder="/uploads/название-файла.png"
           />
           <div className="mt-2 flex flex-wrap items-center gap-2">
-            <label className="cursor-pointer rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700">
+            <label className="inline-flex min-h-[40px] cursor-pointer items-center rounded-xl bg-navy px-3.5 text-[13px] font-semibold text-white transition hover:bg-[#1f3d60]">
               {busy ? "Загрузка…" : "Загрузить файл"}
               <input
                 type="file"
@@ -285,8 +285,8 @@ export function Button({
   type?: "button" | "submit";
 }) {
   const styles = {
-    primary: "bg-slate-900 text-white hover:bg-slate-700",
-    ghost: "border border-slate-300 bg-white text-slate-700 hover:border-slate-500",
+    primary: "bg-navy text-white hover:bg-[#1f3d60]",
+    ghost: "border border-slate-200 bg-white text-slate-700 hover:border-slate-400 hover:bg-slate-50",
     danger: "border border-red-200 bg-red-50 text-red-700 hover:border-red-400",
   }[variant];
 
@@ -295,7 +295,7 @@ export function Button({
       type={type}
       onClick={onClick}
       disabled={disabled}
-      className={`rounded-lg px-3 py-1.5 text-[13px] font-semibold transition disabled:opacity-50 ${styles} ${className}`}
+      className={`inline-flex min-h-[40px] items-center justify-center rounded-xl px-3.5 text-[13px] font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40 disabled:opacity-50 ${styles} ${className}`}
     >
       {children}
     </button>
@@ -352,7 +352,7 @@ export function FileField({
       )}
 
       <div className="flex flex-wrap items-center gap-2">
-        <label className="cursor-pointer rounded-lg bg-slate-900 px-3 py-1.5 text-[13px] font-semibold text-white transition hover:bg-slate-700">
+        <label className="inline-flex min-h-[40px] cursor-pointer items-center rounded-xl bg-navy px-3.5 text-[13px] font-semibold text-white transition hover:bg-[#1f3d60]">
           {busy ? "Загрузка…" : value ? "Заменить файл" : "Прикрепить файл"}
           <input
             type="file"
@@ -449,10 +449,31 @@ export function IconButton({
   );
 }
 
-export function Card({ title, children }: { title?: string; children: React.ReactNode }) {
+export function Card({
+  title,
+  hint,
+  children,
+  id,
+  ...rest
+}: {
+  title?: string;
+  hint?: string;
+  children: React.ReactNode;
+  id?: string;
+  "data-admin-block"?: string;
+}) {
   return (
-    <section className="rounded-xl border border-slate-200 bg-white p-5">
-      {title && <h2 className="mb-4 text-[15px] font-bold text-slate-900">{title}</h2>}
+    <section
+      id={id}
+      {...rest}
+      className="scroll-mt-24 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm sm:p-6"
+    >
+      {title && (
+        <header className="mb-5 border-b border-slate-100 pb-4">
+          <h2 className="text-[16px] font-extrabold text-slate-900">{title}</h2>
+          {hint && <p className="mt-1 text-[13px] leading-[19px] text-slate-500">{hint}</p>}
+        </header>
+      )}
       <div className="space-y-4">{children}</div>
     </section>
   );
@@ -460,14 +481,16 @@ export function Card({ title, children }: { title?: string; children: React.Reac
 
 export function LocaleTabs({ value, onChange }: { value: Locale; onChange: (locale: Locale) => void }) {
   return (
-    <div className="inline-flex rounded-lg border border-slate-300 bg-white p-1">
+    <div role="tablist" aria-label="Язык" className="inline-flex w-full rounded-xl bg-slate-100 p-1">
       {locales.map((locale) => (
         <button
           key={locale}
           type="button"
+          role="tab"
+          aria-selected={locale === value}
           onClick={() => onChange(locale)}
-          className={`rounded-md px-3 py-1 text-[13px] font-semibold transition ${
-            locale === value ? "bg-slate-900 text-white" : "text-slate-600 hover:text-slate-900"
+          className={`min-h-[36px] flex-1 rounded-lg px-3 text-[13px] font-semibold transition ${
+            locale === value ? "bg-white text-slate-900 shadow-sm" : "text-slate-500 hover:text-slate-900"
           }`}
         >
           {localeNames[locale]}
@@ -517,13 +540,21 @@ export function SaveBar({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="sticky bottom-4 z-20 mt-6 flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-3 shadow-[0_8px_30px_rgba(15,23,42,0.15)]">
-      <Button onClick={onSave} disabled={state === "saving"}>
+    <div className="sticky bottom-3 z-20 mt-5 space-y-2 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-[0_8px_30px_rgba(15,23,42,0.12)] xl:static xl:mt-0 xl:border-0 xl:p-0 xl:shadow-none">
+      <Button onClick={onSave} disabled={state === "saving"} className="w-full">
         {state === "saving" ? "Сохраняю…" : "Сохранить"}
       </Button>
-      {state === "saved" && <span className="text-[13px] font-semibold text-green-700">Сохранено ✓</span>}
-      {state === "error" && <span className="text-[13px] font-semibold text-red-600">{message}</span>}
-      <div className="ml-auto flex items-center gap-2">{children}</div>
+      {state === "saved" && (
+        <p role="status" className="text-center text-[13px] font-semibold text-emerald-700">
+          Сохранено ✓
+        </p>
+      )}
+      {state === "error" && (
+        <p role="alert" className="text-[13px] font-semibold leading-[18px] text-red-600">
+          {message}
+        </p>
+      )}
+      {children && <div className="flex flex-wrap items-center gap-2">{children}</div>}
     </div>
   );
 }

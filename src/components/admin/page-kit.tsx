@@ -1,6 +1,8 @@
 "use client";
 
-import { createContext, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { RAIL_TARGET_ID } from "./AdminShell";
 import { diffChanges } from "@/lib/patch";
 import type { SiteContent, TextsContent } from "@/content/store";
 import type { Locale } from "@/i18n/config";
@@ -242,9 +244,10 @@ export function Block({
   hint?: string;
   children: React.ReactNode;
 }) {
+  // якорь для списка разделов в правой колонке
+  const id = "block-" + title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "");
   return (
-    <Card title={title}>
-      {hint && <p className="-mt-1 text-[13px] leading-[19px] text-slate-500">{hint}</p>}
+    <Card title={title} hint={hint} id={id} data-admin-block={title}>
       {children}
     </Card>
   );
@@ -828,24 +831,114 @@ export function PageShell({
   bar: React.ReactNode;
 }) {
   const { locale, setLocale } = useContent();
+  const body = useRef<HTMLDivElement>(null);
+  const [sections, setSections] = useState<{ id: string; title: string }[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [rail, setRail] = useState<HTMLElement | null>(null);
+
+  // список разделов страницы собираем из самих блоков — расставлять его руками не нужно
+  useEffect(() => {
+    const el = body.current;
+    if (!el) return;
+    const read = () =>
+      setSections(
+        Array.from(el.querySelectorAll<HTMLElement>("[data-admin-block]")).map((node) => ({
+          id: node.id,
+          title: node.dataset.adminBlock ?? "",
+        }))
+      );
+    read();
+    const observer = new MutationObserver(read);
+    observer.observe(el, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
+  // правая колонка живёт в оболочке админки — подмешиваем туда инструменты страницы
+  useEffect(() => {
+    setRail(document.getElementById(RAIL_TARGET_ID));
+  }, []);
+
+  useEffect(() => {
+    if (!previewOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setPreviewOpen(false);
+    };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [previewOpen]);
+
+  const tools = (withBar: boolean) => (
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm">
+      <p className="text-[11px] font-bold uppercase tracking-[1.5px] text-slate-400">Эта страница</p>
+      <p className="mt-1 text-[15px] font-extrabold text-slate-900">{title}</p>
+
+      <div className="mt-3">
+        <LocaleTabs value={locale} onChange={setLocale} />
+      </div>
+
+      {sections.length > 1 && (
+        <ol className="mt-4 space-y-0.5 border-t border-slate-100 pt-3">
+          {sections.map((section) => (
+            <li key={section.id}>
+              <a
+                href={`#${section.id}`}
+                className="block rounded-lg px-2 py-1.5 text-[13px] leading-[18px] text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
+              >
+                {section.title}
+              </a>
+            </li>
+          ))}
+        </ol>
+      )}
+
+      <div className="mt-4 space-y-2 border-t border-slate-100 pt-4">
+        {withBar && bar}
+        <Button variant="ghost" className="w-full" onClick={() => setPreviewOpen(true)}>
+          Предпросмотр
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="grid gap-6 pb-10 xl:grid-cols-[minmax(0,1fr)_520px]">
-      <div>
-        <div className="mb-1 flex flex-wrap items-center gap-3">
-          <h1 className="text-[20px] font-extrabold text-slate-900">{title}</h1>
-          <LocaleTabs value={locale} onChange={setLocale} />
+    <div className="pb-10">
+      <div className="mb-5">
+        <h1 className="text-[22px] font-extrabold tracking-[-0.2px] text-slate-900">{title}</h1>
+        {lead && <p className="mt-1 text-[14px] leading-[21px] text-slate-500">{lead}</p>}
+      </div>
+
+      {/* на узких экранах язык и разделы — над содержимым, сохранение — внизу */}
+      <div className="mb-5 xl:hidden">{tools(false)}</div>
+
+      <div ref={body} className="space-y-5">
+        {children}
+      </div>
+
+      <div className="xl:hidden">{bar}</div>
+
+      {rail && createPortal(tools(true), rail)}
+
+      {previewOpen && (
+        <div className="fixed inset-0 z-[90]" role="dialog" aria-modal="true" aria-label="Предпросмотр">
+          <button
+            type="button"
+            aria-label="Закрыть"
+            onClick={() => setPreviewOpen(false)}
+            className="absolute inset-0 cursor-default bg-slate-900/50 backdrop-blur-[2px]"
+          />
+          <div className="absolute inset-y-0 right-0 flex w-full max-w-[860px] flex-col bg-[#f3f5f8] shadow-[-20px_0_60px_rgba(15,23,42,0.25)]">
+            <div className="flex items-center gap-3 border-b border-slate-200 bg-white px-4 py-3">
+              <p className="text-[15px] font-extrabold text-slate-900">Предпросмотр</p>
+              <Button variant="ghost" className="ml-auto" onClick={() => setPreviewOpen(false)}>
+                Закрыть
+              </Button>
+            </div>
+            <div className="min-h-0 flex-1 overflow-y-auto p-4">
+              <Preview path={preview} />
+            </div>
+          </div>
         </div>
-        {lead && <p className="mb-4 text-[13px] text-slate-500">{lead}</p>}
-
-        <div className="space-y-5">{children}</div>
-
-        {bar}
-      </div>
-
-      <div className="xl:sticky xl:top-6 xl:self-start">
-        <Preview path={preview} />
-      </div>
+      )}
     </div>
   );
 }
