@@ -113,11 +113,18 @@ export default function ImageEditor({
       ctx.imageSmoothingQuality = "high";
       ctx.drawImage(img, cx - srcW / 2, cy - srcH / 2, srcW, srcH, 0, 0, outW, outH);
 
-      const png = /\.png$/i.test(fileName);
-      const type = png ? "image/png" : "image/jpeg";
-      const blob = await new Promise<Blob | null>((resolve) =>
+      let png = /\.png$/i.test(fileName);
+      let type = png ? "image/png" : "image/jpeg";
+      let blob = await new Promise<Blob | null>((resolve) =>
         canvas.toBlob(resolve, type, png ? undefined : 0.92)
       );
+      // Фотография в PNG после кадрирования весит в разы больше нужного —
+      // пережимаем её в JPEG, прозрачности у фото всё равно нет.
+      if (blob && png && blob.size > 2.5 * 1024 * 1024) {
+        png = false;
+        type = "image/jpeg";
+        blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, 0.9));
+      }
       if (!blob) throw new Error("Не удалось подготовить файл");
 
       const name = fileName.replace(/\.[^.]+$/, "") + (png ? ".png" : ".jpg");

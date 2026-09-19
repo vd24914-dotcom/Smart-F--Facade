@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { locales, localeNames, type Locale } from "@/i18n/config";
 import ImageEditor from "./ImageEditor";
+import { uploadFile } from "@/lib/upload-client";
 
 /* ─────────────── базовые поля ─────────────── */
 
@@ -165,13 +166,9 @@ export function ImageField({
     setBusy(true);
     setError("");
     try {
-      const body = new FormData();
-      body.append("file", file);
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Не удалось загрузить");
+      const url = await uploadFile(file, "image");
       setMissing(false);
-      onChange(json.url);
+      onChange(url);
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка загрузки");
     } finally {
@@ -324,13 +321,7 @@ export function FileField({
     setBusy(true);
     setError("");
     try {
-      const body = new FormData();
-      body.append("file", file);
-      body.append("kind", "doc");
-      const res = await fetch("/api/admin/upload", { method: "POST", body });
-      const json = await res.json();
-      if (!res.ok) throw new Error(json.error || "Не удалось загрузить");
-      onChange(json.url);
+      onChange(await uploadFile(file, "doc"));
     } catch (e) {
       setError(e instanceof Error ? e.message : "Ошибка загрузки");
     } finally {
