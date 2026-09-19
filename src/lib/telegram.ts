@@ -61,7 +61,22 @@ export function explain(error: string | undefined, token: string) {
 /** Кнопка меню: либо открывает ссылку, либо шлёт команду боту. */
 export type Button = { text: string; url?: string; data?: string };
 
+/**
+ * Меню под полем ввода — постоянная клавиатура телеграма.
+ * Такая кнопка отправляет боту свою подпись, поэтому нажатие узнаём по тексту,
+ * а ссылки на сайт отдаём отдельным сообщением: открывать адрес прямо
+ * с этой клавиатуры телеграм не умеет.
+ */
 export function keyboard(rows: Button[][]) {
+  return {
+    keyboard: rows.map((row) => row.map((b) => ({ text: b.text }))),
+    resize_keyboard: true,
+    is_persistent: true,
+  };
+}
+
+/** Кнопки под сообщением — для ссылок, которые нужно открыть одним нажатием. */
+export function inlineKeyboard(rows: Button[][]) {
   return {
     inline_keyboard: rows.map((row) =>
       row.map((b) => (b.url ? { text: b.text, url: b.url } : { text: b.text, callback_data: b.data ?? "menu" }))

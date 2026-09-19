@@ -16,7 +16,7 @@ import {
 } from "@/content/store";
 import { storageIsWritable } from "@/content/storage";
 import { siteOrigin } from "@/data/seo";
-import { isLocale, type Locale } from "@/i18n/config";
+import { isLocale, locales, type Locale } from "@/i18n/config";
 import {
   adminMenu,
   botLocale,
@@ -25,6 +25,7 @@ import {
   clientMenu,
   formSteps,
   languageMenu,
+  languageNames,
   nextStep,
   parseContactMessage,
   prevStep,
@@ -39,6 +40,7 @@ import {
   downloadTelegramFile,
   escapeHtml,
   forwardTelegramFile,
+  inlineKeyboard,
   keyboard,
   sendTelegram,
   sendTelegramAll,
@@ -196,58 +198,63 @@ async function handle(update: Update, telegram: Telegram) {
   const menu = (chatId: string, locale: Locale): Button[][] =>
     isAdmin(chatId) ? adminMenu(locale, site, socials) : clientMenu(locale, site, socials);
 
-  /* ─── нажали кнопку под сообщением ─── */
-  if (update.callback_query) {
-    const query = update.callback_query;
-    const chatId = String(query.message?.chat.id ?? query.from?.id ?? "");
-    await answerCallback(token, query.id);
-    if (!chatId) return;
+  /** Человек выбрал язык — запоминаем и переводим разговор. */
+  const setLanguage = async (chatId: string, picked: Locale) => {
+    await setBotLocale(chatId, picked);
+    const chosen = botTexts[picked];
 
-    // человек выбрал язык кнопкой — запоминаем и переводим разговор
-    if (query.data?.startsWith("lang:")) {
-      const picked = query.data.slice(5);
-      if (!isLocale(picked)) return;
-      await setBotLocale(chatId, picked);
-      const chosen = botTexts[picked];
+    const running = await getBotSession(chatId);
+    if (running) {
+      // форма уже идёт — продолжаем с того же вопроса, только на новом языке
+      const step = stepByKey(running.step);
+      await setBotSession({ ...running, locale: picked });
+      await sendTelegram(token, chatId, chosen.languageSet, { reply_markup: { remove_keyboard: true } });
+      const calc = (await getDict(picked)).calc as Calc;
+      if (step) return askAgain(token, chatId, step, calc, chosen);
+      return showSummary(token, chatId, { ...running, locale: picked }, calc, chosen);
+    }
 
-      const running = await getBotSession(chatId);
-      if (running) {
-        // форма уже идёт — продолжаем с того же вопроса, только на новом языке
-        const step = stepByKey(running.step);
-        await setBotSession({ ...running, locale: picked });
-        await sendTelegram(token, chatId, chosen.languageSet, { reply_markup: { remove_keyboard: true } });
-        const calc = (await getDict(picked)).calc as Calc;
-        if (step) return askAgain(token, chatId, step, calc, chosen);
-        return showSummary(token, chatId, { ...running, locale: picked }, calc, chosen);
-      }
+    const welcome = telegram.welcome.trim() || chosen.welcome;
+    await sendTelegram(token, chatId, `${chosen.languageSet}\n\n${welcome}\n\n${chosen.ask}`, {
+      reply_markup: keyboard(menu(chatId, picked)),
+    });
+  };
 
-      const welcome = telegram.welcome.trim() || chosen.welcome;
-      await sendTelegram(token, chatId, `${chosen.languageSet}\n\n${welcome}\n\n${chosen.ask}`, {
-        reply_markup: keyboard(menu(chatId, picked)),
+  /**
+   * Что делает кнопка меню. Одно и то же для клавиатуры под полем ввода
+   * (приходит текстом) и для старых кнопок под сообщением (приходят callback-ом).
+   */
+  const runAction = async (chatId: string, locale: Locale, button: Button) => {
+    const t = botTexts[locale];
+    const backToMenu = () =>
+      sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menu(chatId, locale)) });
+
+    // раздел сайта или соцсеть: с клавиатуры под полем ввода ссылку не открыть,
+    // поэтому присылаем её сообщением с кнопкой — открывается одним нажатием
+    if (button.url) {
+      await sendTelegram(token, chatId, `${escapeHtml(button.text)}\n${button.url}`, {
+        reply_markup: inlineKeyboard([[{ text: button.text, url: button.url }]]),
       });
       return;
     }
 
-    const locale = await localeFor(chatId, query.from);
-    const t = botTexts[locale];
-
-    if (query.data === "language") {
+    if (button.data === "language") {
       await sendTelegram(token, chatId, chooseLanguageText, { reply_markup: keyboard(languageMenu()) });
       return;
     }
 
-    if (query.data === "lead") {
+    if (button.data === "lead") {
       await startForm(token, chatId, locale);
       return;
     }
 
     // рабочие кнопки — только для своих
-    if (["leads", "stats", "health"].includes(query.data ?? "") && !isAdmin(chatId)) {
-      await sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menu(chatId, locale)) });
+    if (["leads", "stats", "health"].includes(button.data ?? "") && !isAdmin(chatId)) {
+      await backToMenu();
       return;
     }
 
-    if (query.data === "leads") {
+    if (button.data === "leads") {
       const { items } = await getLeads();
       await sendTelegram(token, chatId, leadsText(items));
       if (items.length) {
@@ -257,7 +264,7 @@ async function handle(update: Update, telegram: Telegram) {
       return;
     }
 
-    if (query.data === "stats") {
+    if (button.data === "stats") {
       const [stats, leads] = await Promise.all([getStats(), getLeads()]);
       await sendTelegram(token, chatId, statsText(stats, leads.items));
       if (Object.keys(stats.days ?? {}).length) {
@@ -273,7 +280,7 @@ async function handle(update: Update, telegram: Telegram) {
       return;
     }
 
-    if (query.data === "health") {
+    if (button.data === "health") {
       const [leads, stats] = await Promise.all([getLeads(), getStats()]);
       const report = await healthReport(site, {
         storageOk: storageIsWritable(),
@@ -285,7 +292,36 @@ async function handle(update: Update, telegram: Telegram) {
       return;
     }
 
-    await sendTelegram(token, chatId, t.ask, { reply_markup: keyboard(menu(chatId, locale)) });
+    await backToMenu();
+  };
+
+  /** Кнопка меню по подписи: клавиатура под полем ввода шлёт боту текст кнопки. */
+  const findMenuButton = (chatId: string, text: string): Button | null => {
+    if (!text) return null;
+    for (const loc of locales) {
+      for (const row of menu(chatId, loc)) {
+        const hit = row.find((b) => b.text === text);
+        if (hit) return hit;
+      }
+    }
+    return null;
+  };
+
+  /* ─── нажали старую кнопку под сообщением ─── */
+  if (update.callback_query) {
+    const query = update.callback_query;
+    const chatId = String(query.message?.chat.id ?? query.from?.id ?? "");
+    await answerCallback(token, query.id);
+    if (!chatId) return;
+
+    if (query.data?.startsWith("lang:")) {
+      const picked = query.data.slice(5);
+      if (isLocale(picked)) await setLanguage(chatId, picked);
+      return;
+    }
+
+    const locale = await localeFor(chatId, query.from);
+    await runAction(chatId, locale, { text: "", data: query.data ?? "menu" });
     return;
   }
 
@@ -323,9 +359,23 @@ async function handle(update: Update, telegram: Telegram) {
     return;
   }
 
+  // нажали язык на клавиатуре под полем ввода — приходит подпись кнопки
+  const pickedLang = (Object.keys(languageNames) as Locale[]).find((code) => languageNames[code] === text);
+  if (pickedLang) {
+    await setLanguage(chatId, pickedLang);
+    return;
+  }
+
   const session = await getBotSession(chatId);
   if (session) {
     await continueForm(message, session, telegram, menu(chatId, locale));
+    return;
+  }
+
+  // нажали кнопку меню под полем ввода
+  const pressed = findMenuButton(chatId, text);
+  if (pressed) {
+    await runAction(chatId, locale, pressed);
     return;
   }
 
