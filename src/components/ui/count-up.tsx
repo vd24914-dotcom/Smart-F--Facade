@@ -35,7 +35,7 @@ export default function CountUp({
 }: {
   value: string;
   duration?: number;
-  /** повторять пересчёт каждые N мс, пока блок на экране; 0 — без повтора */
+  /** повторять пересчёт каждые N мс, пока блок на экране; 0 — ровно один раз за всё время на странице */
   repeat?: number;
   delay?: number;
   className?: string;
@@ -80,6 +80,9 @@ export default function CountUp({
         if (entry.isIntersecting && !visible) {
           visible = true;
           startTimer = window.setTimeout(run, delay);
+          // без повтора цифра набегает один раз за всё время на странице:
+          // дальше за блоком не следим, чтобы прокрутка туда-сюда её не перезапускала
+          if (repeat <= 0) observer.disconnect();
         }
         visible = entry.isIntersecting;
       },
