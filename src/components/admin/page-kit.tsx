@@ -7,7 +7,7 @@ import { diffChanges } from "@/lib/patch";
 import type { SiteContent, TextsContent } from "@/content/store";
 import type { Locale } from "@/i18n/config";
 import type { Dictionary } from "@/i18n/dictionaries";
-import { Area, Button, Card, Field, FileField, IconButton, ImageField, LocaleTabs, Preview, StringList } from "./ui";
+import { Area, Button, Field, FileField, IconButton, ImageField, LocaleTabs, Preview, StringList } from "./ui";
 
 /* ─────────────── работа с вложенными путями ─────────────── */
 
@@ -244,14 +244,57 @@ export function Block({
   hint?: string;
   children: React.ReactNode;
 }) {
-  // якорь для списка разделов в правой колонке
+  // якорь для списка разделов в боковой колонке
   const id = "block-" + title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-+|-+$/g, "");
+  const sections = useContext(SectionsContext);
+  // вне PageShell блок всегда развёрнут — так ведут себя отдельные страницы вроде заявок
+  const open = sections ? sections.openId === id : true;
+
   return (
-    <Card title={title} hint={hint} id={id} data-admin-block={title}>
-      {children}
-    </Card>
+    <section
+      id={id}
+      data-admin-block={title}
+      className={`scroll-mt-24 rounded-2xl border bg-white shadow-sm transition ${
+        open ? "border-slate-200/80" : "border-slate-200/80 hover:border-slate-400"
+      }`}
+    >
+      <button
+        type="button"
+        onClick={() => sections?.toggle(id)}
+        aria-expanded={open}
+        aria-controls={`${id}-body`}
+        disabled={!sections}
+        className="flex w-full items-start gap-3 rounded-2xl px-5 py-4 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-navy/40 disabled:cursor-default sm:px-6"
+      >
+        <span className="min-w-0 flex-1">
+          <span className="block text-[16px] font-extrabold text-slate-900">{title}</span>
+          {hint && <span className="mt-1 block text-[13px] leading-[19px] text-slate-500">{hint}</span>}
+        </span>
+        {sections && (
+          <span
+            aria-hidden
+            className={`mt-1 flex size-7 shrink-0 items-center justify-center rounded-full bg-slate-100 text-slate-500 transition ${
+              open ? "rotate-180 bg-navy text-white" : ""
+            }`}
+          >
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+              <path d="M2 4l4 4 4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div id={`${id}-body`} className="space-y-4 border-t border-slate-100 px-5 pb-6 pt-5 sm:px-6">
+          {children}
+        </div>
+      )}
+    </section>
   );
 }
+
+/** Какой блок страницы развёрнут: остальные свёрнуты в одну строку, чтобы не листать. */
+const SectionsContext = createContext<{ openId: string | null; toggle: (id: string) => void } | null>(null);
 
 /* ─────────────── соцсети ─────────────── */
 
@@ -835,6 +878,27 @@ export function PageShell({
   const [sections, setSections] = useState<{ id: string; title: string }[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [rail, setRail] = useState<HTMLElement | null>(null);
+  // развёрнут только один блок: по умолчанию первый
+  const [openId, setOpenId] = useState<string | null>(null);
+  const scrollTo = useRef<string | null>(null);
+
+  const toggle = (id: string) => setOpenId((current) => (current === id ? null : id));
+  const openSection = (id: string) => {
+    scrollTo.current = id;
+    setOpenId(id);
+  };
+
+  useEffect(() => {
+    if (openId === null && sections.length > 0) setOpenId(sections[0].id);
+  }, [sections, openId]);
+
+  // после раскрытия подъезжаем к блоку — иначе он остаётся ниже экрана
+  useEffect(() => {
+    const id = scrollTo.current;
+    if (!id || openId !== id) return;
+    scrollTo.current = null;
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [openId]);
 
   // список разделов страницы собираем из самих блоков — расставлять его руками не нужно
   useEffect(() => {
@@ -878,16 +942,23 @@ export function PageShell({
 
       {sections.length > 1 && (
         <ol className="mt-4 space-y-0.5 border-t border-slate-100 pt-3">
-          {sections.map((section) => (
-            <li key={section.id}>
-              <a
-                href={`#${section.id}`}
-                className="block rounded-lg px-2 py-1.5 text-[13px] leading-[18px] text-slate-600 transition hover:bg-slate-100 hover:text-slate-900"
-              >
-                {section.title}
-              </a>
-            </li>
-          ))}
+          {sections.map((section) => {
+            const active = section.id === openId;
+            return (
+              <li key={section.id}>
+                <button
+                  type="button"
+                  onClick={() => openSection(section.id)}
+                  aria-current={active ? "true" : undefined}
+                  className={`block w-full rounded-lg px-2 py-1.5 text-left text-[13px] leading-[18px] transition ${
+                    active ? "bg-navy/10 font-semibold text-navy" : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                  }`}
+                >
+                  {section.title}
+                </button>
+              </li>
+            );
+          })}
         </ol>
       )}
 
@@ -910,9 +981,11 @@ export function PageShell({
       {/* на узких экранах язык и разделы — над содержимым, сохранение — внизу */}
       <div className="mb-5 xl:hidden">{tools(false)}</div>
 
-      <div ref={body} className="space-y-5">
-        {children}
-      </div>
+      <SectionsContext.Provider value={{ openId, toggle }}>
+        <div ref={body} className="space-y-3">
+          {children}
+        </div>
+      </SectionsContext.Provider>
 
       <div className="xl:hidden">{bar}</div>
 

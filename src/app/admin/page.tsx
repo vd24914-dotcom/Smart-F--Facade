@@ -43,7 +43,7 @@ export default async function AdminHome() {
       <div>
         <h1 className="text-[22px] font-extrabold tracking-[-0.2px] text-slate-900">Обзор</h1>
         <p className="mt-1 text-[14px] leading-[21px] text-slate-500">
-          Разделы справа. Правки появляются на сайте сразу после кнопки «Сохранить».
+          Разделы слева. Правки появляются на сайте сразу после кнопки «Сохранить».
         </p>
       </div>
 

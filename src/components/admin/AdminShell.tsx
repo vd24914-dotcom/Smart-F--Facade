@@ -9,7 +9,7 @@ import AdminNav from "./AdminNav";
 export const RAIL_TARGET_ID = "admin-rail-page";
 
 /**
- * Оболочка админки: тонкая шапка, слева содержимое, справа колонка с разделами
+ * Оболочка админки: тонкая шапка, слева колонка с разделами, справа содержимое
  * и инструментами открытой страницы. На узких экранах колонка превращается
  * в строку разделов над содержимым.
  */
@@ -57,13 +57,11 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
         </div>
       </header>
 
-      <div className="mx-auto grid max-w-[1400px] gap-6 px-4 py-6 sm:px-6 xl:grid-cols-[minmax(0,1fr)_300px] xl:gap-8 xl:py-8">
+      <div className="mx-auto grid max-w-[1400px] gap-6 px-4 py-6 sm:px-6 xl:grid-cols-[300px_minmax(0,1fr)] xl:gap-8 xl:py-8">
         {/* на узких экранах разделы идут строкой над содержимым */}
         <div className="min-w-0 xl:hidden">
           <AdminNav variant="chips" />
         </div>
-
-        <main className="min-w-0">{children}</main>
 
         <aside className="hidden xl:block">
           <div className="sticky top-[72px] space-y-4">
@@ -74,6 +72,8 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </aside>
+
+        <main className="min-w-0">{children}</main>
       </div>
     </div>
   );
