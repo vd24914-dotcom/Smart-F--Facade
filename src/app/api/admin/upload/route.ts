@@ -33,12 +33,22 @@ function safeName(name: string) {
   return `${Date.now()}-${base || "image"}${ext}`;
 }
 
+/**
+ * Ключ для прямой загрузки. Разрешение браузеру хранилище подписывает только
+ * отдельным ключом BLOB_READ_WRITE_TOKEN; подключение через BLOB_STORE_ID для
+ * этого не годится — тогда файлы идут через сервер, как раньше.
+ */
+const rwToken = () => {
+  const token = process.env.BLOB_READ_WRITE_TOKEN?.trim() ?? "";
+  return token.startsWith("vercel_blob_rw_") ? token : "";
+};
+
 /** Админке нужно знать, идёт ли файл в облако напрямую и с каким доступом. */
 export async function GET() {
   if (!(await isAuthenticated())) {
     return NextResponse.json({ error: "Нужен вход" }, { status: 401 });
   }
-  return NextResponse.json({ cloud: cloudEnabled(), access: BLOB_ACCESS });
+  return NextResponse.json({ cloud: cloudEnabled() && Boolean(rwToken()), access: BLOB_ACCESS });
 }
 
 /**
@@ -54,11 +64,19 @@ async function clientUpload(request: Request) {
     return NextResponse.json({ error: "Нужен вход" }, { status: 401 });
   }
 
+  if (!rwToken()) {
+    return NextResponse.json(
+      { error: "Прямая загрузка недоступна: в Vercel не задан BLOB_READ_WRITE_TOKEN" },
+      { status: 400 }
+    );
+  }
+
   try {
     const { handleUpload } = await import("@vercel/blob/client");
     const result = await handleUpload({
       body,
       request,
+      token: rwToken(),
       onBeforeGenerateToken: async (pathname, clientPayload) => {
         const isDoc = clientPayload === "doc";
         if (!pathname.startsWith(isDoc ? "docs/" : "uploads/")) {

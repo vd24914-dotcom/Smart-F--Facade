@@ -41,7 +41,50 @@ export function safeName(name: string) {
   return `${Date.now()}-${base || "file"}${ext}`;
 }
 
+/** Столько сервер Vercel принимает за один запрос — с небольшим запасом. */
+const SERVER_LIMIT = 4 * 1024 * 1024;
+
+/**
+ * Ужимает фотографию, чтобы она прошла через сервер: уменьшает до 2200 px по
+ * длинной стороне и сохраняет в JPEG, при необходимости снижая качество.
+ * Маленькие файлы и SVG не трогаем.
+ */
+async function shrinkImage(file: File): Promise<File> {
+  if (file.size <= SERVER_LIMIT || !/^image\/(png|jpe?g|webp)$/i.test(file.type)) return file;
+
+  const bitmap = await createImageBitmap(file);
+  let scale = Math.min(1, 2200 / Math.max(bitmap.width, bitmap.height));
+
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const canvas = document.createElement("canvas");
+    canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+    canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+    const ctx = canvas.getContext("2d");
+    if (!ctx) break;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+
+    const quality = Math.max(0.55, 0.88 - attempt * 0.08);
+    const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/jpeg", quality));
+    if (blob && blob.size <= SERVER_LIMIT) {
+      const name = file.name.replace(/\.[^.]+$/, "") + ".jpg";
+      return new File([blob], name, { type: "image/jpeg" });
+    }
+    scale *= 0.8;
+  }
+  throw new Error("Не удалось уменьшить картинку до 4 МБ — попробуйте файл поменьше.");
+}
+
 async function viaServer(file: File, kind: UploadKind) {
+  if (kind === "image") {
+    file = await shrinkImage(file);
+  } else if (file.size > SERVER_LIMIT) {
+    throw new Error(
+      "Файл тяжелее 4 МБ, а прямая загрузка в хранилище недоступна. Добавьте в Vercel переменную " +
+        "BLOB_READ_WRITE_TOKEN (Storage → Blob → Settings → Tokens) и сделайте Redeploy — или уменьшите файл."
+    );
+  }
+
   const body = new FormData();
   body.append("file", file);
   if (kind === "doc") body.append("kind", "doc");
@@ -70,13 +113,18 @@ export async function uploadFile(file: File, kind: UploadKind = "image"): Promis
 
   if (!config.cloud || svg) return viaServer(file, kind);
 
-  const { upload } = await import("@vercel/blob/client");
-  const folder = kind === "doc" ? "docs" : "uploads";
-  const blob = await upload(`${folder}/${safeName(file.name)}`, file, {
-    access: config.access,
-    handleUploadUrl: "/api/admin/upload",
-    clientPayload: kind,
-    contentType: file.type || undefined,
-  });
-  return blob.url;
+  try {
+    const { upload } = await import("@vercel/blob/client");
+    const folder = kind === "doc" ? "docs" : "uploads";
+    const blob = await upload(`${folder}/${safeName(file.name)}`, file, {
+      access: config.access,
+      handleUploadUrl: "/api/admin/upload",
+      clientPayload: kind,
+      contentType: file.type || undefined,
+    });
+    return blob.url;
+  } catch {
+    // разрешение не выписалось (нет ключа, сеть) — идём прежним путём через сервер
+    return viaServer(file, kind);
+  }
 }
